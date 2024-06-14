@@ -73,6 +73,13 @@ def delete_image(filename):
         if os.path.exists(image_path):
             os.remove(image_path)
             
+def fetch_data_and_format(query):
+    g.con.execute(query)
+    data = g.con.fetchall()
+    column_names = [desc[0] for desc in g.con.description]
+    info_list = [dict(zip(column_names, row)) for row in data]
+    return info_list
+            
 #halaman admin
 @app.route('/admin/dashboard')
 def dashboard():

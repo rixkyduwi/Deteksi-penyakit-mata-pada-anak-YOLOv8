@@ -28,20 +28,18 @@ def fetch_years(query):
 #halaman homepage
 @app.route('/')
 def homepahe():
-    thn_dana_list =fetch_data_and_format("SELECT tahun FROM realisasi_pendapatan group by tahun")
-    session['list_thn_dana']= thn_dana_list 
     return render_template('index.html')
-@app.route('/news')
+#halaman tips
+@app.route('/tips')
 def userberita():
-    berita = fetch_data_and_format("SELECT * FROM berita order by id DESC")
-    return render_template('homepage.html',info_list = berita)
-#halaman berita
-@app.route('/berita/<link>')
+    tips = fetch_data_and_format("SELECT * FROM tips order by id DESC")
+    return render_template('tips.html',tips=tips)
+@app.route('/tips/<link>')
 def detail_berita(link):
     query = "SELECT * FROM berita where link = '"+ str(link) +"' order by id DESC "
     berita = fetch_data_and_format(query)
     return render_template('detail_berita.html',info_list = berita)
-#halaman sejarah
+#halaman profile
 @app.route('/sejarah')
 def sejarah():
     g.con.execute("SELECT * FROM sejarah_desa")

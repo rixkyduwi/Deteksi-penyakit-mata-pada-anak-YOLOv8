@@ -1,0 +1,12 @@
+flask
+flask_cors
+flask_mysqldb
+flask_security_too
+flask_sqlalchemy
+flask_jwt_extended
+Flask-Bcrypt
+pillow
+pandas
+datetime
+openpyxl
+ultralytics

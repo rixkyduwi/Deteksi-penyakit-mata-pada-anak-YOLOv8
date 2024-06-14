@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request,session,render_template,g,send_from_directory
+from flask import Flask,jsonify,request,session,render_template,g,send_from_directory,abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager
@@ -14,13 +14,13 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'deteksi_yolov8'
 project_directory = os.path.abspath(os.path.dirname(__file__))
-upload_folder = os.path.join(project_directory, 'static', 'image')
+upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/deteksi_yolov8'
-app.config['SECRET_KEY'] = 'bukan rahasia'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'bukan rahasia')
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
-app.config['SECURITY_PASSWORD_SALT'] = b'asahdjhwquoyo192382qo'
-app.config['JWT_SECRET_KEY'] = 'qwdu92y17dqsu81'
+app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT', b'asahdjhwquoyo192382qo')
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'qwdu92y17dqsu81')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 
@@ -100,4 +100,4 @@ def invalid():
     # Menggunakan abort untuk memicu kesalahan 404
     abort(404)
 
-from . import api_user, api_admin, login
+from . import api_user, api_admin, login, proses_deteksi
