@@ -4,17 +4,16 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
     
 @app.route('/login_admin')
 def admin():
-    return render_template('admin/admin.html')
+    return render_template('admin/login.html')
 @app.route('/login_user')
 def user():
-    return render_template('admin/admin.html')
+    return render_template('user/login.html')
 
 # Endpoint untuk membuat token
 @app.route('/login_admin/proses', methods=['POST'])
 def proses_admin():
         username = request.json['username']
         password = request.json['password']
-
         # Seharusnya Anda memverifikasi kredensial pengguna di sini
         # Misalnya, memeriksa username dan password di database
         if user:
@@ -22,6 +21,7 @@ def proses_admin():
                 if bcrypt.check_password_hash(user.password, password):
                     access_token = create_access_token(identity=username)
                     session['jwt_token'] = access_token
+                    session['role'] = "admin"
                     session['username'] = username
                     return jsonify(access_token=access_token)
                 else:
@@ -44,6 +44,7 @@ def proses_user():
                 if bcrypt.check_password_hash(user.password, password):
                     access_token = create_access_token(identity=username)
                     session['jwt_token'] = access_token
+                    session['role'] = "user"
                     session['username'] = username
                     return jsonify(access_token=access_token)
                 else:
@@ -61,6 +62,7 @@ def keluar():
     unset_jwt_cookies(response)
     session.pop('jwt_token', None)
     session.pop('username', None)
+    session.pop('role', None)
     flash('Sukses Logout')
     return redirect(url_for('masuk'))
 

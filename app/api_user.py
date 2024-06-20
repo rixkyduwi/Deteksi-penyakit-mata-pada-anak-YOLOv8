@@ -27,7 +27,7 @@ def fetch_years(query):
     return thn
 #halaman homepage
 @app.route('/')
-def homepahe():
+def index():
     return render_template('index.html')
 #halaman tips
 @app.route('/tips')
@@ -39,6 +39,24 @@ def detail_berita(link):
     query = "SELECT * FROM berita where link = '"+ str(link) +"' order by id DESC "
     berita = fetch_data_and_format(query)
     return render_template('detail_berita.html',info_list = berita)
+#halaman dashboard user
+@app.route('/user/dashboard')
+def dashboarduser():
+    return render_template('user/dashboard.html')
+#halaman homepage
+@app.route('/user/profile')
+def profile():
+    return render_template('user/profile.html')
+#halaman hasil diagnosa
+@app.route('/user/hasil_diagnosa/<id>')
+def hasil_diagnosa(id):
+    query = "SELECT * FROM hasil_diagnosa where id = '"+ str(id) +"' and username = "+session['username']
+    diagnosa = fetch_data_and_format(query)
+    return render_template('user/hasil_diagnosa.html',diagnosa=diagnosa)
+#halaman homepage
+@app.route('/ganti_password')
+def ganti_password():
+    return render_template('ganti_password.html')
 #halaman profile
 @app.route('/sejarah')
 def sejarah():

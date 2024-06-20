@@ -1,24 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <title>EyeKids</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EyeKids</title>
+  <!-- Link to Google Fonts Raleway -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 600;
+    }
+    .btn-custom{
+        border-radius: 60px;
+    }
+    .custom-bg-info{
+        background-color: #1F4590;
+    }
+    .custom-text-info{
+        color: #1F4590;
+    }
+    .custom-bg-warning{
+        background-color: #FFA451;
+    }
+    .custom-text-warning{
+        color:#FFA451;
+    }
+    .font-bold {
+      font-weight: 700;
+    }
+    .font-semibold {
+      font-weight: 600;
+    }
+    .font-regular {
+      font-weight: 400;
+    }
+    .navbar-brand {
+      align-items: baseline;
+    }
+    .border-medium{
+        border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-    <!-- Content here -->
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="animated-element">Hello World</div>
-            </div>
+   <!-- Topbar -->
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand d-flex " href="#">
+        <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids</p>
+    </a>
+    <div></div>
+    <div></div>
+  </nav>
+
+  <!-- Call to Action Section -->
+  <section class="container my-5">
+    <div class="card custom-bg-info border-medium" style="border-radius: 20px;">
+        <div class="card-body text-center ">
+            <h1 class="font-semibold custom-text-warning"> Login Admin</h1>
+            <form class="form text-center" id="form-now">
+                <input class="btn bg-white mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="text" name="username" id="username"><br>
+                <input class="btn bg-white mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="password" name="password"><br>
+                <button onclick="" class="col-md-6 mt-3 mb-3 btn btn-custom custom-bg-warning text-white">
+                <h4 class="font-semibold" style="margin-bottom: 0px;">Login</h4>
+                </button>
+            </form>
         </div>
     </div>
+  </section>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

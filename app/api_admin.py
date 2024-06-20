@@ -84,7 +84,14 @@ def fetch_data_and_format(query):
 @app.route('/admin/dashboard')
 def dashboard():
     return render_template('admin/dashboard.html')
-
+#halaman history konsultasi
+@app.route('/admin/history_konsultasi')
+def history_konsultasi():
+    return render_template('admin/history_konsultasi.html')
+#halaman penyakit terbanyak
+@app.route('/admin/penyakit_terbanyak')
+def penyakit_terbanyak():
+    return render_template('admin/penyakit_terbanyak.html')
 #sejarah
 @app.route('/admin/infodesa')
 def admininfodesa():
