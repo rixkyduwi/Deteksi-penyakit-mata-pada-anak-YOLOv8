@@ -10,3 +10,4 @@ pandas
 datetime
 openpyxl
 ultralytics
+tesseract

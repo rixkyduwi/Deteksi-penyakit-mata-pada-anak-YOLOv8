@@ -21,3 +21,5 @@ config.py
 .idea/
 
 # Ignore any other files or directories you want to exclude
+app/static/upload
+app/static/detect

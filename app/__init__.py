@@ -15,7 +15,10 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'deteksi_yolov8'
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
+detect_folder = os.path.join(project_directory, 'static', 'detect')
 app.config['UPLOAD_FOLDER'] = upload_folder 
+app.config['PROJECT_FOLDER'] = project_directory 
+app.config['DETECT_FOLDER'] = detect_folder 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/deteksi_yolov8'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'bukan rahasia')
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
@@ -52,7 +55,22 @@ class User(db.Model, UserMixin):
                             secondaryjoin='Role.id == UserRoles.role_id',
                             backref=db.backref('users', lazy='dynamic'))
     fs_uniquifier = db.Column(db.String(64), unique=True)
-    
+
+class History(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    nama = db.Column(db.String(225), unique=True)    
+    nama_anak = db.Column(db.String(225))   
+    usia_anak = db.Column(db.Integer())
+    tanggal_konsultasi = db.Column(db.String(225))  
+    hasil_diagnosa = db.Column(db.String(20))  
+
+class Rekomendasi(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    nama = db.Column(db.String(225), unique=True) 
+    pengobatan = db.Column(db.Text)  
+    link_rekomendasi = db.Column(db.String(225))  
+
+
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(datastore=user_datastore, app=app)

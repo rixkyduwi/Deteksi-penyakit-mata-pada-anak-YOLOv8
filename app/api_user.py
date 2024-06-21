@@ -1,5 +1,5 @@
-from . import app,mysql,db
-from flask import render_template, request, jsonify, redirect, url_for,session,g
+from . import app,mysql,db,History,Rekomendasi
+from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import pandas as pd
 from PIL import Image
 from io import BytesIO
@@ -32,8 +32,8 @@ def index():
 #halaman tips
 @app.route('/tips')
 def userberita():
-    tips = fetch_data_and_format("SELECT * FROM tips order by id DESC")
-    return render_template('tips.html',tips=tips)
+    # tips = fetch_data_and_format("SELECT * FROM tips order by id DESC")
+    return render_template('tips.html')
 @app.route('/tips/<link>')
 def detail_berita(link):
     query = "SELECT * FROM berita where link = '"+ str(link) +"' order by id DESC "
@@ -50,9 +50,35 @@ def profile():
 #halaman hasil diagnosa
 @app.route('/user/hasil_diagnosa/<id>')
 def hasil_diagnosa(id):
-    query = "SELECT * FROM hasil_diagnosa where id = '"+ str(id) +"' and username = "+session['username']
-    diagnosa = fetch_data_and_format(query)
-    return render_template('user/hasil_diagnosa.html',diagnosa=diagnosa)
+    if 'username' not in session:
+        abort(403)  # Forbidden, user tidak terautentikasi
+
+    # Query data history berdasarkan id dan username dari session
+    history_record = History.query.filter_by(id=id, nama=session['username']).first()
+    if not history_record:
+        abort(404)  # Not found, data history tidak ditemukan
+
+    # Query rekomendasi berdasarkan nama_penyakit dari history_record
+    rekomendasi_record = Rekomendasi.query.filter_by(nama=history_record.hasil_diagnosa).first()
+    if not rekomendasi_record:
+        rekomendasi_data = None
+    else:
+        rekomendasi_data = {
+            'pengobatan': rekomendasi_record.pengobatan,
+            'link_rekomendasi': rekomendasi_record.link_rekomendasi
+        }
+
+    # Gabungkan data history dan rekomendasi
+    diagnosa = {
+        'nama': history_record.nama,
+        'nama_anak': history_record.nama_anak,
+        'usia_anak': history_record.usia_anak,
+        'tanggal_konsultasi': history_record.tanggal_konsultasi,
+        'hasil_diagnosa': history_record.hasil_diagnosa,
+        'rekomendasi': rekomendasi_data
+    }
+
+    return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
 #halaman homepage
 @app.route('/ganti_password')
 def ganti_password():

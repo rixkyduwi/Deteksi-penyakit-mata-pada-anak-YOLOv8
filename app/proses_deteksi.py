@@ -1,6 +1,7 @@
-import torch
-from flask import jsonify,request
-from . import app,db
+import torch,datetime
+from flask import jsonify,request,session
+from . import app,db,History
+import pytesseract
 # Load the model
 model_path = "best.pt"
 model = torch.load(model_path)
@@ -19,6 +20,7 @@ ultralytics.checks()
 import subprocess, json, os,uuid
 from PIL import Image
 from io import BytesIO
+names: ['strabismus (mata juling)','ptosis (kelopak mata turun)','mata merah','mata bengkak','mata bintitan']  # type: ignore # class names
 @app.route('/predict', methods=['POST'])
 def predict():
     file = request.files['gambar']
@@ -49,12 +51,30 @@ def predict():
     try:
         # Menjalankan perintah shell
         result = subprocess.run(command, capture_output=True, text=True, check=True)
-
-        # Baca hasil prediksi dari file JSON yang dihasilkan
-        json_path = os.path.join(save_path, 'results.json')
-        with open(json_path, 'r') as f:
-            predictions = json.load(f)
-            print(predictions)
-        return jsonify(predictions), 200
+        print(result.stdout)  # Tambahkan logging untuk output proses
+        # Cari folder predict terbaru di dalam save_path
+        subfolders = [f.path for f in os.scandir(save_path) if f.is_dir()]
+        latest_folder = max(subfolders, key=os.path.getmtime)  # Folder terbaru berdasarkan waktu modifikasi
+        # Mendapatkan direktori saat ini
+        project_directory = os.path.abspath(os.path.dirname(__file__))
+        # Mendapatkan direktori induk dari project_directory
+        parent_directory = os.path.dirname(project_directory)
+        detected_file_path = os.path.join(parent_directory,latest_folder, random_name)
+        detected_text = pytesseract.image_to_string(Image.open(detected_file_path))
+        if detected_text.strip():  # Validasi apakah ada teks yang terbaca
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # Simpan hasil OCR ke database
+            history = History(
+                nama=session['username'],
+                nama_anak="Anak",  # Ganti sesuai kebutuhan
+                usia_anak=5,  # Ganti sesuai kebutuhan
+                tanggal_konsultasi=current_time,  # Ganti sesuai kebutuhan
+                hasil_diagnosa=detected_text
+            )
+            db.session.add(history)
+            db.session.commit()
+        else:
+            return jsonify({"error": "No text detected in the image"}), 400
+        return jsonify({"detected_file_path":detected_file_path}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({'error': e.stderr}), 500

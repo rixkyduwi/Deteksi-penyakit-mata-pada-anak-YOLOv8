@@ -1,3 +1,4 @@
+{% if session['role']=='user' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +129,7 @@
   <nav class="sidebar bg-light p-2" >
     <div class="text-center">
     <img src="../static/icon/profile_default.svg" alt="icon_profile_Default">
-    <p class="font-semibold custom-text-warning">Nama</p>
+    <p class="font-semibold custom-text-warning">{{ session['username'] }}</p>
     <hr class=" custom-bg-info custom-border-size btn-custom" >
     </div>
     <ul class="nav flex-column text-start pl-3">
@@ -166,6 +167,23 @@
   <div class="content" id="mainContent">
     <!-- Hero Section -->
     <section class="container my-5" id="home">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9999;" 
+            class="mt-3 mr-2 alert alert-success alert-dismissible bg-success text-white border-0 fade show"
+            role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            {{ messages[0] }}
+        </div>
+                
+        {% endif %}
+        {% endwith %}
       <div class="row">
         <div class="col-md-6 mb-3 text-center">
         <img src="../static/icon/upload_gambar.svg" class="img-responsive img" alt="icon_upload_gambar">
@@ -238,20 +256,17 @@
           try {
               if (data.msg === "SUKSES") {
                   alert("Status : Sukses ");
-                  var img_path = "/static/upload/"+data.img
-                  $("#img_placeholder").attr('src',img_path)
-                  $("#img_placeholder").show()
-                  $("#ke_chatbot").show()
-                  $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
-                  $("#kirim").html("kirim")
+                  id_hasil = data.id_hasil
+                  window.location.href = "/user/hasil_diagnosa/"+id_hasil;
+                  
               } else {
                   alert("Status: "+data.msg);
-                  window.location.href = "/skin_detection";
+                  window.location.href = "/user/dashboard";
               }
           } catch (error) {
               console.log(error);
               alert("Error: " + error);
-              window.location.href = "/skin_detection";
+              window.location.href = "/user/dashboard";
           }
         });
         event.preventDefault();
@@ -259,3 +274,9 @@
   </script>
 </body>
 </html>
+{% else %}
+    <!-- Jika jwt_token tidak ada -->
+    <script>
+        window.location.href = "/";
+    </script>
+{% endif %}

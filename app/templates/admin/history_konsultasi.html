@@ -13,14 +13,14 @@
       font-family: 'Raleway', sans-serif;
       font-weight: 600;
     }
-    .navbar{
+    .navbar {
       height: 10vh;
       position: fixed;
       top: 0;
       z-index: 2;
       left: 0;
-      width: 250px;
-      background-color: #f8f9fa00;
+      width: 100%;
+      background-color: #f8f9fa;
     }
     .sidebar {
       height: 100vh;
@@ -34,9 +34,8 @@
       background-color: #f8f9fa;
       border-right: 2px solid #ddd; 
       transition: transform 0.3s ease;
-      padding: 20px; /* Tambahkan padding untuk memberikan ruang di dalam sidebar */
+      padding: 20px;
     }
-
     .sidebar .content {
       flex-grow: 1;
     }
@@ -51,38 +50,38 @@
     }  
     .sidebar .social-icons {
       height: 100px;
-      margin-top: auto; /* Mengatur ikon-ikon sosial untuk muncul di bagian paling bawah */
-      text-align: center; /* Untuk menengahkan ikon-ikon sosial */
+      margin-top: auto;
+      text-align: center;
     }
     .content {
       margin-left: 250px;
       padding: 20px;
       transition: margin-left 0.3s ease;
     }
-    .width-mobile{
-        width: 100%;
+    .width-mobile {
+      width: 100%;
     }
-    .width-desktop{
-        width: calc(100% - 250px);
+    .width-desktop {
+      width: calc(100% - 250px);
     }
     .content.collapsed {
       margin-left: 0;
       width: 100%;
     }
     .btn-custom {
-        border-radius: 60px;
+      border-radius: 60px;
     }
     .custom-bg-info {
-        background-color: #1F4590;
+      background-color: #1F4590;
     }
     .custom-text-info {
-        color: #1F4590;
+      color: #1F4590;
     }
     .custom-bg-warning {
-        background-color: #FFA451;
+      background-color: #FFA451;
     }
     .custom-text-warning {
-        color: #FFA451;
+      color: #FFA451;
     }
     .font-bold {
       font-weight: 700;
@@ -100,68 +99,76 @@
       align-items: baseline;
     }
     .custom-border-size {
-    height: 4px; /* Ketebalan garis diatur di sini */
-    border: none; /* Menghapus border default */
-    background-color: #1F4590;/* Warna garis */
-  }
-  .nav-link{
-    color: #ffa451 !important;;
-  }
+      height: 4px;
+      border: none;
+      background-color: #1F4590;
+    }
+    .nav-link {
+      color: #ffa451 !important;
+    }
+    .table-responsive {
+      margin-top: 20px;
+    }
+    .table thead th {
+      background-color: #ffa451;
+      color: white;
+      text-align: center;
+    }
+    .table tbody td {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-       <!-- Topbar -->
-   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- Topbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="d-flex baseline">
-        <a class="navbar-brand d-flex baseline" href="#">
-            <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids</p>
-        </a>
-        <!-- Toggle Button -->
-        <div class="toggle-btn">
-            <button id="sidebarToggle" class="btn btn-secondary">☰</button>
-        </div>
+      <a class="navbar-brand d-flex baseline" href="#">
+        <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids</p>
+      </a>
+      <!-- Toggle Button -->
+      <div class="toggle-btn">
+        <button id="sidebarToggle" class="btn btn-secondary">☰</button>
+      </div>
     </div>
     <div></div>
     <div></div>
   </nav>
   <!-- Sidebar -->
-  <nav class="sidebar bg-light p-2" >
+  <nav class="sidebar bg-light p-2">
     <div class="text-center">
-    <img src="../static/icon/icon_profile_admin.svg" alt="icon_profile_admin">
-    <p class="font-semibold custom-text-warning">Nama</p>
-    <hr class=" custom-bg-info custom-border-size btn-custom" >
+      <img src="../static/icon/icon_profile_admin.svg" alt="icon_profile_admin">
+      <p class="font-semibold custom-text-warning">Nama</p>
+      <hr class="custom-bg-info custom-border-size btn-custom">
     </div>
     <ul class="nav flex-column text-start pl-3">
       <li class="nav-item">
-        <a class="nav-link " href="/admin/dashboard"><img src="../static/icon/jadwal.svg" height="25" width="25" alt="icon_dashboard">  Dashboard</a>
+        <a class="nav-link" href="/admin/dashboard"><img src="../static/icon/jadwal.svg" height="25" width="25" alt="icon_dashboard"> Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="/admin/history_konsultasi"><img src="../static/icon/history_konsultasi.svg" height="25" width="25" alt="icon_username">  History Konsultasi</a>
+        <a class="nav-link" href="/admin/history_konsultasi"><img src="../static/icon/history_konsultasi.svg" height="25" width="25" alt="icon_username"> History Konsultasi</a>
       </li>
     </ul>
     <div>
-    <hr class=" custom-bg-info custom-border-size btn-custom" >
+      <hr class="custom-bg-info custom-border-size btn-custom">
     </div>
     <ul class="nav flex-column text-start pl-3">
       <li class="nav-item">
-        <a class="nav-link " href="/admin/penyakit_terbanyak"><img src="../static/icon/icon_bar_chart.svg" height="25" width="25" alt="icon_ganti_password">  Penyakit Terbanyak</a>
+        <a class="nav-link" href="/admin/penyakit_terbanyak"><img src="../static/icon/icon_bar_chart.svg" height="25" width="25" alt="icon_ganti_password"> Penyakit Terbanyak</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="/keluar"><img src="../static/icon/logout.svg" height="25" width="25" alt="icon_keluar">  Keluar</a>
+        <a class="nav-link" href="/keluar"><img src="../static/icon/logout.svg" height="25" width="25" alt="icon_keluar"> Keluar</a>
       </li>
     </ul>
     <div>
-    <hr class=" custom-bg-info custom-border-size btn-custom" >
+      <hr class="custom-bg-info custom-border-size btn-custom">
     </div>
     <div class="text-center social-icons">
-        <a href=""class="mr-3"><img src="../static/icon/twitter.svg" height="25" width="25" alt=""></a> 
-        <a href=""class="mr-3"><img src="../static/icon/instagram.svg" height="25" width="25" alt=""></a>
-        <a href=""><img src="../static/icon/whatsapp.svg" height="25" width="25" alt=""></a>
+      <a href="" class="mr-3"><img src="../static/icon/twitter.svg" height="25" width="25" alt=""></a> 
+      <a href="" class="mr-3"><img src="../static/icon/instagram.svg" height="25" width="25" alt=""></a>
+      <a href=""><img src="../static/icon/whatsapp.svg" height="25" width="25" alt=""></a>
     </div>
   </nav>
-
-  
-
   <!-- Content -->
   <div class="content" id="mainContent">
     <!-- Hero Section -->
@@ -169,66 +176,67 @@
       <div class="row">
         <div class="col-md-12 mb-3 text-center align-center">
           <div class="text-center d-flex baseline">
-            <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi </h1>
-            <img src="../static/icon/table.svg" height="25" width="25"  alt="icon_table">
+            <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi</h1>
+            <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
           </div>
           <div class="table-responsive">
-          <table class="">
-            <thead>
-              <th>Nama</th>
-              <th>Nama Anak</th>
-              <th>Usia Anak<th>
-              <th>Tanggal Konsultasi</th>
-              <th>Hasil Diagnosa</th>
-              <th>aksi</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>bla</td>
-                <td>bla</td>
-                <td>bla</td>
-                <td>bla</td>
-                <td>bla</td>
-                <td>bla</td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Nama Anak</th>
+                  <th>Usia Anak</th>
+                  <th>Tanggal Konsultasi</th>
+                  <th>Hasil Diagnosa</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>John Doe</td>
+                  <td>Jane Doe</td>
+                  <td>5</td>
+                  <td>12-06-2024</td>
+                  <td>Sehat</td>
+                  <td>
+                    <button class="btn btn-info btn-sm">Detail</button>
+                    <button class="btn btn-danger btn-sm">Hapus</button>
+                  </td>
+                </tr>
+                <!-- Tambahkan baris data lain di sini -->
+              </tbody>
+            </table>
           </div>
         </div>
+      </div>
     </section>
   </div>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
-    function adjustContentStyle() {
+      function adjustContentStyle() {
         const content = $('.content');
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarWidth = 250; // Width of the sidebar in pixels
-
-      if ($(window).width() >= 500) {
-        // Desktop view
-      content.addClass('width-desktop').removeClass('width-mobile');
-      }else {
-        // Mobile view
-      content.addClass('width-mobile').removeClass('width-desktop');
+        const sidebarWidth = 250; // Width of the sidebar in pixels
+        if ($(window).width() >= 500) {
+          // Desktop view
+          content.addClass('width-desktop').removeClass('width-mobile');
+        } else {
+          // Mobile view
+          content.addClass('width-mobile').removeClass('width-desktop');
+        }
       }
-    }
-
-    // Adjust styles on page load
-
-    adjustContentStyle();
-    // Adjust styles on window resize
-    window.addEventListener('resize', adjustContentStyle);
+      // Adjust styles on page load
+      adjustContentStyle();
+      // Adjust styles on window resize
+      window.addEventListener('resize', adjustContentStyle);
       $('#sidebarToggle').on('click', function () {
         $('.sidebar').toggleClass('collapsed');
         $('#mainContent').toggleClass('collapsed');
         adjustContentStyle();
       });
     });
-   
   </script>
 </body>
 </html>

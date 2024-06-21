@@ -12,59 +12,74 @@ def user():
 # Endpoint untuk membuat token
 @app.route('/login_admin/proses', methods=['POST'])
 def proses_admin():
-        username = request.json['username']
-        password = request.json['password']
-        # Seharusnya Anda memverifikasi kredensial pengguna di sini
-        # Misalnya, memeriksa username dan password di database
-        if user:
-            if 'admin' in [role.name for role in user.roles]:
-                if bcrypt.check_password_hash(user.password, password):
-                    access_token = create_access_token(identity=username)
-                    session['jwt_token'] = access_token
-                    session['role'] = "admin"
-                    session['username'] = username
-                    return jsonify(access_token=access_token)
-                else:
-                    return jsonify({"msg": "password salah"}), 401
+    username = request.json['username']
+    password = request.json['password']
+    user = user_datastore.find_user(username=username)
+    if user:
+        if 'admin' in [role.name for role in user.roles]:
+            if bcrypt.check_password_hash(user.password, password):
+                access_token = create_access_token(identity=username)
+                session['jwt_token'] = access_token
+                session['role'] = "admin"
+                session['username'] = username
+                flash('Login Berhasil')
+                return jsonify(access_token=access_token)
             else:
-                return jsonify({"msg": "User is not an admin"}), 403
+                return jsonify({"msg": "password salah"}), 401
         else:
-            return jsonify({"msg": "username salah"}), 404
+            return jsonify({"msg": "User is not an admin"}), 403
+    else:
+        return jsonify({"msg": "username salah"}), 404
         
 # Endpoint untuk membuat token
 @app.route('/login_user/proses', methods=['POST'])
 def proses_user():
-        username = request.json['username']
-        password = request.json['password']
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({"msg": "Invalid request"}), 400
 
-        # Seharusnya Anda memverifikasi kredensial pengguna di sini
-        # Misalnya, memeriksa username dan password di database
-        if user:
-            if 'user' in [role.name for role in user.roles]:
-                if bcrypt.check_password_hash(user.password, password):
-                    access_token = create_access_token(identity=username)
-                    session['jwt_token'] = access_token
-                    session['role'] = "user"
-                    session['username'] = username
-                    return jsonify(access_token=access_token)
-                else:
-                    return jsonify({"msg": "password salah"}), 401
-            else:
-                return jsonify({"msg": "User is not an admin"}), 403
-        else:
-            return jsonify({"msg": "username salah"}), 404
+    username = data['username']
+    password = data['password']
+    user = user_datastore.find_user(username=username)
+
+    if not user:
+        return jsonify({"msg": "username salah"}), 404
+
+    if 'user' not in [role.name for role in user.roles]:
+        return jsonify({"msg": "User is not a regular user"}), 403
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"msg": "password salah"}), 401
+
+    access_token = create_access_token(identity=username)
+    session['jwt_token'] = access_token
+    session['role'] = "user"
+    session['username'] = username
+    flash('Login Berhasil')
+
+    return jsonify(access_token=access_token)
 
 # Endpoint yang memerlukan autentikasi
-@app.route('/keluar')
-def keluar():
-    # Hapus token dari cookie (anda bisa menghapus token dari header juga jika tidak menggunakan cookie)
+def unset_session():
     response = jsonify({'message': 'Logout berhasil'})
     unset_jwt_cookies(response)
     session.pop('jwt_token', None)
     session.pop('username', None)
     session.pop('role', None)
-    flash('Sukses Logout')
-    return redirect(url_for('masuk'))
+@app.route('/keluar')
+def keluar():
+    # Hapus token dari cookie (anda bisa menghapus token dari header juga jika tidak menggunakan cookie)
+    if session['role']=='admin':
+        unset_session()
+        flash('Sukses Logout')
+        return redirect(url_for('admin'))
+    elif session['role']=='user':
+        unset_session()
+        flash('Sukses Logout')
+        return redirect(url_for('user'))
+    else:
+        unset_session()
+        return redirect(url_for('index'))
 
 @jwt.expired_token_loader
 def expired_token_callback():
