@@ -1,4 +1,4 @@
-from . import app,db,bcrypt,user_datastore,security,jwt,Role,User
+from . import app,db,bcrypt,user_datastore,security,jwt,Role,User,Profile
 from flask import request,render_template,redirect,url_for,jsonify,session,flash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity,unset_jwt_cookies
     
@@ -19,6 +19,7 @@ def proses_admin():
         if 'admin' in [role.name for role in user.roles]:
             if bcrypt.check_password_hash(user.password, password):
                 access_token = create_access_token(identity=username)
+
                 session['jwt_token'] = access_token
                 session['role'] = "admin"
                 session['username'] = username
@@ -55,6 +56,13 @@ def proses_user():
     session['jwt_token'] = access_token
     session['role'] = "user"
     session['username'] = username
+    session['id'] = user.id
+    profilee = Profile.query.filter_by(user_id=user.id).first()
+    if not profilee:
+        session['nama_lengkap'] = username
+    else:
+        session['nama_lengkap'] = profilee.full_name
+        
     flash('Login Berhasil')
 
     return jsonify(access_token=access_token)

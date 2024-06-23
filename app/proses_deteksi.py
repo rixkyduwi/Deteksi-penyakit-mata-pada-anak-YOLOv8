@@ -1,4 +1,4 @@
-import torch,datetime
+import torch,datetime,re
 from flask import jsonify,request,session
 from . import app,db,History
 import pytesseract
@@ -20,7 +20,6 @@ ultralytics.checks()
 import subprocess, json, os,uuid
 from PIL import Image
 from io import BytesIO
-names: ['strabismus (mata juling)','ptosis (kelopak mata turun)','mata merah','mata bengkak','mata bintitan']  # type: ignore # class names
 @app.route('/predict', methods=['POST'])
 def predict():
     file = request.files['gambar']
@@ -51,30 +50,56 @@ def predict():
     try:
         # Menjalankan perintah shell
         result = subprocess.run(command, capture_output=True, text=True, check=True)
-        print(result.stdout)  # Tambahkan logging untuk output proses
+        output = result.stdout
+
+        # Logging untuk output proses
+        print(f"Command output: {output}")
+
+        # Mengecek kemunculan setiap nama dalam output
+        names= ['strabismus (mata juling)','ptosis (kelopak mata turun)','mata merah','mata bengkak','mata bintitan']  # class names
+        found_names = {}
+        for name in names:
+            if name in output:
+                found_names[name] = output.count(name)  # Menghitung berapa kali nama tersebut muncul
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         # Cari folder predict terbaru di dalam save_path
         subfolders = [f.path for f in os.scandir(save_path) if f.is_dir()]
         latest_folder = max(subfolders, key=os.path.getmtime)  # Folder terbaru berdasarkan waktu modifikasi
-        # Mendapatkan direktori saat ini
-        project_directory = os.path.abspath(os.path.dirname(__file__))
-        # Mendapatkan direktori induk dari project_directory
-        parent_directory = os.path.dirname(project_directory)
-        detected_file_path = os.path.join(parent_directory,latest_folder, random_name)
-        detected_text = pytesseract.image_to_string(Image.open(detected_file_path))
-        if detected_text.strip():  # Validasi apakah ada teks yang terbaca
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            # Simpan hasil OCR ke database
+        latest_folder = latest_folder.replace("./app/static/detect\\", "")
+        detected_file_path = latest_folder+"/"+random_name
+        print(detected_file_path)
+        # Menampilkan hasil
+        if found_names:
+            print("Found names and their counts in output:")
+            for name, count in found_names.items():
+                print(f"{name}: {count}")
             history = History(
-                nama=session['username'],
+                nama_user=session['username'],
                 nama_anak="Anak",  # Ganti sesuai kebutuhan
                 usia_anak=5,  # Ganti sesuai kebutuhan
                 tanggal_konsultasi=current_time,  # Ganti sesuai kebutuhan
-                hasil_diagnosa=detected_text
+                file_deteksi = detected_file_path,
+                hasil_diagnosa= found_names
+                )
+            db.session.add(history)
+            db.session.commit()
+            new_history_id = history.id  # Access the ID of the newly added profile
+            return jsonify({"msg":"SUKSES","id_hasil":new_history_id})
+        else:
+            history = History(
+                nama_user=session['username'],
+                nama_anak="Anak",  # Ganti sesuai kebutuhan
+                usia_anak=5,  # Ganti sesuai kebutuhan
+                tanggal_konsultasi=current_time,  # Ganti sesuai kebutuhan
+                file_deteksi = detected_file_path,
+                hasil_diagnosa="sehat"
             )
             db.session.add(history)
             db.session.commit()
-        else:
-            return jsonify({"error": "No text detected in the image"}), 400
-        return jsonify({"detected_file_path":detected_file_path}), 200
+            new_history_id = history.id  # Access the ID of the newly added profile
+            print("None of the names were found in the output.")
+            return jsonify({"msg":"SUKSES","id_hasil":new_history_id})
+        
     except subprocess.CalledProcessError as e:
-        return jsonify({'error': e.stderr}), 500
+        return jsonify({'msg': e.stderr}), 500

@@ -1,4 +1,4 @@
-from app import app, db, user_datastore, bcrypt,Rekomendasi
+from app import app, db, user_datastore, bcrypt,Rekomendasi,Profile
 import flask_bcrypt
 
 if __name__ == '__main__':
@@ -24,19 +24,26 @@ if __name__ == '__main__':
             admin = user_datastore.create_user(username="admin", password=hashed_password, active=True)
             user_datastore.add_role_to_user(admin, admin_role)
             db.session.commit()
-
         # Membuat regular user
         if not user_datastore.find_user(username='user'):
             hashed_password = bcrypt.generate_password_hash("user123").decode('utf-8')
             user = user_datastore.create_user(username="user", password=hashed_password, active=True)
             user_datastore.add_role_to_user(user, user_role)
             db.session.commit()
+            profile = Profile(
+                user_id = 2,
+                full_name = "userr",
+                email = "user@gmail.com",
+                phone_number = "08-",
+            )            
+            db.session.add(profile)
+            db.session.commit()
 
         # Membuat rekomendasi mata sehat
         rekomendasi_data = [
             {
                 "nama_penyakit": "sehat",
-                "pengobatan": """jaga kesehatan mata buah hati anda ...""",
+                "pengobatan": """tidak terdeteksi kejanggalan pada mata anak. tetap jaga kesehatan mata anak anda ...""",
                 "link_gmaps": "tidak ada"
             },
             {

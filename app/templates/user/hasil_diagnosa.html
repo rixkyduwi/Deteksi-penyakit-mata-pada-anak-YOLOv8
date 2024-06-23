@@ -9,8 +9,6 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      display: flex;
-      flex-direction: column;
       min-height: 100vh;
       font-family: 'Raleway', sans-serif;
       font-weight: 600;
@@ -60,16 +58,33 @@
   <!-- Call to Action Section -->
   <section class="container my-5">
     <div class="row">
+      <div class="col-md-12 text-center mb-3">
         <h1 class="font-bold custom-text-info">Hasil Diagnosa</h1>
-        <div class="col-md-6">
-            <img src="static/detect/predict/" alt="">
-            <h4 class="font-semibold custom-text-info" id="hasil_predict"></h4>
+      </div>
+        <div class="col-md-4">
+          
+            <img src="/static/detect/{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
+            <h4 class="font-semibold custom-text-info mt-2" id="hasil_predict">
+              {% for penyakit, jumlah in diagnosa.hasil_diagnosa.items() %}
+              <li>{{ penyakit }}</li>
+          {% endfor %}
+            </h4>
         </div>
-        <div class="col-md-6">
-            <h4>pengobatan</h4>
-            <p id="pengobatan">blabla</p>
-            <button id="btn_link" onclick="">rekomendasi</button>
+        <div class="col-md-8">
+            <h3 class="text-center font-bold">pengobatan</h3>
+            {% for penyakit, jumlah in diagnosa.hasil_diagnosa.items() %}
+            <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
+            {% if penyakit in diagnosa.rekomendasi_diagnosa %}
+                <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan }}</p>
+                <a class="btn btn-custom custom-bg-warning custom-text-info font-semibold" href="{{ diagnosa.rekomendasi_diagnosa[penyakit].link_rekomendasi }}">rekomendasi</a>
+            {% endif %}
+        {% endfor %}
+        <br>
         </div>
+        <div class="col-md-12 text-end">
+          <p><a href="/user/dashboard">back</a></p>
+          
+          </div>
     </div>
   </section>
 

@@ -55,20 +55,44 @@ class User(db.Model, UserMixin):
                             secondaryjoin='Role.id == UserRoles.role_id',
                             backref=db.backref('users', lazy='dynamic'))
     fs_uniquifier = db.Column(db.String(64), unique=True)
+    # One-to-One relationship with Profile
+    profile = db.relationship('Profile', uselist=False, back_populates='user')
+
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True)
+    full_name = db.Column(db.String(255))
+    address = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True)
+    phone_number = db.Column(db.String(20))
+    bio = db.Column(db.Text)
+    nama_anak = db.Column(db.String(255))
+    usia_anak = db.Column(db.Integer )
+
+    # Back reference to User
+    user = db.relationship('User', back_populates='profile')
 
 class History(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
-    nama = db.Column(db.String(225), unique=True)    
+    nama_user = db.Column(db.String(225))    
     nama_anak = db.Column(db.String(225))   
     usia_anak = db.Column(db.Integer())
     tanggal_konsultasi = db.Column(db.String(225))  
     hasil_diagnosa = db.Column(db.String(20))  
+    file_deteksi = db.Column(db.String(225)) 
 
 class Rekomendasi(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     nama = db.Column(db.String(225), unique=True) 
     pengobatan = db.Column(db.Text)  
     link_rekomendasi = db.Column(db.String(225))  
+    def serialize(self):
+        return {
+            'id': self.id,
+            'nama': self.nama,
+            'pengobatan': self.pengobatan,
+            'link_rekomendasi': self.link_rekomendasi
+        }
 
 
 # Setup Flask-Security
