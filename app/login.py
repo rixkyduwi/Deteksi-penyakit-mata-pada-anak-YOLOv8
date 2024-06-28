@@ -141,7 +141,7 @@ def register_user():
     # Check if the username already exists
     print(username+' | '+password+' | ')
     if user_datastore.find_user(username=username):
-        return jsonify({"msg": "Username already  exists"}), 400
+        return jsonify({"msg": "Username already exists"}), 400
     
     # Hash the password before storing it
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
