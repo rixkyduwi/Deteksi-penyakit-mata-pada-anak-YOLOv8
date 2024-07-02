@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Membuat Form Login</title>
-  <link rel="stylesheet" href="/static/login__register_user/style.css">
+  <link rel="stylesheet" href="/static/login_register_user/style.css">
 </head>
 <body>
 <div class="wrapper">
@@ -31,81 +31,103 @@
             <pre>
             </pre>
             <div class="field">
-              <input type="text" placeholder="Masukan Email " required>
+              <input type="text" id="username-login" placeholder="Masukan Email " required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Masukan Password" required>
+              <input type="password" id="pswd-login" placeholder="Masukan Password" required>
             </div>
+            <p class="text-danger" id="msg-login">contoh</p>
             <div class="field btn">
-              <div class="btn-layer"></div>
-              <input id="login" type="button" value="Login">
+              <div class="btn-layer">
+                <button style="display: block; background: #ffffff00; border: none; width: 330px;color: #ffffff; height: 50px; " id="login-button" type="button" >
+                  submit</button></div>
             </div>
             <div class="signup-link">Buat akun <a href="">Daftar sekarang</a></div>
           </form>
           <form action="#" class="signup">
             <div class="field">
-              <input type="text" placeholder="Masukan Nama" required>
+              <input type="text" id="username-regis" placeholder="Masukan Nama" required>
             </div>
             <div class="field">
-              <input type="text" placeholder="Masukan Email" required>
+              <input type="email" id="email-regis" placeholder="Masukan Email" required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Masukan Password" required>
+              <input type="password" id="pswd-regis" placeholder="Masukan Password" required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Ulangi password" required>
+              <input type="re-password" id="re-pswd-regis" placeholder="Ulangi password" required>
             </div>
+            <p class="text-danger" id="msg-register">contoh</p>
             <div class="field btn">
-              <div class="btn-layer"></div>
-              <input id="daftar" type="button" value="Daftar">
+              <div class="btn-layer">
+                <button style="display: block; background: #ffffff00; border: none; width: 330px;color: #ffffff; height: 50px; "id="daftar-button" type="button"> 
+                  submit</button></div>
             </div>
-            <div class="signup-link">Sudah punya akun? <a href="">Login</a></div>
+            <div class="signin-link">Sudah punya akun? <a href="">Login</a></div>
           </form>
         </div>
       </div>
     </div>
-  <script  src="/static/login__register_user/script.js"></script>
+  <script  src="/static/login_register_user/script.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    document.getElementById("msg").style.display = "none";
+    document.getElementById("msg-login").style.display = "none";
+    document.getElementById("msg-register").style.display = "none";
     function saveTokenToLocalStorage(token) {
         localStorage.setItem('jwt_token', token);
     }
-    function kirim_login(pilihan){
+    function kirim(pilihan){
         if (pilihan==="login"){
             var uri = "/login_user/proses";
+            var msg= "msg-login";
+            var data_kirim = JSON.stringify({
+                username:document.getElementById("username-login").value,
+                password:document.getElementById("pswd-login").value
+            });
+            var next_url = "/user/dashboard";
         }
         else{
             var uri = "/bikin_akun_user";
+            var msg = "msg-register";
+            var data_kirim = JSON.stringify({
+                username:document.getElementById("username-regis").value,
+                email:document.getElementById("email-regis").value,
+                password:document.getElementById("pswd-regis").value,
+                re_pswd:document.getElementById("re-pswd-regis").value
+            });
+            var next_url = "/login_user";
         }
         $.ajax({
             url: uri,
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({
-                username:document.getElementById("username").value,
-                password:document.getElementById("password").value
-            }),
+            data: data_kirim ,
             success: function(response) {
                 // Proses respons dari server
                 console.log(response);
                 if(response=="Username and password are required" || response=="Username already exists"){
-                    document.getElementById("msg").innerText = response;
-                    document.getElementById("msg").style.display = "block";
+                    document.getElementById(msg).innerText = response;
+                    document.getElementById(msg).style.display = "block";
                 } else {
                     saveTokenToLocalStorage(response);
-                    window.location.href = '/user/dashboard';
+                    window.location.href = next_url;
                 }
-            }
+            },
+            error: function(xhr) {
+            // Menangani kesalahan
+                var errorMessage = JSON.parse(xhr.responseText);
+                console.log(errorMessage);
+                document.getElementById(msg).innerText = errorMessage.msg;
+                document.getElementById(msg).style.display = "block";
+          }
         })
 
         };
-    
-    document.getElementById("login").addEventListener("click", kirim("login"));
-    document.getElementById("daftar").addEventListener("click", kirim("register"));
+    document.getElementById("login-button").addEventListener("click", function() { kirim("login"); });
+    document.getElementById("daftar-button").addEventListener("click", function() { kirim("register"); });
   </script>
 </body>
 </html>

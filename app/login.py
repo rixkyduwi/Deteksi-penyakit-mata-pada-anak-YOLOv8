@@ -1,4 +1,5 @@
 from . import app,db,bcrypt,user_datastore,security,jwt,Role,User,Profile
+import re
 from flask import request,render_template,redirect,url_for,jsonify,session,flash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity,unset_jwt_cookies
     
@@ -131,28 +132,37 @@ def register_admin():
 
     return render_template('admin/register.html')
 
+# Function to validate email format
+def is_valid_email(email):
+    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
+    return re.match(regex, email)
+
 @app.route('/bikin_akun_user', methods=['POST'])
 def register_user():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username or not password:
-        return jsonify({"msg": "Username and password are required"}), 400
-    
-    # Check if the username already exists
-    print(username+' | '+password+' | ')
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    re_password = data.get('re_password')
+
+    if not username or not email or not password or not re_password:
+        return jsonify({"msg": "All fields are required"}), 400
+
+    if not is_valid_email(email):
+        return jsonify({"msg": "Invalid email format"}), 400
+
+    if password != re_password:
+        return jsonify({"msg": "Passwords do not match"}), 400
+
     if user_datastore.find_user(username=username):
         return jsonify({"msg": "Username already exists"}), 400
-    
-    # Hash the password before storing it
+
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    
-    # Check if the admin role exists, if not create it
     admin_role = user_datastore.find_role('user')
     if not admin_role:
         admin_role = user_datastore.create_role(name='user')
         db.session.commit()
 
-    # Create a new user
     user = user_datastore.create_user(username=username, password=hashed_password, active=True)
     user_datastore.add_role_to_user(user, admin_role)
     db.session.commit()
