@@ -57,10 +57,10 @@ def predict():
 
         # Mengecek kemunculan setiap nama dalam output
         names= ['strabismus (mata juling)','ptosis (kelopak mata turun)','mata merah','mata bengkak','mata bintitan']  # class names
-        found_names = {}
+        found_names = ""
         for name in names:
             if name in output:
-                found_names[name] = output.count(name)  # Menghitung berapa kali nama tersebut muncul
+                found_names += name+","
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Cari folder predict terbaru di dalam save_path
@@ -70,10 +70,9 @@ def predict():
         detected_file_path = latest_folder+"/"+random_name
         print(detected_file_path)
         # Menampilkan hasil
-        if found_names:
+        if found_names !="":
             print("Found names and their counts in output:")
-            for name, count in found_names.items():
-                print(f"{name}: {count}")
+            print(found_names)
             history = History(
                 nama_user=session['username'],
                 nama_anak="Anak",  # Ganti sesuai kebutuhan
