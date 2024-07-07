@@ -5,7 +5,7 @@ __pycache__/
 venv/
 env/
 .env/
-
+zulfa/
 # Ignore log files
 *.log
 

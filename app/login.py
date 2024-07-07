@@ -9,7 +9,9 @@ def admin():
 @app.route('/login_user')
 def user():
     return render_template('user/login.html')
-
+@app.route('/tambah_admin')
+def tambah():
+    return render_template('admin/register.html')
 # Endpoint untuk membuat token
 @app.route('/login_admin/proses', methods=['POST'])
 def proses_admin():
