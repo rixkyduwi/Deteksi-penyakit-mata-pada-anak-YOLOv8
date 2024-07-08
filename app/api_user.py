@@ -145,3 +145,46 @@ def ganti_password_post():
     else:
         return jsonify({"msg": "user tidak ditemukan"})
 
+@app.route('/admin/hasil_diagnosa/<id>')
+def user_hasil_diagnosa(id):
+    if 'full_name' not in session:
+        abort(403)  # Forbidden, user tidak terautentikasi
+
+    # Query data history berdasarkan id dan username dari session
+    history_record = History.query.filter_by(id=id).first()
+    if not history_record:
+        abort(404)  # Not found, data history tidak ditemukan
+    
+    # Pastikan hasil_diagnosa adalah dictionary
+    hasil_diagnosa_str = history_record.hasil_diagnosa
+
+    hasil_diagnosa = hasil_diagnosa_str.split(",")
+
+    if hasil_diagnosa[-1] == '':
+        hasil_diagnosa.pop()
+    print(hasil_diagnosa)
+    # Query semua rekomendasi
+    rekomendasi_records = Rekomendasi.query.all()
+    print(rekomendasi_records)
+    rekomendasi_list = [record.serialize() for record in rekomendasi_records]
+    print(rekomendasi_list)
+
+    # Gabungkan rekomendasi yang relevan dengan hasil diagnosa
+    rekomendasi_diagnosa = {}
+    for penyakit in hasil_diagnosa:
+        for rekomendasi in rekomendasi_list:
+            if rekomendasi['nama'] == penyakit:
+                rekomendasi_diagnosa[penyakit] = rekomendasi
+    print(rekomendasi_diagnosa)
+    diagnosa = {
+        'nama_user': history_record.nama_user,
+        'nama_anak': history_record.nama_anak,
+        'usia_anak': history_record.usia_anak,
+        'tanggal_konsultasi': history_record.tanggal_konsultasi,
+        'file_deteksi': history_record.file_deteksi,
+        'hasil_diagnosa': hasil_diagnosa,
+        'rekomendasi_diagnosa': rekomendasi_diagnosa,
+    }
+    print(diagnosa)
+
+    return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
