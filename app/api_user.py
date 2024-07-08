@@ -91,7 +91,7 @@ def update_profile():
     db.session.commit()
 
     # Update session with new data
-    session['full_name'] = profile.full_name
+    session['nama_lengkap'] = profile.full_name
     session['address'] = profile.address
     session['email'] = profile.email
     session['phone_number'] = profile.phone_number
@@ -112,7 +112,7 @@ def hasil_diagnosa(id):
         abort(403)  # Forbidden, user tidak terautentikasi
 
     # Query data history berdasarkan id dan username dari session
-    history_record = History.query.filter_by(nama_user=session['username'], id=id).first()
+    history_record = History.query.filter_by(nama_user=session['full_name'], id=id).first()
     if not history_record:
         abort(404)  # Not found, data history tidak ditemukan
     
@@ -166,7 +166,7 @@ def ganti_password_post():
         # Jika tidak ada data JSON, ambil dari form
         password_lama = request.form.get('password_lama')
         password_baru = request.form.get('password_baru')
-    user = user_datastore.find_user(username=session['username'])
+    user = user_datastore.find_user(username=session['full_name'])
     
     if user:
         if 'admin' in [role.name for role in user.roles]:

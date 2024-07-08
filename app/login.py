@@ -25,7 +25,7 @@ def proses_admin():
 
                 session['jwt_token'] = access_token
                 session['role'] = "admin"
-                session['username'] = username
+                session['full_name'] = username
                 flash('Login Berhasil')
                 return jsonify(access_token=access_token)
             else:
@@ -57,7 +57,7 @@ def proses_user():
     access_token = create_access_token(identity=username)
     session['jwt_token'] = access_token
     session['role'] = "user"
-    session['username'] = username
+    session['full_name'] = username
     session['id'] = user.id
     profile = Profile.query.filter_by(user_id=user.id).first()
     if not profile:

@@ -133,7 +133,7 @@
   <nav class="sidebar bg-light p-2" id="sidebar" aria-labelledby="sidebarToggle">
     <div class="text-center">
       <img src="../static/icon/profile_default.svg" alt="icon_profile_Default">
-      <p class="font-semibold custom-text-warning">Nama</p>
+      <p class="font-semibold custom-text-warning">{{session['full_name']}}</p>
       <hr class="custom-bg-info custom-border-size btn-custom">
     </div>
     <ul class="nav flex-column text-start pl-3">
@@ -194,7 +194,7 @@
                 <label for="username" class="custom-text-warning font-semibold">
                     <img src="../static/icon/username.svg" alt="icon_username"> Nama
                 </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="username" id="username" value="{{ session['username'] }}">
+                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="username" id="username" value="{{ session['full_name'] }}">
             </div>
             <div class="form-group">
                 <label for="email" class="custom-text-warning font-semibold">

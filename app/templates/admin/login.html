@@ -1,6 +1,10 @@
-{% if session['role']=='admin' %}
+{% if session['role']=='user' %}
 <script>
-    window.location.href = "/admin/dashboard";
+  window.location.href = "/user/dashboard";
+</script>
+{% elif  session['role']=='admin' %}
+<script>
+  window.location.href = "/admin/dashboard";
 </script>
 {% else %}
 <!DOCTYPE html>
