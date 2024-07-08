@@ -1,3 +1,4 @@
+{% if session['role']=='admin' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -192,13 +193,13 @@
                 </tr>
               </thead>
               <tbody>
-                {% for i in history_record %}
+                {% for i in histori_records %}
                 <tr>
-                  <td>John Doe</td>
-                  <td>Jane Doe</td>
-                  <td>5</td>
-                  <td>12-06-2024</td>
-                  <td>Sehat</td>
+                  <td>{{ i.nama_user }}</td>
+                  <td>{{ i.nama_anak }}</td>
+                  <td>{{ i.usia_anak }}</td>
+                  <td>{{ i.tanggal_konsultasi  }}</td>
+                  <td>{{ i.hasil_diagnosa }}</td>
                   <td>
                     <button class="btn btn-info btn-sm" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
                     <button class="btn btn-danger btn-sm">Hapus</button>
@@ -242,3 +243,8 @@
   </script>
 </body>
 </html>
+{% else %}
+    <script>
+        window.location.href = "/";
+    </script>
+{% endif %}

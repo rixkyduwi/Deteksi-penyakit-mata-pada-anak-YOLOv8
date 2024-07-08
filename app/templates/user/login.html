@@ -1,8 +1,11 @@
-{% if session['jwt_token'] %}
-    <!-- Jika jwt_token tidak ada -->
-    <script>
-        window.location.href = "/user/dashboard";
-    </script>
+{% if session['role']=='user' %}
+<script>
+  window.location.href = "/user/dashboard";
+</script>
+{% elif  session['role']=='admin' %}
+<script>
+  window.location.href = "/admin/dashboard";
+</script>
 {% else %}
 <!DOCTYPE html>
 <html lang="en">

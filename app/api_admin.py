@@ -88,18 +88,35 @@ def dashboard():
 @app.route('/admin/history_konsultasi')
 def history_konsultasi():
     histori_records = History.query.all()
+    print(histori_records)
     return render_template('admin/history_konsultasi.html',histori_records= histori_records)
 #halaman penyakit terbanyak
 @app.route('/admin/penyakit_terbanyak')
 def penyakit_terbanyak():
-    return render_template('admin/penyakit_terbanyak.html')
+    # Daftar nama penyakit
+    names = ['strabismus (mata juling)', 'ptosis (kelopak mata turun)', 'mata merah', 'mata bengkak', 'mata bintitan']
+
+    # Inisialisasi jumlah kasus dengan 0 untuk setiap nama
+    jml_kasus = [0] * len(names)
+
+    # Ambil data dari database
+    history_records = History.query.all()
+
+    # Hitung jumlah kasus untuk setiap penyakit
+    for record in history_records:
+        hasil_diagnosa = record.hasil_diagnosa  # Sesuaikan dengan struktur data Anda
+        for index, penyakit in enumerate(names):
+            if penyakit in hasil_diagnosa:  # Sesuaikan dengan cara Anda menyimpan data penyakit
+                jml_kasus[index] += 1
+
+    return render_template('admin/penyakit_terbanyak.html', names=names, jml_kasus=jml_kasus)
 
 @app.route('/admin/infodesa')
 def admininfodesa():
     info_list = fetch_data_and_format("SELECT * FROM sejarah_desa")
     return render_template("admin/infodesa.html", info_list = info_list)
 #halaman hasil diagnosa
-@app.route('/admin/hasil_diagnosa/<id>')
+@app.route('/admin/hasil_konsultasi/<id>')
 def admin_hasil_diagnosa(id):
     if 'username' not in session:
         abort(403)  # Forbidden, user tidak terautentikasi

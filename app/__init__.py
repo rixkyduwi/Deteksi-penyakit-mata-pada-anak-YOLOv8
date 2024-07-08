@@ -4,7 +4,7 @@ from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin
 from flask_bcrypt import Bcrypt
-from datetime import timedelta
+from datetime import timedelta,datetime
 from functools import wraps
 import os
 
@@ -77,9 +77,9 @@ class History(db.Model, RoleMixin):
     nama_user = db.Column(db.String(225))    
     nama_anak = db.Column(db.String(225))   
     usia_anak = db.Column(db.Integer())
-    tanggal_konsultasi = db.Column(db.String(225))  
     hasil_diagnosa = db.Column(db.String(20))  
     file_deteksi = db.Column(db.String(225)) 
+    tanggal_konsultasi = db.Column(db.String(225), default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 class Rekomendasi(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
