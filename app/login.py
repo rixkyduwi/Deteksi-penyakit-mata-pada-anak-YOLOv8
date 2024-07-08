@@ -110,7 +110,6 @@ def register_admin():
         jwt_required()
         username = request.form.get('username')
         password = request.form.get('password')
-        print(email)
         if not username or not password:
             return jsonify({"msg": "Username and password are required"}), 400
         
