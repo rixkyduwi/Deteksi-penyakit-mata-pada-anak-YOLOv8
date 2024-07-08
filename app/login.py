@@ -176,4 +176,4 @@ def register_user():
     db.session.add(profile)
     db.session.commit()
     flash('Registrasi Berhasil')
-    return redirect(url_for('user', msg='Registration Successful'))
+    return redirect(url_for('user'))
