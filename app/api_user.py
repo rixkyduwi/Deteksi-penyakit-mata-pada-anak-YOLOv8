@@ -76,11 +76,10 @@ def update_profile():
 
             # Check if the new username is the same as the current username
             if new_full_name == session['full_name']:
-                user.username = new_full_name
+                profile.full_name = new_full_name
             elif existing_user and existing_user.id != user.id:
                 return jsonify({"msg": "Username already taken"})
             else:
-                user.username = new_full_name
                 profile.full_name = new_full_name
 
         profile.address = new_address
@@ -135,17 +134,14 @@ def ganti_password_post():
     user = user_datastore.find_user(username=session['full_name'])
     
     if user:
-        if 'admin' in [role.name for role in user.roles]:
-            if bcrypt.check_password_hash(user.password, password_lama):
-                # Mengganti password lama dengan password baru
-                user.password = bcrypt.generate_password_hash(password_baru).decode('utf-8')
-                user_datastore.put(user)
-                db.session.commit()
-                return jsonify({"msg": "SUKSES"})
-            else:
-                return jsonify({"msg": "Password lama salah"})
+        if bcrypt.check_password_hash(user.password, password_lama):
+            # Mengganti password lama dengan password baru
+            user.password = bcrypt.generate_password_hash(password_baru).decode('utf-8')
+            user_datastore.put(user)
+            db.session.commit()
+            return jsonify({"msg": "SUKSES"})
         else:
-            return jsonify({"msg": "Akses ditolak"})
+            return jsonify({"msg": "Password lama salah"})
     else:
         return jsonify({"msg": "user tidak ditemukan"})
 
