@@ -160,6 +160,8 @@
                 canvas.toBlob(function (blob) {
                     var formData = new FormData();
                     formData.append('gambar', blob, 'photo.png');
+                $('#upload').text("Loading...")
+                $('#upload').attr("disabled","disabled")
 
                     $.ajax({
                         type: 'POST',

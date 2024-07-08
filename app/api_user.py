@@ -145,7 +145,7 @@ def ganti_password_post():
     else:
         return jsonify({"msg": "user tidak ditemukan"})
 
-@app.route('/admin/hasil_diagnosa/<id>')
+@app.route('/user/hasil_diagnosa/<id>')
 def user_hasil_diagnosa(id):
     if 'full_name' not in session:
         abort(403)  # Forbidden, user tidak terautentikasi
