@@ -175,6 +175,10 @@ def user_hasil_diagnosa(id):
         for rekomendasi in rekomendasi_list:
             if rekomendasi['nama'] == penyakit:
                 rekomendasi_diagnosa[penyakit] = rekomendasi
+                print(rekomendasi['link_rekomendasi'])
+                link_rekomendasi = rekomendasi['link_rekomendasi']
+                link_rekomendasi = link_rekomendasi.split(",")
+                rekomendasi_diagnosa[penyakit]['link_rekomendasi'] = link_rekomendasi
     print(rekomendasi_diagnosa)
     diagnosa = {
         'nama_user': history_record.nama_user,

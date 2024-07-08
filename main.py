@@ -54,7 +54,7 @@ Bisa terjadi karena keturunan atau bawaan lahir, Masalah penglihatan pada satu m
 Cara mengatasi :<br>
 1.	Menggunakan Penutup mata (patching) tersedia di apotik : Metode ini melibatkan menutupi mata yang lebih kuat untuk mendorong mata yang lebih lemah bekerja lebih keras. Ini sering digunakan pada anak-anak untuk membantu memperkuat otot-otot mata yang lebih lemah.<br>
 2.	Jika masalah terus berlanjut segera periksakan ke dokter,untuk mendapat penanganan lebih lanjut""",
-                "link_gmaps": "https://www.google.com/maps/search/klinik/"
+                "link_gmaps": "klinik"
             },
             {
                 "nama_penyakit": 'ptosis (kelopak mata turun)',
@@ -64,7 +64,7 @@ Cara mengatasinya<br>
 2.	bisa juga terjadi karena adanya penyakit bawaan seperti tumor.<br>
 Untuk ptosis sendiri memang tindakanya hanya oprasi saja,karena ditujukan untuk mengembalikan kelopak matanya seperti semula lagi,segera cari klinik mata terdekat untuk konsultasi dengan dokter
 """,
-                "link_gmaps": "https://www.google.com/maps/search/rumah+sakit/"
+                "link_gmaps": "rumah sakit,klinik"
             },
             {
                 "nama_penyakit": 'mata merah',
@@ -73,7 +73,7 @@ Cara mengatasinya<br>
 1.	Pastikan apakah mata yang terkena kemerahan hanya satu atau keduanya, karena jika hanya satu mata, kemungkinan besar terjadi infeksi.<br>
 2.	Perhatikan apakah mata yang merah disertai dengan adanya belekan. Jika mata merah disertai belekan, dapat diteteskan antibiotik tetes mata yang tidak mengandung steroid, yang dapat dibeli di apotek terdekat. Jika kondisi ini berlanjut, segera kunjungi klinik terdekat dan konsultasikan dengan dokter.<br>
 """,
-                "link_gmaps": "https://www.google.com/maps/search/apotek/"
+                "link_gmaps": "apotek"
             },
             {
                 "nama_penyakit": 'mata bengkak',
@@ -86,7 +86,7 @@ Ajari anak untuk tidak menggosok atau menyentuh matanya agar tidak memperburuk k
 Obat antihistamin:<br>
 Jika pembengkakan disebabkan oleh alergi, obat antihistamin dapat membantu. Namun, pastikan untuk berkonsultasi dengan dokter sebelum memberikan obat ini kepada anak.<br>
 Rekomendasi klinik terdekat""",
-                "link_gmaps": "https://www.google.com/maps/search/klinik/"
+                "link_gmaps": "klinik"
             },
             {
                 "nama_penyakit": 'mata bintitan',
@@ -96,7 +96,7 @@ Jangan mencoba memencet atau memecahkan bintitan, karena dapat memperburuk infek
 Cara mengatasi :<br>
 1.	Membeli salep atau tetes mata antibiotik di apotik untuk mengatasi infeksi.<br>
 2.	Jika bintitan tidak sembuh dalam beberapa hari, terasa sangat sakit, atau disertai demam, segera bawa anak ke dokter untuk mendapatkan penanganan lebih lanjut.""",
-                "link_gmaps": "https://www.google.com/maps/search/klinik/"
+                "link_gmaps": "klinik"
             }
         ]
 

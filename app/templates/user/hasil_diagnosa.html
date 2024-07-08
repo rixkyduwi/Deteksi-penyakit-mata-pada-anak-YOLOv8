@@ -77,7 +77,17 @@
             <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
             {% if penyakit in diagnosa.rekomendasi_diagnosa %}
                 <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
-                <a class="btn btn-custom custom-bg-warning  font-semibold" href="{{ diagnosa.rekomendasi_diagnosa[penyakit].link_rekomendasi }}">rekomendasi</a>
+                {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}
+                {% if link == "klinik" %}
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik/">Rekomendasi Klinik</a>
+                {% elif link == "apotek" %}
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik/">Rekomendasi Apotek</a>
+                {% elif link == "rumah sakit"%}
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/rumah+sakit/">Rekomendasi Rumah Sakit</a>
+                {% elif penyakit == "sehat"%}
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="/Tips">Tips Menjaga Kesehara Mata</a>
+                {% endif %}
+                {% endfor %}
             {% endif %}
         {% endfor %}
         <br>
