@@ -110,6 +110,7 @@ def register_admin():
         jwt_required()
         username = request.form.get('username')
         password = request.form.get('password')
+        print(email)
         if not username or not password:
             return jsonify({"msg": "Username and password are required"}), 400
         
@@ -132,12 +133,7 @@ def register_admin():
         user_datastore.add_role_to_user(user, admin_role)
         db.session.commit()
 
-        #logout
-        response = jsonify({'message': 'Logout berhasil'})
-        unset_jwt_cookies(response)
-        session.pop('jwt_token', None)
-        session.pop('username', None)
-        flash('Sukses Logout')
+        flash('Registration successfull')
         return redirect(url_for('login_admin', msg='Registration Successful'))
 
     return render_template('admin/register.html')
@@ -177,11 +173,8 @@ def register_user():
     user = user_datastore.create_user(username=username, password=hashed_password, active=True)
     user_datastore.add_role_to_user(user, admin_role)
     db.session.commit()
-
-    #logout
-    response = jsonify({'message': 'Logout berhasil'})
-    unset_jwt_cookies(response)
-    session.pop('jwt_token', None)
-    session.pop('username', None)
-    flash('Sukses Logout')
+    profile = Profile(user_id=user.id, full_name='', address='', email=email, phone_number='', bio='', nama_anak='', usia_anak='')
+    db.session.add(profile)
+    db.session.commit()
+    flash('Registrasi Berhasil')
     return redirect(url_for('user', msg='Registration Successful'))
