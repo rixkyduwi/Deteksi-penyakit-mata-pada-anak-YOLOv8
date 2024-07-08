@@ -189,12 +189,17 @@
       <div class="card" style="border: 0;">
         <div class="card-body">
           <h1 class="font-semibold text-center custom-text-warning">Profile</h1>
+          {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
           <form class="col-md-12" id="form-now">
             <div class="form-group">
                 <label for="username" class="custom-text-warning font-semibold">
                     <img src="../static/icon/username.svg" alt="icon_username"> Nama
                 </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="username" id="username" value="{{ session['full_name'] }}">
+                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="full_name" id="full_name" value="{{ session['full_name'] }}">
             </div>
             <div class="form-group">
                 <label for="email" class="custom-text-warning font-semibold">
@@ -210,7 +215,7 @@
             </div>
             <div class="form-group">
                 <label for="usia_anak" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/boneka.svg" alt="icon_usia_anak"> Usia Anak
+                    <img src="../static/icon/boneka.svg" alt="icon_usia_anak"> Usia Anak (Tahun)
                 </label>
                 <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="number" name="usia_anak" id="usia_anak" value="{{ session['usia_anak'] }}">
             </div>
@@ -263,38 +268,42 @@
       });
     });
       function updateProfile() {
-          // Ambil nilai dari form
-          var username = $('#username').val();
-          var email = $('#email').val();
-          var nm_anak = $('#nm_anak').val();
-          var usia_anak = $('#usia_anak').val();
-          var no_hp = $('#no_hp').val();
-  
-          // Kirim data menggunakan AJAX
-          $.ajax({
-              type: 'POST',
-              url: '/user/update_profile',  // Ganti dengan URL endpoint Anda
-              data: {
-                  full_name: username,
-                  email: email,
-                  nama_anak: nm_anak,
-                  usia_anak: usia_anak,
-                  phone_number: no_hp
-              },
-              success: function(response) {
-                  // Tampilkan pesan sukses atau lakukan tindakan lain setelah sukses
-                  alert(response.msg);
-                  if(response.msg==="Profil berhasil diperbarui"){
-                    document.location.href="/user/dashboard";
-                  }
-                  // Contoh: redirect atau tindakan lainnya
-                  // window.location.href = '/profile'; // Contoh redirect ke halaman profil
-              },
-              error: function(error) {
-                  // Tampilkan pesan error atau lakukan tindakan lain jika ada error
-                  alert("terjadi kesalahan");
-              }
-          });
+        event.preventDefault(); // Prevent form submission
+                
+                // Ambil nilai dari form
+                var full_name= $('#full_name').val();
+                var email = $('#email').val();
+                var nm_anak = $('#nm_anak').val();
+                var usia_anak = $('#usia_anak').val();
+                var no_hp = $('#no_hp').val();
+        
+                // Kirim data menggunakan AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: '/user/update_profile',  // Ganti dengan URL endpoint Anda
+                    data: {
+                        full_name: full_name,
+                        email: email,
+                        nama_anak: nm_anak,
+                        usia_anak: usia_anak,
+                        phone_number: no_hp
+                    },
+                    success: function(response) {
+                        // Tampilkan pesan sukses atau lakukan tindakan lain setelah sukses
+                        alert(response.msg);
+                        if(response.msg === "Profil berhasil diperbarui"){
+                            document.location.href = "/user/dashboard";
+                        }
+                    },
+                    error: function(xhr) {
+                        // Tangani dan tampilkan pesan error dari server
+                        var errorMsg = "Terjadi kesalahan";
+                        if (xhr.responseJSON && xhr.responseJSON.msg) {
+                            errorMsg = xhr.responseJSON.msg;
+                        }
+                        alert(errorMsg);
+                    }
+                });
       }
   </script>
       <script>

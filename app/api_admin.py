@@ -116,40 +116,37 @@ def admininfodesa():
     info_list = fetch_data_and_format("SELECT * FROM sejarah_desa")
     return render_template("admin/infodesa.html", info_list = info_list)
 #halaman hasil diagnosa
-@app.route('/admin/hasil_konsultasi/<id>')
+@app.route('/admin/history_konsultasi/<id>')
 def admin_hasil_diagnosa(id):
-    if 'username' not in session:
+    if 'full_name' not in session:
         abort(403)  # Forbidden, user tidak terautentikasi
 
     # Query data history berdasarkan id dan username dari session
     history_record = History.query.filter_by(id=id).first()
     if not history_record:
         abort(404)  # Not found, data history tidak ditemukan
-
+    
     # Pastikan hasil_diagnosa adalah dictionary
     hasil_diagnosa_str = history_record.hasil_diagnosa
 
-    # Mengganti kutipan tunggal dengan kutipan ganda
-    hasil_diagnosa_str = re.sub(r"'", '"', hasil_diagnosa_str)
+    hasil_diagnosa = hasil_diagnosa_str.split(",")
 
-    try:
-        hasil_diagnosa = json.loads(hasil_diagnosa_str)
-    except json.JSONDecodeError as e:
-        # Log error jika JSON tidak valid
-        print(f"JSON Decode Error: {e}")
-        hasil_diagnosa = {}
-
+    if hasil_diagnosa[-1] == '':
+        hasil_diagnosa.pop()
+    print(hasil_diagnosa)
     # Query semua rekomendasi
     rekomendasi_records = Rekomendasi.query.all()
+    print(rekomendasi_records)
     rekomendasi_list = [record.serialize() for record in rekomendasi_records]
+    print(rekomendasi_list)
 
     # Gabungkan rekomendasi yang relevan dengan hasil diagnosa
     rekomendasi_diagnosa = {}
-    for penyakit, jumlah in hasil_diagnosa.items():
+    for penyakit in hasil_diagnosa:
         for rekomendasi in rekomendasi_list:
             if rekomendasi['nama'] == penyakit:
                 rekomendasi_diagnosa[penyakit] = rekomendasi
-
+    print(rekomendasi_diagnosa)
     diagnosa = {
         'nama_user': history_record.nama_user,
         'nama_anak': history_record.nama_anak,
@@ -159,5 +156,6 @@ def admin_hasil_diagnosa(id):
         'hasil_diagnosa': hasil_diagnosa,
         'rekomendasi_diagnosa': rekomendasi_diagnosa,
     }
+    print(diagnosa)
 
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)

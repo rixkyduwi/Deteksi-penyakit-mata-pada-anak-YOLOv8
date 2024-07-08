@@ -203,7 +203,8 @@
 
                 var formData = new FormData();
                 formData.append('gambar', files[0]);
-
+                $('#cek_hasil').text("Loading...")
+                $('#cek_hasil').attr("disabled","disabled")
                 $.ajax({
                     url: '/predict',
                     data: formData,
@@ -236,8 +237,11 @@
     </script>
 </body>
 </html>
+{% elif  session['role']=='admin' %}
+<script>
+  window.location.href = "/admin/dashboard";
+</script>
 {% else %}
-    <!-- Jika jwt_token tidak ada -->
     <script>
         window.location.href = "/";
     </script>

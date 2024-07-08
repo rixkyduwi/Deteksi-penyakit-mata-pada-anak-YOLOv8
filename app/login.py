@@ -64,7 +64,7 @@ def proses_user():
         profile = Profile(user_id=user.id, full_name='', address='', email='', phone_number='', bio='', nama_anak='', usia_anak='')
         db.session.add(profile)
         db.session.commit()
-    
+    profile = Profile.query.filter_by(user_id=user.id).first()
     session['full_name'] = profile.full_name
     session['address'] = profile.address
     session['email'] = profile.email
@@ -72,7 +72,7 @@ def proses_user():
     session['bio'] = profile.bio
     session['nama_anak'] = profile.nama_anak
     session['usia_anak'] = profile.usia_anak
-
+    print(session)
     if profile.full_name == "" or profile.nama_anak == "" or profile.usia_anak == "" or profile.email == "" or profile.phone_number == "":
         return jsonify(access_token=access_token, redirect_url=url_for('profile'))
     else:

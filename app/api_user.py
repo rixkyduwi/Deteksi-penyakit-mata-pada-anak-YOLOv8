@@ -5,6 +5,7 @@ from PIL import Image
 from io import BytesIO
 import os,textwrap, locale, json, uuid, time,re
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 @app.before_request
 def before_request():
@@ -64,91 +65,56 @@ def update_profile():
     new_usia_anak = request.form.get('usia_anak')
     print(new_email)
     print(new_full_name)
-    print(new_full_name)
     print(new_phone_number)
     print(new_nama_anak)
     print(new_usia_anak)
-    if new_full_name:
-        # Check if the new username is unique
-        existing_user = User.query.filter_by(username=new_full_name).first()
 
-        # Check if the new username is the same as the current username
-        if new_full_name == session['nama_lengkap']:
-            user.username = new_full_name
-        elif existing_user and existing_user.id != user.id:
-            return jsonify({"msg":"Username already taken"})
-        else:
-            user.username = new_full_name
-            profile.full_name = new_full_name
+    try:
+        if new_full_name:
+            # Check if the new username is unique
+            existing_user = User.query.filter_by(username=new_full_name).first()
 
-    profile.address = new_address
-    profile.email = new_email
-    profile.phone_number = new_phone_number
-    profile.bio = new_bio
-    profile.nama_anak = new_nama_anak
-    profile.usia_anak = new_usia_anak
+            # Check if the new username is the same as the current username
+            if new_full_name == session['full_name']:
+                user.username = new_full_name
+            elif existing_user and existing_user.id != user.id:
+                return jsonify({"msg": "Username already taken"})
+            else:
+                user.username = new_full_name
+                profile.full_name = new_full_name
 
-    db.session.commit()
+        profile.address = new_address
+        profile.email = new_email
+        profile.phone_number = new_phone_number
+        profile.bio = new_bio
+        profile.nama_anak = new_nama_anak
+        profile.usia_anak = new_usia_anak
 
-    # Update session with new data
-    session['nama_lengkap'] = profile.full_name
-    session['address'] = profile.address
-    session['email'] = profile.email
-    session['phone_number'] = profile.phone_number
-    session['bio'] = profile.bio
-    session['nama_anak'] = profile.nama_anak
-    session['usia_anak'] = profile.usia_anak
+        db.session.commit()
 
-    # Check if all required fields are filled
-    if not all([user.username, profile.full_name, profile.nama_anak, profile.usia_anak, profile.email, profile.phone_number]):
-        return jsonify({"msg":"Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"})
+        # Update session with new data
+        session['full_name'] = profile.full_name
+        session['address'] = profile.address
+        session['email'] = profile.email
+        session['phone_number'] = profile.phone_number
+        session['bio'] = profile.bio
+        session['nama_anak'] = profile.nama_anak
+        session['usia_anak'] = profile.usia_anak
 
-    return jsonify({"msg":"Profil berhasil diperbarui"})
+        # Check if all required fields are filled
+        if not all([user.username, profile.full_name, profile.nama_anak, profile.usia_anak, profile.email, profile.phone_number]):
+            return jsonify({"msg": "Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"})
 
-#halaman hasil diagnosa
-@app.route('/user/hasil_diagnosa/<id>')
-def hasil_diagnosa(id):
-    if 'username' not in session:
-        abort(403)  # Forbidden, user tidak terautentikasi
+        return jsonify({"msg": "Profil berhasil diperbarui"})
 
-    # Query data history berdasarkan id dan username dari session
-    history_record = History.query.filter_by(nama_user=session['full_name'], id=id).first()
-    if not history_record:
-        abort(404)  # Not found, data history tidak ditemukan
-    
-    # Pastikan hasil_diagnosa adalah dictionary
-    hasil_diagnosa_str = history_record.hasil_diagnosa
-
-    hasil_diagnosa = hasil_diagnosa_str.split(",")
-
-    if hasil_diagnosa[-1] == '':
-        hasil_diagnosa.pop()
-    print(hasil_diagnosa)
-    # Query semua rekomendasi
-    rekomendasi_records = Rekomendasi.query.all()
-    print(rekomendasi_records)
-    rekomendasi_list = [record.serialize() for record in rekomendasi_records]
-    print(rekomendasi_list)
-
-    # Gabungkan rekomendasi yang relevan dengan hasil diagnosa
-    rekomendasi_diagnosa = {}
-    for penyakit in hasil_diagnosa:
-        for rekomendasi in rekomendasi_list:
-            if rekomendasi['nama'] == penyakit:
-                rekomendasi_diagnosa[penyakit] = rekomendasi
-    print(rekomendasi_diagnosa)
-    diagnosa = {
-        'nama_user': history_record.nama_user,
-        'nama_anak': history_record.nama_anak,
-        'usia_anak': history_record.usia_anak,
-        'tanggal_konsultasi': history_record.tanggal_konsultasi,
-        'file_deteksi': history_record.file_deteksi,
-        'hasil_diagnosa': hasil_diagnosa,
-        'rekomendasi_diagnosa': rekomendasi_diagnosa,
-    }
-    print(diagnosa)
-
-    return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
+    except IntegrityError as e:
+        db.session.rollback()
+        error_message = str(e.orig)  # Extract the original error message
+        return jsonify({"msg": f"Error: {error_message}"}), 400
+    except Exception as e:
+        db.session.rollback()
+        error_message = str(e)
+        return jsonify({"msg": f"Error: {error_message}"}), 400
 
 @app.route('/ganti_password')
 def ganti_password():

@@ -67,7 +67,7 @@ class Profile(db.Model):
     phone_number = db.Column(db.String(20))
     bio = db.Column(db.Text)
     nama_anak = db.Column(db.String(255))
-    usia_anak = db.Column(db.Integer )
+    usia_anak = db.Column(db.Integer)
 
     # Back reference to User
     user = db.relationship('User', back_populates='profile')
@@ -75,9 +75,9 @@ class Profile(db.Model):
 class History(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     nama_user = db.Column(db.String(225))    
-    nama_anak = db.Column(db.String(225))   
+    nama_anak = db.Column(db.String(110))   
     usia_anak = db.Column(db.Integer())
-    hasil_diagnosa = db.Column(db.String(20))  
+    hasil_diagnosa = db.Column(db.String(255))  
     file_deteksi = db.Column(db.String(225)) 
     tanggal_konsultasi = db.Column(db.String(225), default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 

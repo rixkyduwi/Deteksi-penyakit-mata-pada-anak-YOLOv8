@@ -75,9 +75,9 @@ def predict():
             print("Found names and their counts in output:")
             print(found_names)
             history = History(
-                nama_user=session['username'],
-                nama_anak="Anak",  # Ganti sesuai kebutuhan
-                usia_anak=5,  # Ganti sesuai kebutuhan
+                nama_user=session['full_name'],
+                nama_anak=session['nama_anak'],  # Ganti sesuai kebutuhan
+                usia_anak=session['usia_anak'],  # Ganti sesuai kebutuhan
                 tanggal_konsultasi=current_time,  # Ganti sesuai kebutuhan
                 file_deteksi = detected_file_path,
                 hasil_diagnosa= found_names
@@ -88,9 +88,9 @@ def predict():
             return jsonify({"msg":"SUKSES","id_hasil":new_history_id})
         else:
             history = History(
-                nama_user=session['username'],
-                nama_anak="Anak",  # Ganti sesuai kebutuhan
-                usia_anak=5,  # Ganti sesuai kebutuhan
+                nama_user=session['full_name'],
+                nama_anak=session['nama_anak'],  # Ganti sesuai kebutuhan
+                usia_anak=session['usia_anak'],  # Ganti sesuai kebutuhan
                 tanggal_konsultasi=current_time,  # Ganti sesuai kebutuhan
                 file_deteksi = detected_file_path,
                 hasil_diagnosa="sehat"

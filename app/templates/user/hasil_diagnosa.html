@@ -1,4 +1,4 @@
-{% if session['role']=='user' %}
+{% if session['jwt_token'] %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +64,7 @@
       </div>
         <div class="col-md-4">
             <h2 class="font-semibold">Nama: {{ diagnosa.nama_anak }}</h2>
-            <p>Usia : {{ diagnosa.usia_anak }}</p>
+            <p>Usia : {{ diagnosa.usia_anak }} Tahun</p>
             <img src="/static/detect/{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
             <h4 class="font-semibold  mt-2" id="hasil_predict">
               {% for penyakit in diagnosa.hasil_diagnosa %}
