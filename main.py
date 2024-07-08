@@ -43,37 +43,59 @@ if __name__ == '__main__':
         rekomendasi_data = [
             {
                 "nama_penyakit": "sehat",
-                "pengobatan": """tidak terdeteksi kejanggalan pada mata anak. tetap jaga kesehatan mata anak anda ...""",
-                "link_gmaps": "tidak ada"
+                "pengobatan": """tidak terdeteksi kejanggalan pada mata anak. <br> tetap jaga kesehatan mata anak anda ...""",
+                "link_gmaps": "/tips"
             },
             {
                 "nama_penyakit": "strabismus (mata juling)",
-                "pengobatan": """<ul>
-        <li>Penggunaan kacamata khusus, untuk memperbaiki posisi bola mata bayi, agar kembali lurus.</li>
-        <li>Penggunaan penutup mata (eye patch) selama beberapa jam per hari. Cara ini dapat melatih otot mata yang juling, sehingga kondisi juling dapat berkurang.</li>
-        <li>Penggunaan obat tetes mata dengan kandungan atropin, yang diteteskan pada mata yang tidak juling agar pandangannya kabur, sehingga mata yang juling dilatih untuk melihat dengan fokus.</li>
-        <li>segera periksakan dengan dokter apa bila mata tidak sembuh</li>
-        </ul>""",
+                "pengobatan": """Terjadi karena tidak keseimbangan dan keharmonisan gerak otot otot bola mata (Ketika otot mata mengalami underaksi dan over aksi sehingga menyebabkan mata juling<br>
+Bisa terjadi karena keturunan atau bawaan lahir, Masalah penglihatan pada satu mata, Jika salah satu mata memiliki masalah penglihatan yang signifikan, seperti rabun jauh atau rabun dekat yang tidak terkoreksi.<br>
+<br>
+Cara mengatasi :<br>
+1.	Menggunakan Penutup mata (patching) tersedia di apotik : Metode ini melibatkan menutupi mata yang lebih kuat untuk mendorong mata yang lebih lemah bekerja lebih keras. Ini sering digunakan pada anak-anak untuk membantu memperkuat otot-otot mata yang lebih lemah.<br>
+2.	Jika masalah terus berlanjut segera periksakan ke dokter,untuk mendapat penanganan lebih lanjut""",
                 "link_gmaps": "https://www.google.com/maps/search/klinik/"
             },
             {
                 "nama_penyakit": 'ptosis (kelopak mata turun)',
-                "pengobatan": """bawa ke rumah sakit terdekat segera""",
+                "pengobatan": """Suatu keadaan dimana keadaan kelopak mata atas turun kebawah dari kedudukan mata normal,kedudukan normal itu ditepi kelopak mata kita 2 mm di dekat tepian mata atas,biasanya terjadi pada satu atau dua mata biasanya terjadi tanpa gejala.Akibatnya biasanya terkena gangguan lapang pandang,kesulitan melihat jauh atau dekat atau keadaan paling parah bisa terjadi mata malas pada anak<br>
+Cara mengatasinya<br>
+                1.	Penyebabnya biasanya terjadi bayi baru lahir atau bawaan terjadi karena otot otot untuk menikan kelopak mata sangat lemah<br>
+2.	bisa juga terjadi karena adanya penyakit bawaan seperti tumor.<br>
+Untuk ptosis sendiri memang tindakanya hanya oprasi saja,karena ditujukan untuk mengembalikan kelopak matanya seperti semula lagi,segera cari klinik mata terdekat untuk konsultasi dengan dokter
+""",
                 "link_gmaps": "https://www.google.com/maps/search/rumah+sakit/"
             },
             {
                 "nama_penyakit": 'mata merah',
-                "pengobatan": """Mata merah atau konjungtivitis ...""",
+                "pengobatan": """Mata merah biasanya terjadi karena infeks iatau alergi Paparan asap, debu, angin, atau bahan kimia yang dapat menyebabkan mata merah<br>
+Cara mengatasinya<br>
+1.	Pastikan apakah mata yang terkena kemerahan hanya satu atau keduanya, karena jika hanya satu mata, kemungkinan besar terjadi infeksi.<br>
+2.	Perhatikan apakah mata yang merah disertai dengan adanya belekan. Jika mata merah disertai belekan, dapat diteteskan antibiotik tetes mata yang tidak mengandung steroid, yang dapat dibeli di apotek terdekat. Jika kondisi ini berlanjut, segera kunjungi klinik terdekat dan konsultasikan dengan dokter.<br>
+""",
                 "link_gmaps": "https://www.google.com/maps/search/apotek/"
             },
             {
                 "nama_penyakit": 'mata bengkak',
-                "pengobatan": """bawa ke klinik segera""",
+                "pengobatan": """Mata bengkak pada anak dapat disebabkan oleh berbagai factor seperti reaksi alergi terhadap debu, bulu hewan, atau bahan kimia dalam produk seperti sabun atau sampo dapat menyebabkan mata bengkak, gatal, dan berair,gigitan serangga atau saluran air mata tersumbat.<br>
+Cara mengatasinya<br>
+Kompres dingin:<br>
+Gunakan kain bersih yang dibasahi dengan air dingin dan letakkan di atas mata yang bengkak selama beberapa menit. <br>
+Hindari menyentuh atau menggosok mata:<br>
+Ajari anak untuk tidak menggosok atau menyentuh matanya agar tidak memperburuk kondisi.<br>
+Obat antihistamin:<br>
+Jika pembengkakan disebabkan oleh alergi, obat antihistamin dapat membantu. Namun, pastikan untuk berkonsultasi dengan dokter sebelum memberikan obat ini kepada anak.<br>
+Rekomendasi klinik terdekat""",
                 "link_gmaps": "https://www.google.com/maps/search/klinik/"
             },
             {
                 "nama_penyakit": 'mata bintitan',
-                "pengobatan": """bawa ke klinik terdekat segera""",
+                "pengobatan": """Mata bintitan (hordeolum) pada anak adalah kondisi di mana terjadi pembengkakan kecil, berwarna merah, dan terasa sakit di kelopak mata. Ini biasanya disebabkan oleh infeksi bakteri pada kelenjar minyak atau folikel bulu mata. <br>
+Jangan mencoba memencet atau memecahkan bintitan, karena dapat memperburuk infeksi atau menyebarkannya ke area lain.<br>
+<br>
+Cara mengatasi :<br>
+1.	Membeli salep atau tetes mata antibiotik di apotik untuk mengatasi infeksi.<br>
+2.	Jika bintitan tidak sembuh dalam beberapa hari, terasa sangat sakit, atau disertai demam, segera bawa anak ke dokter untuk mendapatkan penanganan lebih lanjut.""",
                 "link_gmaps": "https://www.google.com/maps/search/klinik/"
             }
         ]

@@ -57,6 +57,25 @@
     </nav>
   
 <div class="wrapper">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="flashMessage" style="
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 9999;"
+      class="mt-3 mr-2 alert alert-success alert-dismissible bg-success text-white border-0 fade show"
+      role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+
       <div class="title-text">
         <div class="title login">Login</div>
         <div class="title signup">Registrasi</div>
@@ -139,10 +158,11 @@
                 username:document.getElementById("username-regis").value,
                 email:document.getElementById("email-regis").value,
                 password:document.getElementById("pswd-regis").value,
-                re_pswd:document.getElementById("re-pswd-regis").value
+                re_password:document.getElementById("re-pswd-regis").value
             });
             var next_url = "/login_user";
         }
+        console.log(data_kirim)
         $.ajax({
             url: uri,
             method: 'POST',
@@ -171,6 +191,12 @@
         };
     document.getElementById("login-button").addEventListener("click", function() { kirim("login"); });
     document.getElementById("daftar-button").addEventListener("click", function() { kirim("register"); });
+  </script>
+  <script>
+    // Hide the flash message after 1 second
+    setTimeout(function() {
+      $('#flashMessage').fadeOut('fast');
+    }, 1000); // Adjust the timeout value as needed
   </script>
 </body>
 </html>

@@ -67,21 +67,22 @@
   <section class="container my-5">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <div style="
+      <div id="flashMessage" style="
         position: fixed;
         top: 0;
         right: 0;
-        z-index: 9999;" 
+        z-index: 9999;"
         class="mt-3 mr-2 alert alert-success alert-dismissible bg-success text-white border-0 fade show"
         role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <span aria-hidden="true">&times;</span>
+        </button>
         {{ messages[0] }}
-    </div>
-            
+      </div>
     {% endif %}
-    {% endwith %}
+  {% endwith %}
+  
+  
     <div class="card custom-bg-info border-medium" style="border-radius: 20px;">
         <div class="card-body text-center ">
             <h1 class="font-semibold custom-text-warning"> Login Admin</h1>
@@ -133,6 +134,12 @@
         });
     }
     document.getElementById("login").addEventListener("click", kirim);</script>
+        <script>
+            // Hide the flash message after 1 second
+            setTimeout(function() {
+              $('#flashMessage').fadeOut('fast');
+            }, 1000); // Adjust the timeout value as needed
+          </script>
 </body>
 </html>
 {% endif %}

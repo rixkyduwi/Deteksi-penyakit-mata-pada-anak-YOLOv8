@@ -48,7 +48,7 @@
 <body>
    <!-- Topbar -->
    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand d-flex " href="#">
+    <a class="navbar-brand d-flex " href="/user/dashboard">
         <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids</p>
     </a>
     <div></div>
@@ -62,20 +62,20 @@
         <h1 class="font-bold ">Hasil Diagnosa</h1>
       </div>
         <div class="col-md-4">
-          
+            <h2 class="font-semibold">Nama: {{ diagnosa.nama_anak }}</h2>
+            <p>Usia : {{ diagnosa.usia_anak }}</p>
             <img src="/static/detect/{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
             <h4 class="font-semibold  mt-2" id="hasil_predict">
-              {% for penyakit, jumlah in diagnosa.hasil_diagnosa.items() %}
+              {% for penyakit in diagnosa.hasil_diagnosa %}
               <li>{{ penyakit }}</li>
           {% endfor %}
             </h4>
         </div>
         <div class="col-md-8">
-            <h3 class="text-center font-bold">pengobatan</h3>
-            {% for penyakit, jumlah in diagnosa.hasil_diagnosa.items() %}
+            {% for penyakit in diagnosa.hasil_diagnosa %}
             <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
             {% if penyakit in diagnosa.rekomendasi_diagnosa %}
-                <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan }}</p>
+                <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
                 <a class="btn btn-custom custom-bg-warning  font-semibold" href="{{ diagnosa.rekomendasi_diagnosa[penyakit].link_rekomendasi }}">rekomendasi</a>
             {% endif %}
         {% endfor %}

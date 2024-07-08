@@ -36,6 +36,7 @@ def predict():
     model_path = "./best.pt"
     save_path = "./app/static/detect"
     conf = 0.55
+    print("loading..")
     # Perintah yang akan dijalankan
     command = [
         'yolo',

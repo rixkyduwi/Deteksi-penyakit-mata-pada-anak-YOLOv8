@@ -45,7 +45,6 @@ def proses_user():
     username = data['username']
     password = data['password']
     user = user_datastore.find_user(username=username)
-
     if not user:
         return jsonify({"msg": "username salah"}), 404
 
@@ -60,15 +59,24 @@ def proses_user():
     session['role'] = "user"
     session['username'] = username
     session['id'] = user.id
-    profilee = Profile.query.filter_by(user_id=user.id).first()
-    if not profilee:
-        session['nama_lengkap'] = username
-    else:
-        session['nama_lengkap'] = profilee.full_name
-        
-    flash('Login Berhasil')
+    profile = Profile.query.filter_by(user_id=user.id).first()
+    if not profile:
+        profile = Profile(user_id=user.id, full_name='', address='', email='', phone_number='', bio='', nama_anak='', usia_anak='')
+        db.session.add(profile)
+        db.session.commit()
+    
+    session['full_name'] = profile.full_name
+    session['address'] = profile.address
+    session['email'] = profile.email
+    session['phone_number'] = profile.phone_number
+    session['bio'] = profile.bio
+    session['nama_anak'] = profile.nama_anak
+    session['usia_anak'] = profile.usia_anak
 
-    return jsonify(access_token=access_token)
+    if profile.full_name == "" or profile.nama_anak == "" or profile.usia_anak == "" or profile.email == "" or profile.phone_number == "":
+        return jsonify(access_token=access_token, redirect_url=url_for('profile'))
+    else:
+        return jsonify(access_token=access_token, redirect_url=url_for('dashboarduser'))
 
 # Endpoint yang memerlukan autentikasi
 def unset_session():
@@ -142,6 +150,7 @@ def is_valid_email(email):
 @app.route('/bikin_akun_user', methods=['POST'])
 def register_user():
     data = request.get_json()
+    print(data)
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
@@ -175,4 +184,4 @@ def register_user():
     session.pop('jwt_token', None)
     session.pop('username', None)
     flash('Sukses Logout')
-    return redirect(url_for('login_user', msg='Registration Successful'))
+    return redirect(url_for('user', msg='Registration Successful'))
