@@ -79,6 +79,7 @@ def update_profile():
             return jsonify({"msg":"Username already taken"})
         else:
             user.username = new_full_name
+            profile.full_name = new_full_name
 
     profile.address = new_address
     profile.email = new_email
