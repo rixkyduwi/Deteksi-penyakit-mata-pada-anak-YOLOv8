@@ -1,4 +1,4 @@
-import torch,datetime,re
+import torch,datetime,re,os
 from flask import jsonify,request,session
 from . import app,db,History
 import pytesseract
