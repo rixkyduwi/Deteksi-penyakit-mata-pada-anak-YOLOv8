@@ -84,6 +84,8 @@ def predict():
                 )
             db.session.add(history)
             db.session.commit()
+
+            
             new_history_id = history.id  # Access the ID of the newly added profile
             return jsonify({"msg":"SUKSES","id_hasil":new_history_id})
         else:

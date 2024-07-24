@@ -1,8 +1,10 @@
-from . import app,db,bcrypt,user_datastore,security,jwt,Role,User,Profile
+from . import app,db,bcrypt,user_datastore,security,jwt,Role,User,Profile,mail,s
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 import re
-from flask import request,render_template,redirect,url_for,jsonify,session,flash
+from flask import request,render_template,redirect,url_for,jsonify,session,flash,render_template_string
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity,unset_jwt_cookies
-    
+from flask_mail import Message
+
 @app.route('/login_admin')
 def admin():
     return render_template('admin/login.html')
@@ -175,5 +177,99 @@ def register_user():
     profile = Profile(user_id=user.id, full_name='', address='', email=email, phone_number='', bio='', nama_anak='', usia_anak='')
     db.session.add(profile)
     db.session.commit()
-    flash('Registrasi Berhasil')
+
+    token = s.dumps(email, salt='email-confirm')
+
+    conf_email_url = url_for('confirm_email', token=token, _external=True)
+    email_body = render_template_string('''
+        Hello {{ username }},
+        
+        Anda menerima email ini, karena kami memerlukan verifikasi email untuk akun Anda agar aktif dan dapat digunakan.
+        
+        Silakan klik tautan di bawah ini untuk mengatur ulang kata sandi Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
+        
+        Reset your password: {{ conf_email_url }}
+        
+        hubungi dukungan jika Anda memiliki pertanyaan.
+        
+        Untuk bantuan lebih lanjut, silakan hubungi tim dukungan kami di developer masteraldi2809@gmail.com.
+        
+        Salam Hangat,
+        
+        Pejuang D4
+    ''', username=username,  conf_email_url=conf_email_url)
+
+    msg = Message('Confirmasi Email Anda',
+                  sender='@gmail.com', recipients=[email])
+
+    msg.body = email_body
+    mail.send(msg)
+
+    flash("Email untuk mereset kata sandi telah dikirim.")
+
     return redirect(url_for('user'))
+@app.route('/confirm_email/<token>', methods=['GET'])
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except SignatureExpired:
+        return jsonify({"message": "Token telah kedaluwarsa"}), 400
+    except BadSignature:
+        return jsonify({"message": "Token tidak valid"}), 400
+    
+    user_datastore.update_one({"email": email}, {"$set": {"verify_email": True}})    
+    return '''
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Email Verify</title>
+      </head>
+      <body>
+        <h1>Email Telah Terverifikasi </h1>
+      </body>
+    </html>
+    '''.format(token)
+
+@app.post("/forgotpassword")
+def forgot_password():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"message": "Email harus diisi"}), 400
+    
+    user = user_datastore.find_one({"email": email})
+
+    if not user:
+        return jsonify({"message": "Email tidak ditemukan"}), 404
+
+    token = s.dumps(email, salt='email-confirm')
+
+    reset_password_url = url_for('confirm_email', token=token, _external=True)
+    email_body = render_template_string('''
+        Hello {{ user["name"] }},
+        
+        Anda menerima email ini, karena kami menerima permintaan untuk mengatur ulang kata sandi akun Anda.
+        
+        Silakan klik tautan di bawah ini untuk mengatur ulang kata sandi Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
+        
+        Reset your password: {{ reset_password_url }}
+        
+        Jika Anda tidak meminta pengaturan ulang kata sandi, abaikan email ini atau hubungi dukungan jika Anda memiliki pertanyaan.
+        
+        Untuk bantuan lebih lanjut, silakan hubungi tim dukungan kami di developer masteraldi2809@gmail.com.
+        
+        Salam Hangat,
+        
+        Mriki_Project
+    ''', user=user,  reset_password_url=reset_password_url)
+
+    msg = Message('Reset Kata Sandi Anda',
+                  sender='masteraldi2809@gmail.com', recipients=[email])
+
+    msg.body = email_body
+    mail.send(msg)
+
+
+    return jsonify({"message": "Email untuk mereset kata sandi telah dikirim."}), 200

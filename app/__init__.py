@@ -4,8 +4,10 @@ from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail, Message
 from datetime import timedelta,datetime
 from functools import wraps
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 import os
 
 app = Flask(__name__)
@@ -107,7 +109,16 @@ mysql.init_app(app)
 from flask_cors import CORS
 # CORS(app, resources={r"/chatbot/*":  {"origins": ["https://","https://www"]}})
 # Import rute dari modul-modul Anda
-
+nama_aplikasi="Apkk_saya"
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='masteraldi2809@gmail.com',  # Ganti dengan email Anda
+    MAIL_PASSWORD='xthezwlpdajgtlav',  # Ganti dengan password aplikasi yang dihasilkan
+)
+mail = Mail(app)
+s = URLSafeTimedSerializer(app.config['JWT_SECRET_KEY'])
 @app.route('/sitemap.xml')
 def sitemap():
     # Logika untuk menghasilkan sitemap.xml
