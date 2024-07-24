@@ -3,7 +3,9 @@ from flask import jsonify,request,session
 from . import app,db,History
 import pytesseract
 # Load the model
-model_path = "best.pt"
+
+project_directory = os.path.abspath(os.path.dirname(__file__))
+model_path = os.path.join(project_directory, 'best.pt')
 model = torch.load(model_path)
 
 # Check the model's attributes to determine the version
