@@ -6,6 +6,7 @@ flask_sqlalchemy
 flask_jwt_extended
 Flask-Bcrypt
 Flask-mail
+python-dotenv
 pillow
 pandas
 datetime
