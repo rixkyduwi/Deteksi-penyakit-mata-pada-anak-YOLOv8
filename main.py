@@ -64,7 +64,7 @@ Cara mengatasinya<br>
 2.	bisa juga terjadi karena adanya penyakit bawaan seperti tumor.<br>
 Untuk ptosis sendiri memang tindakanya hanya oprasi saja,karena ditujukan untuk mengembalikan kelopak matanya seperti semula lagi,segera cari klinik mata terdekat untuk konsultasi dengan dokter
 """,
-                "link_gmaps": "rumah sakit,klinik"
+                "link_gmaps": "apotek,klinik"
             },
             {
                 "nama_penyakit": 'mata merah',
