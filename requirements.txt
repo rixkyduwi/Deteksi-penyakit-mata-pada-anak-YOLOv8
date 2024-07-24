@@ -5,6 +5,7 @@ flask_security_too
 flask_sqlalchemy
 flask_jwt_extended
 Flask-Bcrypt
+Flask-mail
 pillow
 pandas
 datetime
