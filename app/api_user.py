@@ -59,13 +59,11 @@ def update_profile():
     new_full_name = request.form.get('full_name')
     new_address = request.form.get('address')
     new_email = request.form.get('email')
-    new_phone_number = request.form.get('phone_number')
     new_bio = request.form.get('bio')
     new_nama_anak = request.form.get('nama_anak')
     new_usia_anak = request.form.get('usia_anak')
     print(new_email)
     print(new_full_name)
-    print(new_phone_number)
     print(new_nama_anak)
     print(new_usia_anak)
 
@@ -84,7 +82,6 @@ def update_profile():
 
         profile.address = new_address
         profile.email = new_email
-        profile.phone_number = new_phone_number
         profile.bio = new_bio
         profile.nama_anak = new_nama_anak
         profile.usia_anak = new_usia_anak
@@ -95,13 +92,12 @@ def update_profile():
         session['full_name'] = profile.full_name
         session['address'] = profile.address
         session['email'] = profile.email
-        session['phone_number'] = profile.phone_number
         session['bio'] = profile.bio
         session['nama_anak'] = profile.nama_anak
         session['usia_anak'] = profile.usia_anak
 
         # Check if all required fields are filled
-        if not all([user.username, profile.full_name, profile.nama_anak, profile.usia_anak, profile.email, profile.phone_number]):
+        if not all([user.username, profile.full_name, profile.nama_anak, profile.usia_anak, profile.email]):
             return jsonify({"msg": "Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"})
 
         return jsonify({"msg": "Profil berhasil diperbarui"})
