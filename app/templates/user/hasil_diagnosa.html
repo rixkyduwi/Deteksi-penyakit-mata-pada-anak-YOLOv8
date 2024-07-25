@@ -74,7 +74,10 @@
         </div>
         <div class="col-md-8">
             {% for penyakit in diagnosa.hasil_diagnosa %}
-            <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
+            {% if penyakit == "sehat"%}
+            {% else %}
+            <h5 class="font-semibold">{{ penyakit }}</h5>
+            {% endif %}
             {% if penyakit in diagnosa.rekomendasi_diagnosa %}
                 <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
                 {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}

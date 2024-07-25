@@ -174,7 +174,8 @@ def register_user():
     user = user_datastore.create_user(username=username, password=hashed_password, active=True)
     user_datastore.add_role_to_user(user, admin_role)
     db.session.commit()
-    profile = Profile(user_id=user.id, full_name='', address='', email=email, phone_number='', bio='', nama_anak='', usia_anak='')
+    
+    profile = Profile(user_id=user.id, full_name='', address='', email=email, phone_number='', bio='', nama_anak='', usia_anak=None)
     db.session.add(profile)
     db.session.commit()
 

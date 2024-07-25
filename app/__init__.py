@@ -69,7 +69,7 @@ class Profile(db.Model):
     phone_number = db.Column(db.String(20))
     bio = db.Column(db.Text)
     nama_anak = db.Column(db.String(255))
-    usia_anak = db.Column(db.Integer)
+    usia_anak = db.Column(db.Integer, nullable=True)
 
     # Back reference to User
     user = db.relationship('User', back_populates='profile')
