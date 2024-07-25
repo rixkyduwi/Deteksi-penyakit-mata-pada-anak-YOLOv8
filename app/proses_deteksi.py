@@ -8,7 +8,10 @@ from flask import Flask, jsonify, request, session
 from . import app,db,History
 from PIL import Image
 from io import BytesIO
-
+import os
+print("Updated PATH:", os.environ['PATH'])
+print("MPLCONFIGDIR:", os.environ['MPLCONFIGDIR'])
+print("YOLO_CONFIG_DIR:", os.environ['YOLO_CONFIG_DIR'])
 # Load the model
 project_directory = os.path.abspath(os.path.dirname(__file__))
 model_path = os.path.join(project_directory, 'best.pt')
