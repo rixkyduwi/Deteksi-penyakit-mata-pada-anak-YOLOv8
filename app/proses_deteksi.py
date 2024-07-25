@@ -54,7 +54,7 @@ def predict():
     ]
 
     try:
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', check=True)
         output = result.stdout
         print(f"Command output: {output}")
 
