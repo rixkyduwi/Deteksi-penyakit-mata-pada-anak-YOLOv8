@@ -22,4 +22,8 @@ ultralytics_config_dir = os.path.join(base_dir, 'env', 'Ultralytics_config')
 os.environ['MPLCONFIGDIR'] = matplotlib_cache_dir
 os.environ['YOLO_CONFIG_DIR'] = ultralytics_config_dir
 
+print("Updated PATH:", os.environ['PATH'])
+print("MPLCONFIGDIR:", os.environ['MPLCONFIGDIR'])
+print("YOLO_CONFIG_DIR:", os.environ['YOLO_CONFIG_DIR'])
+
 from app import app as application
