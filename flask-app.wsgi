@@ -10,7 +10,7 @@ load_dotenv()
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Set the path to the yolo executable
-yolo_path = os.path.join(base_dir, 'env', 'bin', 'yolo')
+yolo_path = os.path.join(base_dir, 'env', 'bin')
 
 # Set the environment variable PATH
 os.environ['PATH'] += os.pathsep + yolo_path
