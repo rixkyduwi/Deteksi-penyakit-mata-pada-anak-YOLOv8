@@ -197,7 +197,7 @@
           <form class="col-md-12" id="form-now">
             <div class="form-group">
                 <label for="username" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/username.svg" alt="icon_username"> Nama
+                    <img src="../static/icon/username.svg" alt="icon_username"> Nama orang tua
                 </label>
                 <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="full_name" id="full_name" value="{{ session['full_name'] }}">
             </div>
@@ -269,6 +269,7 @@
                 var email = $('#email').val();
                 var nm_anak = $('#nm_anak').val();
                 var usia_anak = $('#usia_anak').val();
+        
                 // Kirim data menggunakan AJAX
                 $.ajax({
                     type: 'POST',
@@ -278,7 +279,6 @@
                         email: email,
                         nama_anak: nm_anak,
                         usia_anak: usia_anak,
-                        phone_number: no_hp
                     },
                     success: function(response) {
                         // Tampilkan pesan sukses atau lakukan tindakan lain setelah sukses

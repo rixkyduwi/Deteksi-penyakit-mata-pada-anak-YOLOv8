@@ -69,22 +69,20 @@
             <h4 class="font-semibold  mt-2" id="hasil_predict">
               {% for penyakit in diagnosa.hasil_diagnosa %}
               <li>{{ penyakit }}</li>
+              <!-- <li style="color: red;">{{ penyakit }}</li>  -->
           {% endfor %}
             </h4>
         </div>
         <div class="col-md-8">
             {% for penyakit in diagnosa.hasil_diagnosa %}
-            {% if penyakit == "sehat"%}
-            {% else %}
-            <h5 class="font-semibold">{{ penyakit }}</h5>
-            {% endif %}
+            <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
             {% if penyakit in diagnosa.rekomendasi_diagnosa %}
                 <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
                 {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}
                 {% if link == "klinik" %}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik/">Rekomendasi Klinik</a>
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik+mata+terdekat/">Rekomendasi Klinik</a>
                 {% elif link == "apotek" %}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/apotek/">Rekomendasi Apotek</a>
+                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/apotek+terdekat/">Rekomendasi Apotek</a>
                 {% elif link == "rumah sakit"%}
                 <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/rumah+sakit/">Rekomendasi Rumah Sakit</a>
                 {% elif penyakit == "sehat"%}
@@ -100,7 +98,7 @@
   </section>
   <section class="container my-5">
   <div class="row">
-    <div class="col-md-12 text-end">
+    <div class="btn btn-custom custom-bg-warning font-semibold">
       <p><a href="/user/dashboard">back</a></p>
     </div>
   </div>

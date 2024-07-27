@@ -1,30 +1,5 @@
 from app import app, db, user_datastore, bcrypt,Rekomendasi,Profile
 import flask_bcrypt
-import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Get the base directory (root of the project)
-base_dir = os.path.abspath(os.path.dirname(__file__))
-
-# Set the path to the yolo executable
-yolo_path = os.path.join(base_dir, 'env', 'Scripts', 'yolo.exe')
-
-# Set the environment variable PATH
-os.environ['PATH'] += os.pathsep + yolo_path
-
-# Set environment variables for matplotlib and ultralytics
-matplotlib_cache_dir = os.path.join(base_dir, 'env', 'matplotlib_cache')
-ultralytics_config_dir = os.path.join(base_dir, 'env', 'Ultralytics_config')
-
-os.environ['MPLCONFIGDIR'] = matplotlib_cache_dir
-os.environ['YOLO_CONFIG_DIR'] = ultralytics_config_dir
-
-print("Updated PATH:", os.environ['PATH'])
-print("MPLCONFIGDIR:", os.environ['MPLCONFIGDIR'])
-print("YOLO_CONFIG_DIR:", os.environ['YOLO_CONFIG_DIR'])
 
 if __name__ == '__main__':
     # Tambahkan user dan admin awal
@@ -56,7 +31,7 @@ if __name__ == '__main__':
             user_datastore.add_role_to_user(user, user_role)
             db.session.commit()
             profile = Profile(
-                user_id = 2,
+                user_id = 2, 
                 full_name = "userr",
                 email = "user@gmail.com",
                 phone_number = "08-",
@@ -89,16 +64,16 @@ Cara mengatasinya<br>
 2.	bisa juga terjadi karena adanya penyakit bawaan seperti tumor.<br>
 Untuk ptosis sendiri memang tindakanya hanya oprasi saja,karena ditujukan untuk mengembalikan kelopak matanya seperti semula lagi,segera cari klinik mata terdekat untuk konsultasi dengan dokter
 """,
-                "link_gmaps": "apotek,klinik"
+                "link_gmaps": "klinik"
             },
             {
-                "nama_penyakit": 'mata merah',
+                "nama_penyakit":' mata merah',
                 "pengobatan": """Mata merah biasanya terjadi karena infeks iatau alergi Paparan asap, debu, angin, atau bahan kimia yang dapat menyebabkan mata merah<br>
 Cara mengatasinya<br>
 1.	Pastikan apakah mata yang terkena kemerahan hanya satu atau keduanya, karena jika hanya satu mata, kemungkinan besar terjadi infeksi.<br>
 2.	Perhatikan apakah mata yang merah disertai dengan adanya belekan. Jika mata merah disertai belekan, dapat diteteskan antibiotik tetes mata yang tidak mengandung steroid, yang dapat dibeli di apotek terdekat. Jika kondisi ini berlanjut, segera kunjungi klinik terdekat dan konsultasikan dengan dokter.<br>
 """,
-                "link_gmaps": "apotek"
+                "link_gmaps": "apotek,klinik"
             },
             {
                 "nama_penyakit": 'mata bengkak',
@@ -111,7 +86,7 @@ Ajari anak untuk tidak menggosok atau menyentuh matanya agar tidak memperburuk k
 Obat antihistamin:<br>
 Jika pembengkakan disebabkan oleh alergi, obat antihistamin dapat membantu. Namun, pastikan untuk berkonsultasi dengan dokter sebelum memberikan obat ini kepada anak.<br>
 Rekomendasi klinik terdekat""",
-                "link_gmaps": "klinik"
+                "link_gmaps": "klinik,apotek"
             },
             {
                 "nama_penyakit": 'mata bintitan',
@@ -121,7 +96,7 @@ Jangan mencoba memencet atau memecahkan bintitan, karena dapat memperburuk infek
 Cara mengatasi :<br>
 1.	Membeli salep atau tetes mata antibiotik di apotik untuk mengatasi infeksi.<br>
 2.	Jika bintitan tidak sembuh dalam beberapa hari, terasa sangat sakit, atau disertai demam, segera bawa anak ke dokter untuk mendapatkan penanganan lebih lanjut.""",
-                "link_gmaps": "klinik"
+                "link_gmaps": "klinik,apotek"
             }
         ]
 

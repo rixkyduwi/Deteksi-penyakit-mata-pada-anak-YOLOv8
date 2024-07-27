@@ -43,7 +43,7 @@ def detail_berita(link):
 #halaman dashboard user
 @app.route('/user/dashboard')
 def dashboarduser():
-    if not all([session.get('full_name'), session.get('nama_anak'), session.get('usia_anak'), session.get('email'), session.get('phone_number')]):
+    if not all([session.get('full_name'), session.get('nama_anak'), session.get('usia_anak'), session.get('email')]):
         return redirect(url_for("profile"))
     else:
         return render_template('user/dashboard.html')
@@ -66,7 +66,7 @@ def update_profile():
     print(new_full_name)
     print(new_nama_anak)
     print(new_usia_anak)
-
+# melihat nama profil di icon profil
     try:
         if new_full_name:
             # Check if the new username is unique
@@ -179,6 +179,7 @@ def user_hasil_diagnosa(id):
     diagnosa = {
         'nama_user': history_record.nama_user,
         'nama_anak': history_record.nama_anak,
+        'usia_anak': history_record.usia_anak,
         'usia_anak': history_record.usia_anak,
         'tanggal_konsultasi': history_record.tanggal_konsultasi,
         'file_deteksi': history_record.file_deteksi,

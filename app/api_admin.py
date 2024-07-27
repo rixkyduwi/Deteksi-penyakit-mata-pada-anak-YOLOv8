@@ -110,11 +110,9 @@ def penyakit_terbanyak():
                 jml_kasus[index] += 1
 
     return render_template('admin/penyakit_terbanyak.html', names=names, jml_kasus=jml_kasus)
+# Setelah proses penghitungan selesai, data dihitung kemudian dikirim ke template HTML penyakit_terbanyak.html menggunakan fungsi render_template.
+# Template HTML akan menerima dua variabel: names dan jml_kasus, yang kemudian dapat digunakan untuk menampilkan data di halaman web.
 
-@app.route('/admin/infodesa')
-def admininfodesa():
-    info_list = fetch_data_and_format("SELECT * FROM sejarah_desa")
-    return render_template("admin/infodesa.html", info_list = info_list)
 #halaman hasil diagnosa
 @app.route('/admin/history_konsultasi/<id>')
 def admin_hasil_diagnosa(id):

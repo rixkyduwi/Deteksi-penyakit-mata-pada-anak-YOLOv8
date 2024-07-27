@@ -208,6 +208,7 @@
       });
     });
     document.addEventListener('DOMContentLoaded', function () {
+      // Mengambil konteks 2D dari elemen <canvas> dengan ID myChart. Ini diperlukan untuk menggambar diagram di dalam canvas.
       var ctx = document.getElementById('myChart').getContext('2d');
       var labels= '{{ names|tojson }}';
       console.log(labels)
@@ -215,6 +216,7 @@
       var data = '{{ jml_kasus|tojson }}';
       console.log(data)
       data = JSON.parse(data);
+      // Membuat instance baru dari Chart dengan tipe diagram bar (diagram batang).
       var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -257,3 +259,29 @@
         window.location.href = "/";
     </script>
 {% endif %}
+<!-- jika satu diagram saja palinh banyak -->
+<!-- var index = 0; // Ganti ini dengan indeks penyakit yang ingin Anda tampilkan
+var selectedLabel = labels[index];
+var selectedData = data[index];
+
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: [selectedLabel], // Label penyakit yang dipilih
+    datasets: [{
+      label: 'Jumlah Kasus',
+      data: [selectedData], // Data untuk penyakit yang dipilih
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+-->
