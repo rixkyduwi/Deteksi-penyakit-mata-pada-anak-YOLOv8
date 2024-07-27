@@ -49,7 +49,7 @@ if __name__ == '__main__':
             {
                 "nama_penyakit": "strabismus (mata juling)",
                 "pengobatan": """Terjadi karena tidak keseimbangan dan keharmonisan gerak otot otot bola mata (Ketika otot mata mengalami underaksi dan over aksi sehingga menyebabkan mata juling<br>
-Bisa terjadi karena keturunan atau bawaan lahir, Masalah penglihatan pada satu mata, Jika salah satu mata memiliki masalah penglihatan yang signifikan, seperti rabun jauh atau rabun dekat yang tidak terkoreksi.<br>
+Bisa terjadi karena keturunan atau bawaan lahir, Madsaasalah penglihatan pada satu mata, Jika salah satu mata memiliki masalah penglihatan yang signifikan, seperti rabun jauh atau rabun dekat yang tidak terkoreksi.<br>
 <br>
 Cara mengatasi :<br>
 1.	Menggunakan Penutup mata (patching) tersedia di apotik : Metode ini melibatkan menutupi mata yang lebih kuat untuk mendorong mata yang lebih lemah bekerja lebih keras. Ini sering digunakan pada anak-anak untuk membantu memperkuat otot-otot mata yang lebih lemah.<br>
