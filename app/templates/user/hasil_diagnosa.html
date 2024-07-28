@@ -69,13 +69,15 @@
             <h4 class="font-semibold  mt-2" id="hasil_predict">
               {% for penyakit in diagnosa.hasil_diagnosa %}
               <li>{{ penyakit }}</li>
-              <!-- <li style="color: red;">{{ penyakit }}</li>  -->
           {% endfor %}
             </h4>
         </div>
         <div class="col-md-8">
             {% for penyakit in diagnosa.hasil_diagnosa %}
-            <h5 class="font-semibold"><li>{{ penyakit }}</li></h5>
+            {% if penyakit == "sehat"%}
+            {% else %}
+            <h5 class="font-semibold">{{ penyakit }}</h5>
+            {% endif %}
             {% if penyakit in diagnosa.rekomendasi_diagnosa %}
                 <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
                 {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}
@@ -98,7 +100,7 @@
   </section>
   <section class="container my-5">
   <div class="row">
-    <div class="btn btn-custom custom-bg-warning font-semibold">
+    <div class="btn-custom custom-bg-warning font-semibold col-md-12 text-end">
       <p><a href="/user/dashboard">back</a></p>
     </div>
   </div>

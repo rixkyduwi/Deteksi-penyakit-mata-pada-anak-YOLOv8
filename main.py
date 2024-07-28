@@ -1,5 +1,30 @@
 from app import app, db, user_datastore, bcrypt,Rekomendasi,Profile
 import flask_bcrypt
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the base directory (root of the project)
+base_dir = os.path.abspath(os.path.dirname(__file__))
+
+# Set the path to the yolo executable
+yolo_path = os.path.join(base_dir, 'env', 'Scripts', 'yolo.exe')
+
+# Set the environment variable PATH
+os.environ['PATH'] += os.pathsep + yolo_path
+
+# Set environment variables for matplotlib and ultralytics
+matplotlib_cache_dir = os.path.join(base_dir, 'env', 'matplotlib_cache')
+ultralytics_config_dir = os.path.join(base_dir, 'env', 'Ultralytics_config')
+
+os.environ['MPLCONFIGDIR'] = matplotlib_cache_dir
+os.environ['YOLO_CONFIG_DIR'] = ultralytics_config_dir
+
+print("Updated PATH:", os.environ['PATH'])
+print("MPLCONFIGDIR:", os.environ['MPLCONFIGDIR'])
+print("YOLO_CONFIG_DIR:", os.environ['YOLO_CONFIG_DIR'])
 
 if __name__ == '__main__':
     # Tambahkan user dan admin awal
@@ -49,7 +74,7 @@ if __name__ == '__main__':
             {
                 "nama_penyakit": "strabismus (mata juling)",
                 "pengobatan": """Terjadi karena tidak keseimbangan dan keharmonisan gerak otot otot bola mata (Ketika otot mata mengalami underaksi dan over aksi sehingga menyebabkan mata juling<br>
-Bisa terjadi karena keturunan atau bawaan lahir, Madsaasalah penglihatan pada satu mata, Jika salah satu mata memiliki masalah penglihatan yang signifikan, seperti rabun jauh atau rabun dekat yang tidak terkoreksi.<br>
+Bisa terjadi karena keturunan atau bawaan lahir, Masalah penglihatan pada satu mata, Jika salah satu mata memiliki masalah penglihatan yang signifikan, seperti rabun jauh atau rabun dekat yang tidak terkoreksi.<br>
 <br>
 Cara mengatasi :<br>
 1.	Menggunakan Penutup mata (patching) tersedia di apotik : Metode ini melibatkan menutupi mata yang lebih kuat untuk mendorong mata yang lebih lemah bekerja lebih keras. Ini sering digunakan pada anak-anak untuk membantu memperkuat otot-otot mata yang lebih lemah.<br>
@@ -111,3 +136,4 @@ Cara mengatasi :<br>
                 db.session.commit()
 
     app.run(host="0.0.0.0", debug=True, port=4040)
+

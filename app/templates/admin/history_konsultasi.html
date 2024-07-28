@@ -119,6 +119,8 @@
       text-align: center;
     }
   </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Topbar -->
@@ -181,7 +183,7 @@
             <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
           </div>
           <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="data-table">
               <thead>
                 <tr>
                   <th>Nama</th>
@@ -218,6 +220,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
+      $('#data-table').DataTable();
       function adjustContentStyle() {
         const content = $('.content');
         const sidebarWidth = 250; // Width of the sidebar in pixels

@@ -4,6 +4,8 @@ from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail
+from itsdangerous import  URLSafeTimedSerializer
 from datetime import timedelta,datetime
 from functools import wraps
 import os
@@ -22,6 +24,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/deteksi_yolov8'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'bukan rahasia')
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT', b'asahdjhwquoyo192382qo')
+app.config['SECURITY_LOGIN_URL'] = None
+app.config['SECURITY_LOGOUT_URL'] = None 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'qwdu92y17dqsu81')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
@@ -96,7 +100,15 @@ class Rekomendasi(db.Model, RoleMixin):
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(datastore=user_datastore, app=app)
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='masteraldi2809@gmail.com',  # Ganti dengan email Anda
+    MAIL_PASSWORD='xthezwlpdajgtlav',  # Ganti dengan password aplikasi yang dihasilkan
+)
+mail = Mail(app)
+s = URLSafeTimedSerializer(app.config['JWT_SECRET_KEY'])
 
 jwt = JWTManager(app)
 mysql = MySQL()
@@ -116,7 +128,7 @@ def sitemap():
 @app.route('/robots.txt')
 def robots():
     # Logika untuk menghasilkan robots.txt
-    return """
+    return """44
     User-agent: *
     Disallow: /private/
     Disallow: /cgi-bin/

@@ -180,7 +180,6 @@ def user_hasil_diagnosa(id):
         'nama_user': history_record.nama_user,
         'nama_anak': history_record.nama_anak,
         'usia_anak': history_record.usia_anak,
-        'usia_anak': history_record.usia_anak,
         'tanggal_konsultasi': history_record.tanggal_konsultasi,
         'file_deteksi': history_record.file_deteksi,
         'hasil_diagnosa': hasil_diagnosa,

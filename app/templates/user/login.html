@@ -106,11 +106,11 @@
               <div class="btn-layer">
                 <button style="display: block; background: #ffffff00; border: none; width: 330px;color: #ffffff; height: 50px; " id="login-button" type="button" >
                   submit disinii</button></div>
+        <!-- <a href="/app/templates/ganti_password.html" class="text-warning">Lupa Password?</a>  -->
+            <div class="btn btn-custom custom-bg-warning font-semibold">
+              <p><a href="/lupa_password">lupa password</a></p>
             </div>
-      <!-- <a href="/app/templates/ganti_password.html" class="text-warning">Lupa Password?</a>  -->
-      <div class="btn btn-custom custom-bg-warning font-semibold">
-        <p><a href="/user/dashboard">lupa password</a></p>
-      </div>
+            </div>
             <div class="signup-link">Buat akun <a href="">Daftar sekarang</a></div>
           </form>
           <form action="#" class="signup">
@@ -130,8 +130,8 @@
             <div class="field btn">
               <div class="btn-layer">
                 <button style="display: block; background: #ffffff00; border: none; width: 330px;color: #ffffff; height: 50px; "id="daftar-button" type="button"> 
-                  submit</button></div>
-            </div>
+                  submit disinii</button></div>
+                  </div>
             <div class="signin-link">Sudah punya akun? <a href="">Login</a></div>
           </form>
         </div>
@@ -150,7 +150,7 @@
     }
     function kirim(pilihan){
         if (pilihan==="login"){
-            var uri = "/login_user/proses";
+            var uri = "/login/proses";
             var msg= "msg-login";
             var data_kirim = JSON.stringify({
                 username:document.getElementById("username-login").value,
@@ -167,7 +167,7 @@
                 password:document.getElementById("pswd-regis").value,
                 re_password:document.getElementById("re-pswd-regis").value
             });
-            var next_url = "/login_user";
+            var next_url = "/login";
         }
         console.log(data_kirim)
         $.ajax({
