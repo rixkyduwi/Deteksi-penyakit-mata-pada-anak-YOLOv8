@@ -1,8 +1,7 @@
-from flask import Flask,jsonify,request,session,render_template,g,send_from_directory,abort
+from flask import Flask,jsonify,request,session,render_template,g,send_from_directory,abort,redirect,url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from itsdangerous import  URLSafeTimedSerializer
@@ -24,8 +23,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/deteksi_yolov8'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'bukan rahasia')
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT', b'asahdjhwquoyo192382qo')
-app.config['SECURITY_LOGIN_URL'] = None
-app.config['SECURITY_LOGOUT_URL'] = None 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'qwdu92y17dqsu81')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
@@ -44,15 +41,15 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id'))
 
-class Role(db.Model, RoleMixin):
+class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
+    verify_email = db.Column(db.Boolean())
     roles = db.relationship('Role', secondary='user_roles', 
                             primaryjoin='User.id == UserRoles.user_id',
                             secondaryjoin='Role.id == UserRoles.role_id',
@@ -75,7 +72,7 @@ class Profile(db.Model):
     # Back reference to User
     user = db.relationship('User', back_populates='profile')
 
-class History(db.Model, RoleMixin):
+class History(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     nama_user = db.Column(db.String(225))    
     nama_anak = db.Column(db.String(110))   
@@ -84,7 +81,7 @@ class History(db.Model, RoleMixin):
     file_deteksi = db.Column(db.String(225)) 
     tanggal_konsultasi = db.Column(db.String(225), default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-class Rekomendasi(db.Model, RoleMixin):
+class Rekomendasi(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     nama = db.Column(db.String(225), unique=True) 
     pengobatan = db.Column(db.Text)  
@@ -98,8 +95,8 @@ class Rekomendasi(db.Model, RoleMixin):
         }
 
 
-# Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+#zulfanisa0103@gmail.com 
+#zulfacantik
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
@@ -153,4 +150,15 @@ def invalid():
     # Menggunakan abort untuk memicu kesalahan 404
     abort(404)
 
+def login_role_required(required_role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'id' not in session:
+                return redirect(url_for('login'))
+            if session.get('role') != required_role:
+                return jsonify({"msg": "Permission denied"}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 from . import api_user, api_admin, login, proses_deteksi

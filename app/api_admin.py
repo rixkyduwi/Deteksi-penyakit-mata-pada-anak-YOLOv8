@@ -1,4 +1,4 @@
-from . import app,mysql,db,allowed_file, History,Rekomendasi
+from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import os,textwrap, locale, json, uuid, time,re
 import pandas as pd
@@ -82,16 +82,19 @@ def fetch_data_and_format(query):
             
 #halaman admin
 @app.route('/admin/dashboard')
+@login_role_required('admin')
 def dashboard():
     return render_template('admin/dashboard.html')
 #halaman history konsultasi
 @app.route('/admin/history_konsultasi')
+@login_role_required('admin')
 def history_konsultasi():
     histori_records = History.query.all()
     print(histori_records)
     return render_template('admin/history_konsultasi.html',histori_records= histori_records)
 #halaman penyakit terbanyak
 @app.route('/admin/penyakit_terbanyak')
+@login_role_required('admin')
 def penyakit_terbanyak():
     # Daftar nama penyakit
     names = ['strabismus (mata juling)', 'ptosis (kelopak mata turun)', 'mata merah', 'mata bengkak', 'mata bintitan']
@@ -115,6 +118,7 @@ def penyakit_terbanyak():
 
 #halaman hasil diagnosa
 @app.route('/admin/history_konsultasi/<id>')
+@login_role_required('admin')
 def admin_hasil_diagnosa(id):
     if 'full_name' not in session:
         abort(403)  # Forbidden, user tidak terautentikasi

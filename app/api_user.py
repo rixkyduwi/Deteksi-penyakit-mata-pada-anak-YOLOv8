@@ -1,4 +1,4 @@
-from . import app,mysql,db,History,Rekomendasi,User,Profile,user_datastore,bcrypt
+from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import pandas as pd
 from PIL import Image
@@ -36,12 +36,13 @@ def userberita():
     # tips = fetch_data_and_format("SELECT * FROM tips order by id DESC")
     return render_template('tips.html')
 @app.route('/tips/<link>')
-def detail_berita(link):
+def detail_tips(link):
     query = "SELECT * FROM berita where link = '"+ str(link) +"' order by id DESC "
     berita = fetch_data_and_format(query)
     return render_template('detail_berita.html',info_list = berita)
 #halaman dashboard user
 @app.route('/user/dashboard')
+@login_role_required('user')
 def dashboarduser():
     if not all([session.get('full_name'), session.get('nama_anak'), session.get('usia_anak'), session.get('email')]):
         return redirect(url_for("profile"))
@@ -49,9 +50,11 @@ def dashboarduser():
         return render_template('user/dashboard.html')
 #halaman homepage
 @app.route('/user/profile')
+@login_role_required('user')
 def profile():
     return render_template('user/profile.html')
 @app.route('/user/update_profile', methods=['POST'])
+@login_role_required('user')
 def update_profile():
     user = User.query.filter_by(id=session['id']).first()
     profile = Profile.query.filter_by(user_id=session['id']).first()
@@ -112,11 +115,12 @@ def update_profile():
         return jsonify({"msg": f"Error: {error_message}"}), 400
 
 @app.route('/ganti_password')
+@login_role_required('user')
 def ganti_password():
-
     return render_template('ganti_password.html')
 
 @app.route('/ganti_password', methods=["POST"])
+@login_role_required('user')
 def ganti_password_post():
     # Coba ambil data dari JSON
     data = request.get_json()
@@ -127,13 +131,11 @@ def ganti_password_post():
         # Jika tidak ada data JSON, ambil dari form
         password_lama = request.form.get('password_lama')
         password_baru = request.form.get('password_baru')
-    user = user_datastore.find_user(username=session['full_name'])
-    
+    user = User.query.filter_by(username=session['full_name']).first()
     if user:
         if bcrypt.check_password_hash(user.password, password_lama):
             # Mengganti password lama dengan password baru
             user.password = bcrypt.generate_password_hash(password_baru).decode('utf-8')
-            user_datastore.put(user)
             db.session.commit()
             return jsonify({"msg": "SUKSES"})
         else:
@@ -142,6 +144,7 @@ def ganti_password_post():
         return jsonify({"msg": "user tidak ditemukan"})
 
 @app.route('/user/hasil_diagnosa/<id>')
+@login_role_required('user')
 def user_hasil_diagnosa(id):
     if 'full_name' not in session:
         abort(403)  # Forbidden, user tidak terautentikasi
