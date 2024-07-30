@@ -94,15 +94,12 @@ class Rekomendasi(db.Model):
             'link_rekomendasi': self.link_rekomendasi
         }
 
-
-#zulfanisa0103@gmail.com 
-#zulfacantik
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='masteraldi2809@gmail.com',  # Ganti dengan email Anda
-    MAIL_PASSWORD='xthezwlpdajgtlav',  # Ganti dengan password aplikasi yang dihasilkan
+    MAIL_USERNAME='zulfanisa0103@gmail.com ',  # Ganti dengan email Anda
+    MAIL_PASSWORD='gxigmkceytspavfa',  # Ganti dengan password aplikasi yang dihasilkan
 )
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.config['JWT_SECRET_KEY'])

@@ -287,8 +287,8 @@ def reset_password(token):
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
-
+    
     # Update the verify_email field to True
     user.verify_email = True
     db.session.commit()   
-    return render_template().format(token)
+    return render_template("reset_password.html").format(token)
