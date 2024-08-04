@@ -194,9 +194,9 @@ def register_user():
     msg.body = email_body
     mail.send(msg)
 
-    flash("Email untuk confirm email telah dikirim.")
+    flash(" Register berhasil silahkan cek email anda.")
 
-    return redirect(url_for('login'))
+    return redirect(url_for('login', msg='Register Berhasil silahkan cek email anda '))
 @app.route('/confirm_email/<token>', methods=['GET'])
 def confirm_email(token):
     try:
@@ -206,8 +206,8 @@ def confirm_email(token):
     except BadSignature:
         return jsonify({"message": "Token tidak valid"}), 400
     
-    user = User.query.filter_by(email=email).first()
-    
+    profile = Profile.query.filter_by(email=email).first()
+    user = User.query.filter_by(id=profile.user_id).first()
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
@@ -235,8 +235,9 @@ def forgot_password():
 
         if not email:
             return jsonify({"message": "Email harus diisi"}), 400
-        
-        user = user = User.query.filter_by(email=email).first()
+            
+        profile = Profile.query.filter_by(email=email).first()
+        user = User.query.filter_by(id=profile.user_id).first()
 
         if not user:
             return jsonify({"message": "Email tidak ditemukan"}), 404
@@ -283,7 +284,8 @@ def reset_password(token):
     except BadSignature:
         return jsonify({"message": "Token tidak valid"}), 400
     
-    user = User.query.filter_by(email=email).first()
+    profile = Profile.query.filter_by(email=email).first()
+    user = User.query.filter_by(id=profile.user_id).first()
     
     if not user:
         return jsonify({"msg": "User not found"}), 404

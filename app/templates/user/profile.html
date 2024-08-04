@@ -114,6 +114,12 @@
       border-color: #1F4590;
     }
   </style>
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script
+              src="/static/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+      
 </head>
 <body>
   <!-- Topbar -->
@@ -207,35 +213,53 @@
                 </label>
                 <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="email" name="email" id="email" value="{{ session['email'] }}">
             </div>
-            <div class="form-group">
-                <label for="nm_anak" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/boneka.svg" alt="icon_nm_anak"> Nama Anak
-                </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="nm_anak" id="nm_anak" value="{{ session['nama_anak'] }}">
-            </div>
-            <div class="form-group">
-                <label for="usia_anak" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/boneka.svg" alt="icon_usia_anak"> Usia Anak (Tahun)
-                </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="number" name="usia_anak" id="usia_anak" value="{{ session['usia_anak'] }}">
-            </div>
+          
             <div class="text-center">
                 <button type="button" onclick="updateProfile()" class="col-md-6 btn btn-custom custom-bg-info text-white">
                     <h4 class="font-semibold" style="margin-bottom: 0;">Simpan</h4>
                 </button>
             </div>
         </form>
-        
+        <div class="text-end">
+          <button type="button" onclick="updateProfile()" class="col-md-6 btn btn-custom custom-bg-info text-white">
+              <h4 class="font-semibold" style="margin-bottom: 0;">Simpan</h4>
+          </button>
+      </div>
         </div>
+      </div>
+        <div class="text-end"><button class="btn btn-custom text-white">tambah data</button>dsf</div>
+        <table id="bookingsTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Anak</th>
+                    <th>Usia Anak</th>
+                    <th>Jenis Kelamin</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for anak in anak_anak %}
+                <tr>
+                    <td>{{ anak.id }}</td>
+                    <td>{{ anak.nama_anak }}</td>
+                    <td>{{ anak.usia_anak }}</td>
+                    <td>{{ anak.jenis_kelamin }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+      
+       
       </div>
     </section>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
+      $('#bookingsTable').DataTable();
       function adjustContentStyle() {
         const content = $('.content');
         const sidebarWidth = 250; // Width of the sidebar in pixels

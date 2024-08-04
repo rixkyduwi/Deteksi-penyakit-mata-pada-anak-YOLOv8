@@ -243,7 +243,8 @@
           <a href="/forgotpassword">Lupa password?</a>
           <a href="/verif_email">Verifikasi Email</a>
         </div>
-        <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="submit" value="Daftar" onclick="validateLogin()">Submit</button>
+        <p class="text-danger" id="msg-login"></p>
+        <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="button"  id="login-button">Submit</button>
         <div class="signup-link">
           Belum punya akun? <a href="">Daftar sekarang</a>
         </div>
@@ -258,7 +259,11 @@
         <div class="field">
           <input type="password" id="pswd-daftar" placeholder="Masukan Password" required>
         </div>
-          <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="submit" value="Daftar" onclick="validateRegister()">Submit</button>
+        <div class="field">
+          <input type="password" id="re-pswd-daftar" placeholder="Masukan Password" required>
+        </div>
+        <p class="text-danger" id="msg-register"></p>
+          <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="button" id="daftar-button">Submit</button>
       </form>
     </div>
   </div>
@@ -281,33 +286,91 @@
     loginText.style.marginLeft = "0%";
   });
 </script>
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-  function validateLogin() {
-    const usernameLogin = document.getElementById('username-login').value;
+  document.getElementById("msg-login").style.display = "none";
+  document.getElementById("msg-register").style.display = "none";
+  function saveTokenToLocalStorage(token) {
+      localStorage.setItem('jwt_token', token);
+  }
+  function kirim(pilihan){
+      if (pilihan==="login"){
+        const usernameLogin = document.getElementById('username-login').value;
     const pswdLogin = document.getElementById('pswd-login').value;
     if (!usernameLogin || !pswdLogin) {
       alert("Mohon lengkapi semua field.");
     } else {
-      alert("Login berhasil!");
-    }
-  }
+    
+          var uri = "/login";
+          var msg= "msg-login";
 
-  function validateRegister() {
-    const usernameDaftar = document.getElementById('username-daftar').value;
+          var data_kirim = JSON.stringify({
+              username:document.getElementById("username-login").value,
+              password:document.getElementById("pswd-login").value
+          });
+          var next_url = "/user/dashboard";
+          var msg= "login berhasil"
+        }
+      }
+      else{
+        const usernameDaftar = document.getElementById('username-daftar').value;
     const emailDaftar = document.getElementById('email-daftar').value;
     const pswdDaftar = document.getElementById('pswd-daftar').value;
-    if (!usernameDaftar || !emailDaftar || !pswdDaftar) {
+    const repswd = document.getElementById("re-pswd-daftar").value
+    if (!usernameDaftar || !emailDaftar || !pswdDaftar || !repswd) {
       alert("Mohon lengkapi semua field.");
     } else {
-      alert("Registrasi berhasil!");
+    
+          var uri = "/bikin_akun_user";
+          var msg = "msg-register";
+          var data_kirim = JSON.stringify({
+              username:document.getElementById("username-daftar").value,
+              email:document.getElementById("email-daftar").value,
+              password:document.getElementById("pswd-daftar").value,
+              re_password:document.getElementById("re-pswd-daftar").value
+          });
+          var login = "Register berhasil silahkan cek email anda"
+          var next_url = "/login";
+        }
+      }
+      console.log(data_kirim)
+      $.ajax({
+          url: uri,
+          method: 'POST',
+          contentType: 'application/json',
+          data: data_kirim ,
+          success: function(response) {
+              // Proses respons dari server
+              console.log(response);
+              if(response=="Username and password are required" || response=="Username already exists"){
+                  document.getElementById(msg).innerText = response;
+                  document.getElementById(msg).style.display = "block";
+              } else {
+                  saveTokenToLocalStorage(response);
+                  alert(msg)
+                  window.location.href = next_url;
+              }
+          },
+          error: function(xhr) {
+          // Menangani kesalahan
+              var errorMessage = JSON.parse(xhr.responseText);
+              console.log(errorMessage);
+              document.getElementById(msg).innerText = errorMessage.msg;
+              document.getElementById(msg).style.display = "block";
+        }
+      })
     }
-  }
+document.getElementById("login-button").addEventListener("click", function() { kirim("login"); });
+document.getElementById("daftar-button").addEventListener("click", function() { kirim("register"); });
 </script>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+// Hide the flash message after 1 second
+setTimeout(function() {
+  $('#flashMessage').fadeOut('fast');
+}, 1000); // Adjust the timeout value as needed
+</script>
 </body>
 </html>
 {% endif %}
