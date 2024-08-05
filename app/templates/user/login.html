@@ -260,7 +260,7 @@
           <input type="password" id="pswd-daftar" placeholder="Masukan Password" required>
         </div>
         <div class="field">
-          <input type="password" id="re-pswd-daftar" placeholder="Masukan Password" required>
+          <input type="password" id="re-pswd-daftar" placeholder="Konfirmasi Ulang Password" required>
         </div>
         <p class="text-danger" id="msg-register"></p>
           <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="button" id="daftar-button">Submit</button>
@@ -310,7 +310,7 @@
               username:document.getElementById("username-login").value,
               password:document.getElementById("pswd-login").value
           });
-          var next_url = "/user/dashboard";
+          var next_url = "/user/dashboard";  
           var msg= "login berhasil"
         }
       }

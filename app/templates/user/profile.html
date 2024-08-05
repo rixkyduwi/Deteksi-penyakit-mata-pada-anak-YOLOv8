@@ -8,117 +8,120 @@
   <!-- Link to Google Fonts Raleway -->
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      min-height: 100vh;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 600;
-    }
-    .navbar{
-      height: 10vh;
-      position: fixed;
-      top: 0;
-      z-index: 2;
-      left: 0;
-      width: 250px;
-      background-color: #f8f9fa00;
-    }
-    .sidebar {
-      height: 100vh;
-      position: fixed;
-      top: 65px;
-      left: 0;
-      width: 250px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background-color: #f8f9fa;
-      border-right: 2px solid #ddd;
-      transition: transform 0.3s ease;
-      padding: 20px;
-    }
-    .sidebar .content {
-      flex-grow: 1;
-    }
-    .sidebar.collapsed {
-      transform: translateX(-100%);
-    }
-    .sidebar .nav-link {
-      color: #000;
-    }
-    .sidebar .nav-link:hover {
-      background-color: #e9ecef;
-    }
-    .sidebar .social-icons {
-      height: 100px;
-      margin-top: auto;
-      text-align: center;
-    }
-    .content {
-      margin-left: 250px;
-      padding: 20px;
-      transition: margin-left 0.3s ease;
-    }
-    .width-mobile {
-      width: 100%;
-    }
-    .width-desktop {
-      width: calc(100% - 250px);
-    }
-    .content.collapsed {
-      margin-left: 0;
-      width: 100%;
-    }
-    .btn-custom {
-      border-radius: 60px;
-    }
-    .custom-bg-info {
-      background-color: #1F4590;
-    }
-    .custom-text-info {
-      color: #1F4590;
-    }
-    .custom-bg-warning {
-      background-color: #FFA451;
-    }
-    .custom-text-warning {
-      color: #FFA451;
-    }
-    .font-bold {
-      font-weight: 700;
-    }
-    .font-semibold {
-      font-weight: 600;
-    }
-    .font-regular {
-      font-weight: 400;
-    }
-    .toggle-btn {
-      cursor: pointer;
-    }
-    .baseline {
-      align-items: baseline;
-    }
-    .custom-border-size {
-      height: 4px;
-      border: none;
-      background-color: #1F4590;
-    }
-    .nav-link {
-      color: #ffa451 !important;
-    }
-    .border-medium {
-      border-radius: 10px;
-    }
-    .custom-border-info {
-      border-color: #1F4590;
-    }
-  </style>
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script
               src="/static/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+              <style>
+                body {
+                  min-height: 100vh;
+                  font-family: 'Raleway', sans-serif;
+                  font-weight: 600;
+                }
+                .navbar{
+                  height: 10vh;
+                  position: fixed;
+                  top: 0;
+                  z-index: 2;
+                  left: 0;
+                  width: 250px;
+                  background-color: #f8f9fa00;
+                }
+                .sidebar {
+                  height: 100vh;
+                  position: fixed;
+                  top: 65px;
+                  left: 0;
+                  width: 250px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                  background-color: #f8f9fa;
+                  border-right: 2px solid #ddd;
+                  transition: transform 0.3s ease;
+                  padding: 20px;
+                }
+                .sidebar .content {
+                  flex-grow: 1;
+                }
+                .sidebar.collapsed {
+                  transform: translateX(-100%);
+                }
+                .sidebar .nav-link {
+                  color: #000;
+                }
+                .sidebar .nav-link:hover {
+                  background-color: #e9ecef;
+                }
+                .sidebar .social-icons {
+                  height: 100px;
+                  margin-top: auto;
+                  text-align: center;
+                }
+                .content {
+                  margin-left: 250px;
+                  padding: 20px;
+                  transition: margin-left 0.3s ease;
+                }
+                .width-mobile {
+                  width: 100%;
+                }
+                .width-desktop {
+                  width: calc(100% - 250px);
+                }
+                .content.collapsed {
+                  margin-left: 0;
+                  width: 100%;
+                }
+                .btn-custom {
+                  border-radius: 60px;
+                }
+                .custom-bg-info {
+                  background-color: #1F4590;
+                }
+                .custom-text-info {
+                  color: #1F4590;
+                }
+                .custom-bg-warning {
+                  background-color: #FFA451;
+                }
+                .custom-text-warning {
+                  color: #FFA451;
+                }
+                .font-bold {
+                  font-weight: 700;
+                }
+                .font-semibold {
+                  font-weight: 600;
+                }
+                .font-regular {
+                  font-weight: 400;
+                }
+                .toggle-btn {
+                  cursor: pointer;
+                }
+                .baseline {
+                  align-items: baseline;
+                }
+                .custom-border-size {
+                  height: 4px;
+                  border: none;
+                  background-color: #1F4590;
+                }
+                .nav-link {
+                  color: #ffa451 !important;
+                }
+                .border-medium {
+                  border-radius: 10px;
+                }
+                .custom-border-info {
+                  border-color: #1F4590;
+                }
+                .text-white{
+                  color: #fff;
+                }
+              </style>            
       
 </head>
 <body>
@@ -140,7 +143,7 @@
     <div class="text-center">
       <img src="../static/icon/profile_default.svg" alt="icon_profile_Default">
       <p class="font-semibold custom-text-warning">{{session['full_name']}}</p>
-      <hr class="custom-bg-info custom-border-size btn-custom">
+      <hr class="custom-bg-info custom-border-size ">
     </div>
     <ul class="nav flex-column text-start pl-3">
       <li class="nav-item">
@@ -151,7 +154,7 @@
       </li>
     </ul>
     <div>
-      <hr class="custom-bg-info custom-border-size btn-custom">
+      <hr class="custom-bg-info custom-border-size ">
     </div>
     <ul class="nav flex-column text-start pl-3">
       <li class="nav-item">
@@ -162,7 +165,7 @@
       </li>
     </ul>
     <div>
-      <hr class="custom-bg-info custom-border-size btn-custom">
+      <hr class="custom-bg-info custom-border-size ">
     </div>
     <div class="text-center social-icons">
       <a href="" class="mr-3"><img src="../static/icon/twitter.svg" height="25" width="25" alt="Twitter"></a>
@@ -171,88 +174,67 @@
     </div>
   </nav>
 
-  <!-- Content -->
-  <div class="content" id="mainContent">
-    <!-- Call to Action Section -->
-    <section class="container my-5">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div id="flashMessage" style="
-          position: fixed;
-          top: 0;
-          right: 0;
-          z-index: 9999;"
-          class="mt-3 mr-2 alert alert-success alert-dismissible bg-success text-white border-0 fade show"
-          role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          {{ messages[0] }}
-        </div>
-      {% endif %}
-    {% endwith %}
-    
-      <div class="card" style="border: 0;">
-        <div class="card-body">
-          <h1 class="font-semibold text-center custom-text-warning">Profile</h1>
-          {% if error %}
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
+   <!-- Content -->
+   <div class="content" id="mainContent">
+    <!-- Flash Message -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div id="flashMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ messages[0] }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     {% endif %}
-          <form class="col-md-12" id="form-now">
-            <div class="form-group">
-                <label for="username" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/username.svg" alt="icon_username"> Nama orang tua
-                </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="text" name="full_name" id="full_name" value="{{ session['full_name'] }}">
-            </div>
-            <div class="form-group">
-                <label for="email" class="custom-text-warning font-semibold">
-                    <img src="../static/icon/email.svg" alt="icon_email"> Email
-                </label>
-                <input class="btn bg-white mb-3 font-semibold font-regular form-control custom-border-info" type="email" name="email" id="email" value="{{ session['email'] }}">
-            </div>
-          
-            <div class="text-center">
-                <button type="button" onclick="updateProfile()" class="col-md-6 btn btn-custom custom-bg-info text-white">
-                    <h4 class="font-semibold" style="margin-bottom: 0;">Simpan</h4>
-                </button>
-            </div>
+    {% endwith %}
+
+    <!-- Profile Form -->
+    <div class="card">
+      <div class="card-body">
+        <h1 class="text-center font-semibold" style="color: #FFA451;">Profile</h1>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form id="form-now">
+          <div class="form-group">
+            <label class="font-semibold" style="color: #FFA451;"><img src="../static/icon/username.svg" alt="Username Icon"> Nama orang tua</label>
+            <input type="text" class="form-control " name="full_name" id="full_name" value="{{ session['full_name'] }}">
+          </div>
+          <div class="form-group">
+            <label class="font-semibold" style="color: #FFA451;"><img src="../static/icon/email.svg" alt="Email Icon"> Email</label>
+            <input type="email" class="form-control " name="email" id="email" value="{{ session['email'] }}">
+          </div>
+          <div class="text-center">
+            <button type="button" onclick="updateProfile()" class="btn btn-custom custom-bg-warning text-white">Simpan</button>
+          </div>
         </form>
-        <div class="text-end">
-          <button type="button" onclick="updateProfile()" class="col-md-6 btn btn-custom custom-bg-info text-white">
-              <h4 class="font-semibold" style="margin-bottom: 0;">Simpan</h4>
-          </button>
       </div>
-        </div>
-      </div>
-        <div class="text-end"><button class="btn btn-custom text-white">tambah data</button>dsf</div>
-        <table id="bookingsTable" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Anak</th>
-                    <th>Usia Anak</th>
-                    <th>Jenis Kelamin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for anak in anak_anak %}
-                <tr>
-                    <td>{{ anak.id }}</td>
-                    <td>{{ anak.nama_anak }}</td>
-                    <td>{{ anak.usia_anak }}</td>
-                    <td>{{ anak.jenis_kelamin }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </div>
-      
-       
-      </div>
-    </section>
+    </div>
+
+    <!-- Anak-anak Table -->
+    <div class="mt-3">
+      <button class="btn btn-custom-warning mb-2 custom-bg-info text-white">Tambah Data</button>
+      <table id="bookingsTable" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama Anak</th>
+            <th>Usia Anak</th>
+            <th>Jenis Kelamin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for anak in anak_anak %}
+          <tr>
+            <td>{{ anak.id }}</td>
+            <td>{{ anak.nama_anak }}</td>
+            <td>{{ anak.usia_anak }}</td>
+            <td>{{ anak.jenis_kelamin }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -328,6 +310,11 @@
           $('#flashMessage').fadeOut('fast');
         }, 1000); // Adjust the timeout value as needed
       </script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 {% else %}
