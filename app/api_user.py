@@ -53,6 +53,9 @@ def dashboarduser():
 @login_role_required('user')
 def profile():
     return render_template('user/profile.html')
+
+from sqlalchemy.exc import IntegrityError
+
 @app.route('/user/update_profile', methods=['POST'])
 @login_role_required('user')
 def update_profile():
@@ -63,31 +66,24 @@ def update_profile():
     new_address = request.form.get('address')
     new_email = request.form.get('email')
     new_bio = request.form.get('bio')
-    new_nama_anak = request.form.get('nama_anak')
-    new_usia_anak = request.form.get('usia_anak')
-    print(new_email)
-    print(new_full_name)
-    print(new_nama_anak)
-    print(new_usia_anak)
-# melihat nama profil di icon profil
+
     try:
-        if new_full_name:
-            # Check if the new username is unique
-            existing_user = User.query.filter_by(username=new_full_name).first()
+        # Update profile fields only if they are provided and different from current values
+        if new_full_name and new_full_name != profile.full_name:
+            if User.query.filter(User.username == new_full_name, User.id != user.id).first():
+                return jsonify({"msg": "Username already taken"}), 400
+            profile.full_name = new_full_name
 
-            # Check if the new username is the same as the current username
-            if new_full_name == session['full_name']:
-                profile.full_name = new_full_name
-            elif existing_user and existing_user.id != user.id:
-                return jsonify({"msg": "Username already taken"})
-            else:
-                profile.full_name = new_full_name
+        if new_email and new_email != profile.email:
+            if Profile.query.filter(Profile.email == new_email, Profile.user_id != user.id).first():
+                return jsonify({"msg": "Email already taken"}), 400
+            profile.email = new_email
 
-        profile.address = new_address
-        profile.email = new_email
-        profile.bio = new_bio
-        profile.nama_anak = new_nama_anak
-        profile.usia_anak = new_usia_anak
+        if new_address and new_address != profile.address:
+            profile.address = new_address
+
+        if new_bio and new_bio != profile.bio:
+            profile.bio = new_bio
 
         db.session.commit()
 
@@ -96,12 +92,10 @@ def update_profile():
         session['address'] = profile.address
         session['email'] = profile.email
         session['bio'] = profile.bio
-        session['nama_anak'] = profile.nama_anak
-        session['usia_anak'] = profile.usia_anak
 
         # Check if all required fields are filled
-        if not all([user.username, profile.full_name, profile.nama_anak, profile.usia_anak, profile.email]):
-            return jsonify({"msg": "Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"})
+        if not all([user.username, profile.full_name, profile.email]):
+            return jsonify({"msg": "Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"}), 400
 
         return jsonify({"msg": "Profil berhasil diperbarui"})
 
