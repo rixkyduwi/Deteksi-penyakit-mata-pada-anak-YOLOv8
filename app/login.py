@@ -94,11 +94,14 @@ def register_admin():
         if not username or not password:
             return jsonify({"msg": "Username and password are required"}), 400
         
-        # Check if the username already exists
+        # Check if the username and emaillegreop[d] already exists
         print(username+' | '+password+' | ')
         user = User.query.filter_by(username=username).first()
         if user:
             return jsonify({"msg": "Username already  exists"}), 400
+        email = User.query.filter_by(email=email).first()
+        if email:
+            return jsonify({"msg": "Email already  exists"}), 400
 
         # Hash the password before storing it
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')

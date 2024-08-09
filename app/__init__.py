@@ -66,12 +66,17 @@ class Profile(db.Model):
     email = db.Column(db.String(255), unique=True)
     phone_number = db.Column(db.String(20))
     bio = db.Column(db.Text)
-    nama_anak = db.Column(db.String(255))
-    usia_anak = db.Column(db.Integer)
     
     # Back reference to User
     user = db.relationship('User', back_populates='profile')
-
+class Data_Anak(db.Model):
+    id = db.Column(db.Integer, primaary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    nama_anak = db.Column(db.String(255))
+    usia_anak = db.Column(db.Integer)
+    jenis_kelamin = db.Column(db.String(255))
+    # Back reference to User
+    user = db.relationship('User', back_populates='data_anak')
 class History(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     nama_user = db.Column(db.String(225))    

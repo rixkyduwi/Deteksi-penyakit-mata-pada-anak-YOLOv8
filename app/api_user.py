@@ -1,4 +1,4 @@
-from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required
+from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required, Data_Anak
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import pandas as pd
 from PIL import Image
@@ -48,11 +48,78 @@ def dashboarduser():
         return redirect(url_for("profile"))
     else:
         return render_template('user/dashboard.html')
-#halaman homepage
+#halaman crud data anak
+@app.route('/user/data_anak', methods=['POST'])
+@login_role_required('user')
+def create_data_anak():
+    nama_anak = request.form.get('nama_anak')
+    usia_anak = request.form.get('usia_anak')
+    jenis_kelamin = request.form.get('jenis_kelamin')
+
+    try:
+        data_anak = Data_Anak(
+            user_id=session['id'],
+            nama_anak=nama_anak,
+            usia_anak=int(usia_anak),
+            jenis_kelamin=jenis_kelamin
+        )
+        db.session.add(data_anak)
+        db.session.commit()
+
+        return jsonify({"msg": "Data anak berhasil ditambahkan"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error: {str(e)}"}), 400
+@app.route('/user/data_anak/<int:id>', methods=['POST'])
+@login_role_required('user')
+def update_data_anak(id):
+    try:
+        data_anak = Data_Anak.query.filter_by(id=id, user_id=session['id']).first()
+
+        if not data_anak:
+            return jsonify({"msg": "Data anak tidak ditemukan"}), 404
+
+        nama_anak = request.form.get('nama_anak')
+        usia_anak = request.form.get('usia_anak')
+        jenis_kelamin = request.form.get('jenis_kelamin')
+
+        data_anak.nama_anak = nama_anak
+        data_anak.usia_anak = int(usia_anak)
+        data_anak.jenis_kelamin = jenis_kelamin
+
+        db.session.commit()
+
+        return jsonify({"msg": "Data anak berhasil diperbarui"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error: {str(e)}"}), 400
+@app.route('/user/data_anak/<int:id>', methods=['DELETE'])
+@login_role_required('user')
+def delete_data_anak(id):
+    try:
+        data_anak = Data_Anak.query.filter_by(id=id, user_id=session['id']).first()
+
+        if not data_anak:
+            return jsonify({"msg": "Data anak tidak ditemukan"}), 404
+
+        db.session.delete(data_anak)
+        db.session.commit()
+
+        return jsonify({"msg": "Data anak berhasil dihapus"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error: {str(e)}"}), 400
+
+#halaman profile
 @app.route('/user/profile')
 @login_role_required('user')
 def profile():
-    return render_template('user/profile.html')
+    anak_anak = Data_Anak.query.filter_by(user_id=session['id']).all()
+    data = [{"id": anak.id, "nama_anak": anak.nama_anak, "usia_anak": anak.usia_anak, "jenis_kelamin": anak.jenis_kelamin} for anak in anak_anak]
+    return render_template('user/profile.html',data=data)
 
 from sqlalchemy.exc import IntegrityError
 
