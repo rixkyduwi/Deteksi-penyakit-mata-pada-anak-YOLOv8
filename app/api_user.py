@@ -1,4 +1,4 @@
-from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required, Data_Anak
+from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required, DataAnak
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import pandas as pd
 from PIL import Image

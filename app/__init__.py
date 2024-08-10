@@ -69,14 +69,14 @@ class Profile(db.Model):
     
     # Back reference to User
     user = db.relationship('User', back_populates='profile')
-class Data_Anak(db.Model):
-    id = db.Column(db.Integer, primaary_key=True)
+class DataAnak(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     nama_anak = db.Column(db.String(255))
     usia_anak = db.Column(db.Integer)
     jenis_kelamin = db.Column(db.String(255))
     # Back reference to User
-    user = db.relationship('User', back_populates='data_anak')
+    user = db.relationship('User', back_populates='dataanak')
 class History(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     nama_user = db.Column(db.String(225))    
