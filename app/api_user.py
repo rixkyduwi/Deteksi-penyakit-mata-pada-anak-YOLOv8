@@ -1,4 +1,4 @@
-from . import app,mysql,db,History,Rekomendasi,User,Profile,bcrypt,login_role_required, DataAnak
+from . import app,mysql,db,History,Rekomendasi,User,bcrypt,login_role_required, DataAnak
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import pandas as pd
 from PIL import Image
@@ -44,7 +44,12 @@ def detail_tips(link):
 @app.route('/user/dashboard')
 @login_role_required('user')
 def dashboarduser():
-    if not all([session.get('full_name'), session.get('nama_anak'), session.get('usia_anak'), session.get('email')]):
+    data_anak = DataAnak.query.filter_by(user_id=session['id']).all()
+    # Cek jika data anak kosong
+    if not data_anak:
+        return redirect(url_for("profile"))
+    # Check if all required fields are filled
+    if not all([session.get('username'),session.get('full_name'),session.get('email')]):
         return redirect(url_for("profile"))
     else:
         return render_template('user/dashboard.html')
@@ -57,7 +62,7 @@ def create_data_anak():
     jenis_kelamin = request.form.get('jenis_kelamin')
 
     try:
-        data_anak = Data_Anak(
+        data_anak = DataAnak(
             user_id=session['id'],
             nama_anak=nama_anak,
             usia_anak=int(usia_anak),
@@ -75,7 +80,7 @@ def create_data_anak():
 @login_role_required('user')
 def update_data_anak(id):
     try:
-        data_anak = Data_Anak.query.filter_by(id=id, user_id=session['id']).first()
+        data_anak = DataAnak.query.filter_by(id=id, user_id=session['id']).first()
 
         if not data_anak:
             return jsonify({"msg": "Data anak tidak ditemukan"}), 404
@@ -99,7 +104,7 @@ def update_data_anak(id):
 @login_role_required('user')
 def delete_data_anak(id):
     try:
-        data_anak = Data_Anak.query.filter_by(id=id, user_id=session['id']).first()
+        data_anak = DataAnak.query.filter_by(id=id, user_id=session['id']).first()
 
         if not data_anak:
             return jsonify({"msg": "Data anak tidak ditemukan"}), 404
@@ -117,7 +122,7 @@ def delete_data_anak(id):
 @app.route('/user/profile')
 @login_role_required('user')
 def profile():
-    anak_anak = Data_Anak.query.filter_by(user_id=session['id']).all()
+    anak_anak = DataAnak.query.filter_by(user_id=session['id']).all()
     data = [{"id": anak.id, "nama_anak": anak.nama_anak, "usia_anak": anak.usia_anak, "jenis_kelamin": anak.jenis_kelamin} for anak in anak_anak]
     return render_template('user/profile.html',data=data)
 
@@ -127,41 +132,43 @@ from sqlalchemy.exc import IntegrityError
 @login_role_required('user')
 def update_profile():
     user = User.query.filter_by(id=session['id']).first()
-    profile = Profile.query.filter_by(user_id=session['id']).first()
 
     new_full_name = request.form.get('full_name')
     new_address = request.form.get('address')
     new_email = request.form.get('email')
-    new_bio = request.form.get('bio')
+    new_phone_number = request.form.get('phone_number')
 
     try:
-        # Update profile fields only if they are provided and different from current values
-        if new_full_name and new_full_name != profile.full_name:
+        # Update user fields only if they are provided and different from current values
+        if new_full_name and new_full_name != user.full_name:
             if User.query.filter(User.username == new_full_name, User.id != user.id).first():
-                return jsonify({"msg": "Username already taken"}), 400
-            profile.full_name = new_full_name
+                return jsonify({"msg": "nama lengkap already taken"}), 400
+            if User.query.filter(User.full_name == new_full_name, User.id != user.id).first():
+                return jsonify({"msg": "nama lengkap already taken"}), 400
+            user.full_name = new_full_name
 
-        if new_email and new_email != profile.email:
-            if Profile.query.filter(Profile.email == new_email, Profile.user_id != user.id).first():
+        if new_email and new_email != user.email:
+            if user.query.filter(user.email == new_email, user.user_id != user.id).first():
                 return jsonify({"msg": "Email already taken"}), 400
-            profile.email = new_email
+            user.email = new_email
 
-        if new_address and new_address != profile.address:
-            profile.address = new_address
+        if new_address and new_address != user.address:
+            user.address = new_address
 
-        if new_bio and new_bio != profile.bio:
-            profile.bio = new_bio
 
         db.session.commit()
 
         # Update session with new data
-        session['full_name'] = profile.full_name
-        session['address'] = profile.address
-        session['email'] = profile.email
-        session['bio'] = profile.bio
+        session['full_name'] = user.full_name
+        session['address'] = user.address
+        session['email'] = user.email
+        data_anak = DataAnak.query.filter_by(user_id=session['id']).all()
+        # Cek jika data anak kosong
+        if not data_anak:
+            return jsonify({"msg": "Minimal tambahkan data anak 1 sebelum melanjutkan"}), 400
 
         # Check if all required fields are filled
-        if not all([user.username, profile.full_name, profile.email]):
+        if not all([user.username, user.full_name, user.email]):
             return jsonify({"msg": "Silakan lengkapi semua data dahulu sebelum bisa mengakses fitur-fitur kami"}), 400
 
         return jsonify({"msg": "Profil berhasil diperbarui"})

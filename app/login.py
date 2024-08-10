@@ -1,4 +1,4 @@
-from . import app,db,bcrypt,jwt,Role,User,Profile,mail,s,login_role_required
+from . import app,db,bcrypt,jwt,Role,User,mail,s,login_role_required
 from itsdangerous import BadSignature, SignatureExpired
 import re
 from flask import request,render_template,redirect,url_for,jsonify,session,flash,render_template_string
@@ -25,18 +25,12 @@ def login():
         if not bcrypt.check_password_hash(user.password, password):
             return jsonify({"msg": "password salah"}), 401
         if user.verify_email == False:
-            return jsonify({"msg": "username salah"}), 401
+            return jsonify({"msg": "anda belum memverifikasi email"}), 401
         user_roles = [role.name for role in user.roles]
         access_token = create_access_token(identity=username)
         session['jwt_token'] = access_token
         session['full_name'] = username
         session['id'] = user.id
-        profile = Profile.query.filter_by(user_id=user.id).first()
-        if not profile:
-            profile = Profile(user_id=user.id, full_name='', address='', email='', phone_number='', bio='', nama_anak='', usia_anak=None)
-            db.session.add(profile)
-            db.session.commit()
-        profile = Profile.query.filter_by(user_id=user.id).first()
         
         # Redirect berdasarkan peran user
         if 'admin' in user_roles:
@@ -45,15 +39,12 @@ def login():
             return redirect(url_for('dashboard_admin'))
         elif 'user' in user_roles:
             session['role'] = 'user'
-            session['full_name'] = profile.full_name
-            session['address'] = profile.address
-            session['email'] = profile.email
-            session['phone_number'] = profile.phone_number
-            session['bio'] = profile.bio
-            session['nama_anak'] = profile.nama_anak
-            session['usia_anak'] = profile.usia_anak
+            session['full_name'] = user.full_name
+            session['address'] = user.address
+            session['email'] = user.email
+            session['phone_number'] = user.phone_number
             print(session)
-            if profile.full_name == "" or profile.nama_anak == "" or profile.usia_anak == "" or profile.email == "" or profile.phone_number == "":
+            if user.full_name == "" or user.email == "" or user.phone_number == "":
                 return jsonify(access_token=access_token, redirect_url=url_for('profile'))
             else:
                 return redirect(url_for('dashboard_user'))
@@ -153,7 +144,7 @@ def register_user():
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     # Create a new user
-    new_user = User(username=username, password=hashed_password, verify_email=False)
+    new_user = User(username=username, password=hashed_password, verify_email=False, full_name='', address='', email=email, phone_number='')
     admin_role = Role.query.filter_by(name='user').first()
     if not admin_role:
         admin_role = Role(name='user')
@@ -164,10 +155,6 @@ def register_user():
     
     # Add the new user to the database
     db.session.add(new_user)
-    db.session.commit()
-    
-    profile = Profile(user_id=new_user.id, full_name='', address='', email=email, phone_number='', bio='', nama_anak='', usia_anak=None)
-    db.session.add(profile)
     db.session.commit()
 
     token = s.dumps(email, salt='email-confirm')
@@ -209,14 +196,13 @@ def confirm_email(token):
     except BadSignature:
         return jsonify({"message": "Token tidak valid"}), 400
     
-    profile = Profile.query.filter_by(email=email).first()
-    user = User.query.filter_by(id=profile.user_id).first()
+    user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
     # Update the verify_email field to True
     user.verify_email = True
-    db.session.commit()   
+    db.session.commit()
     return '''
     <!doctype html>
     <html lang="en">
@@ -239,15 +225,14 @@ def forgot_password():
         if not email:
             return jsonify({"message": "Email harus diisi"}), 400
             
-        profile = Profile.query.filter_by(email=email).first()
-        user = User.query.filter_by(id=profile.user_id).first()
+        user = User.query.filter_by(email=email).first()
 
         if not user:
             return jsonify({"message": "Email tidak ditemukan"}), 404
 
         token = s.dumps(email, salt='reset-password')
 
-        reset_password_url = url_for('', token=token, _external=True)
+        reset_password_url = url_for('reset_password', token=token, _external=True)
         email_body = render_template_string('''
             Hello {{ user["name"] }},
             
@@ -278,7 +263,7 @@ def forgot_password():
         return render_template("forgot_password.html")
 
 
-@app.route('/reset_password/<token>', methods=['GET'])
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
@@ -287,13 +272,25 @@ def reset_password(token):
     except BadSignature:
         return jsonify({"message": "Token tidak valid"}), 400
     
-    profile = Profile.query.filter_by(email=email).first()
-    user = User.query.filter_by(id=profile.user_id).first()
+    user = User.query.filter_by(email=email).first()
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
-    
-    # Update the verify_email field to True
-    user.verify_email = True
-    db.session.commit()   
+    if request.method == 'POST':
+        password = request.form.get('password')
+        re_password = request.form.get('re_password')
+
+        if not password or not re_password:
+            return jsonify({"msg": "All fields are required"}), 400
+
+        if password != re_password:
+            return jsonify({"msg": "Passwords do not match"}), 400
+
+        # Hash the new password and update it in the database
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+
+        flash('Password berhasil direset. Silakan login dengan password baru Anda.')
+        return redirect(url_for('login'))
     return render_template("reset_password.html").format(token)

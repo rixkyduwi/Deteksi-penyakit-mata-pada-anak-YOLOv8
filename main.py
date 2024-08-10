@@ -1,4 +1,4 @@
-from app import app, db, bcrypt,Rekomendasi,Profile,User,Role
+from app import app, db, bcrypt,Rekomendasi,User,Role
 import flask_bcrypt
 import os
 from dotenv import load_dotenv
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         admin_user = User.query.filter_by(username='admin').first()
         if not admin_user:
             hashed_password = bcrypt.generate_password_hash("admin123").decode('utf-8')
-            admin_user = User(username="admin", password=hashed_password, verify_email=True)
+            admin_user = User(username="admin", password=hashed_password, verify_email=True,full_name="adminnn",email="admin@gmail.com",phone_number="08123456789")
             admin_user.roles.append(admin_role)
             db.session.add(admin_user)
             db.session.commit()
@@ -56,18 +56,9 @@ if __name__ == '__main__':
         regular_user = User.query.filter_by(username='user').first()
         if not regular_user:
             hashed_password = bcrypt.generate_password_hash("user123").decode('utf-8')
-            regular_user = User(username="user", password=hashed_password, verify_email=True)
+            regular_user = User(username="user", password=hashed_password, verify_email=True,full_name="userrr",email="user@gmail.com",phone_number="08123456789")
             regular_user.roles.append(user_role)
             db.session.add(regular_user)
-            db.session.commit()
-            
-            profile = Profile(
-                user_id=regular_user.id, 
-                full_name="user",
-                email="user@gmail.com",
-                phone_number="08-"
-            )
-            db.session.add(profile)
             db.session.commit()
 
         # Membuat rekomendasi mata sehat
