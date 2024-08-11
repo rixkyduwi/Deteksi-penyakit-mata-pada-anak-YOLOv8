@@ -13,7 +13,6 @@
   </div>
   {% endif %}
   {% endwith %}
-
   <!-- Profile Form -->
   <div class="card">
     <div class="card-body">
@@ -59,8 +58,8 @@
           <td>{{ anak.usia_anak }}</td>
           <td>{{ anak.jenis_kelamin }}</td>
           <td>
-            <button class="btn btn-custom-warning mb-2 custom-bg-warning text-white" onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')"> Edit Data </button>
-            <button class="btn btn-custom-danger mb-2 custom-bg-danger text-white" onclick="showModal('delete', '{{ anak.id }}')"> Hapus Data </button>
+            <button class="btn btn-custom-warning mb-2 bg-warning text-white" onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')"> Edit Data </button>
+            <button class="btn btn-custom-danger mb-2 bg-danger text-white" onclick="showModal('delete', '{{ anak.id }}')"> Hapus Data </button>
           </td>
         </tr>
         {% endfor %}
@@ -100,10 +99,10 @@
                         <label class="form-check-label" for="jenis_kelamin_p">Perempuan</label>
                     </div>
                 </div>
-                  <div id="deleteConfirmation" style="display: none;">
-                      <p>Anda yakin ingin menghapus data ini?</p>
-                  </div>
               </form>
+              <div id="deleteConfirmation" style="display: none;">
+                <p>Anda yakin ingin menghapus data ini?</p>
+            </div>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -167,10 +166,11 @@
     $.ajax({
         type: 'POST',
         url: '/user/update_profile',  // Ganti dengan URL endpoint Anda
-        data: {
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({ 
             full_name: full_name,
             email: $('#email').val(),
-        },
+        }),
         success: function(response) {
             // Tampilkan pesan sukses atau lakukan tindakan lain setelah sukses
             alert(response.msg);
@@ -185,10 +185,11 @@
                 errorMsg = xhr.responseJSON.msg;
             }
             alert(errorMsg);
+            location.reload()
         }
     });
 });
-function showModal(action, data) {
+function showModal(action, id, nama_anak, usia_anak, jenis_kelamin) {
     const modalTitle = $('#dataAnakModalLabel');
     const modalActionButton = $('#modalActionButton');
     const deleteConfirmation = $('#deleteConfirmation');
@@ -199,23 +200,29 @@ function showModal(action, data) {
     deleteConfirmation.hide();
 
     if (action === 'add') {
+        $("#dataAnakForm").show();
         modalTitle.text('Tambah Data Anak');
         modalActionButton.text('Tambah');
         modalActionButton.off('click').on('click', tambahData);
     } else if (action === 'edit') {
+        $("#dataAnakForm").show();
         modalTitle.text('Edit Data Anak');
         modalActionButton.text('Simpan');
-        $('#data_id').val(data.id);
-        $('#data_nama_anak').val(data.nama_anak);
-        $('#data_usia_anak').val(data.usia_anak);
-        // Set radio button based on the value
-        $(`input[name="jenis_kelamin"][value="${data.jenis_kelamin}"]`).prop('checked', true);
+        $('#data_id').val(id);
+        $('#data_nama_anak').val(nama_anak || '');
+        $('#data_usia_anak').val(usia_anak || '');
+        if (jenis_kelamin === 'L') {
+            $('#jenis_kelamin_l').prop('checked', true);
+        } else if (jenis_kelamin === 'P') {
+            $('#jenis_kelamin_p').prop('checked', true);
+        }
         modalActionButton.off('click').on('click', updateData);
     } else if (action === 'delete') {
         modalTitle.text('Hapus Data Anak');
         modalActionButton.text('Hapus');
-        $('#data_id').val(data.id);
+        $('#data_id').val(id);
         deleteConfirmation.show();
+        $("#dataAnakForm").hide();
         modalActionButton.off('click').on('click', deleteData);
     }
 
@@ -231,15 +238,17 @@ function tambahData() {
     $.ajax({
         type: 'POST',
         url: '/user/data_anak',  // Ganti dengan URL endpoint Anda
-        data: {
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({ 
             nama_anak: nama_anak,
             usia_anak: usia_anak,
             jenis_kelamin: jenis_kelamin,
-        },
+        }),
         success: function(response) {
             alert(response.msg);
             $('#dataAnakModal').modal('hide');
             // Refresh table or take other actions
+            location.reload()
         },
         error: function(xhr) {
             alert("Terjadi kesalahan: " + (xhr.responseJSON ? xhr.responseJSON.msg : "Kesalahan tidak diketahui"));
@@ -257,16 +266,18 @@ function updateData() {
     $.ajax({
         type: 'PUT',
         url: '/user/data_anak/'+id,  // Ganti dengan URL endpoint Anda
-        data: {
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({ 
             id: id,
             nama_anak: nama_anak,
             usia_anak: usia_anak,
             jenis_kelamin: jenis_kelamin,
-        },
+        }),
         success: function(response) {
             alert(response.msg);
             $('#dataAnakModal').modal('hide');
             // Refresh table or take other actions
+            location.reload()
         },
         error: function(xhr) {
             alert("Terjadi kesalahan: " + (xhr.responseJSON ? xhr.responseJSON.msg : "Kesalahan tidak diketahui"));
@@ -281,11 +292,13 @@ function deleteData() {
     $.ajax({
         type: 'DELETE',
         url: '/user/data_anak/'+id,  // Ganti dengan URL endpoint Anda
-        data: { id: id },
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({  id: id }),
         success: function(response) {
             alert(response.msg);
             $('#dataAnakModal').modal('hide');
             // Refresh table or take other actions
+            location.reload()
         },
         error: function(xhr) {
             alert("Terjadi kesalahan: " + (xhr.responseJSON ? xhr.responseJSON.msg : "Kesalahan tidak diketahui"));

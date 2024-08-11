@@ -48,18 +48,64 @@
             </div>
         </section>
     </div>
+    <div class="modal fade" id="dataAnakModal" tabindex="-1" role="dialog" aria-labelledby="dataAnakModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataAnakModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <table id="dataAnakTable" class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Nama Anak</th>
+                        <th>Usia Anak</th>
+                        <th>Jenis Kelamin</th>
+                        <th>aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for anak in data %}
+                      <tr>
+                        <td>{{ anak.id }}</td>
+                        <td>{{ anak.nama_anak }}</td>
+                        <td>{{ anak.usia_anak }}</td>
+                        <td>{{ anak.jenis_kelamin }}</td>
+                        <td>
+                          <button class="btn btn-custom-warning mb-2 bg-warning text-white" onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')"> Edit Data </button>
+                          <button class="btn btn-custom-danger mb-2 bg-danger text-white" onclick="showModal('delete', '{{ anak.id }}')"> Hapus Data </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+      </div>
     {% endblock %}
     {% block js %}    
     <script>
         $(document).ready(function () {
             document.querySelectorAll('input').forEach(function(input) {
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); 
-        }
-    });
-});
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                }
+            });
+        });
+        
+    $('#dataAnakTable').DataTable();
+    var selectedImageBlob = null;
 
+function openDataAnakModal(imageBlob) {
+    selectedImageBlob = imageBlob;  // Simpan blob gambar yang diambil
+    $('#dataAnakModal').modal('show');  // Buka modal data anak
+}      
             function adjustContentStyle() {
                 const content = $('.content');
                 const sidebar = document.querySelector('.sidebar');
@@ -102,39 +148,10 @@
             });
 
             $('#upload').on('click', function () {
-                canvas.toBlob(function (blob) {
-                    var formData = new FormData();
-                    formData.append('gambar', blob, 'photo.png');
                 $('#upload').text("Loading...")
                 $('#upload').attr("disabled","disabled")
-
-                    $.ajax({
-                        type: 'POST',
-                        url: '/predict_mtcnn',// /predict_mtnn buat mengenali wajah dulu baru mengenali penyakit  /predict buat langsung mengenaali penyakit
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (data){
-                        if (data.msg === "SUKSES") {
-                            alert("Status : Sukses ");
-                            var id_hasil = data.id_hasil;
-                            window.location.href = "/user/hasil_diagnosa/" + id_hasil;
-                        } else {
-                            alert("Status: " + data.msg);
-                            window.location.href = "/user/dashboard";
-                        }
-                    },
-                     error: function(xhr) {
-                      // Tangani dan tampilkan pesan error dari server
-                      var errorMsg = "Terjadi kesalahan pada Server";
-                      if (xhr.responseJSON && xhr.responseJSON.msg) {
-                          errorMsg = xhr.responseJSON.msg;
-                        window.location.href = "/user/dashboard";
-                      }
-                      alert(errorMsg);
-                        window.location.href = "/user/dashboard";
-                  }
-                    });
+                canvas.toBlob(function (blob) {
+                    openDataAnakModal(blob);
                 }, 'image/png');
             });
             // Secara keseluruhan, kode ini memastikan bahwa aliran video dari kamera perangkat dihentikan dan dilepaskan ketika modal
@@ -160,36 +177,48 @@
                 formData.append('gambar', files[0]);
                 $('#cek_hasil').text("Loading...")
                 $('#cek_hasil').attr("disabled","disabled")
-                $.ajax({
-                    url: '/predict_mtcnn',// /predict_mtnn buat mengenali wajah dulu baru mengenali penyakit  /predict buat langsung mengenaali penyakit
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    method: 'POST',
-                    success: function (data) {
-                        if (data.msg === "SUKSES") {
-                            alert("Status : Sukses ");
-                            var id_hasil = data.id_hasil;
-                            window.location.href = "/user/hasil_diagnosa/" + id_hasil;
-                        } else {
-                            alert("Status: " + data.msg);
-                            window.location.href = "/user/dashboard";
-                        }
-                    },
-                     error: function(xhr) {
-                      // Tangani dan tampilkan pesan error dari server
-                      var errorMsg = "Terjadi kesalahan pada Server";
-                      if (xhr.responseJSON && xhr.responseJSON.msg) {
-                          errorMsg = xhr.responseJSON.msg;
-                        window.location.href = "/user/dashboard";
-                      }
-                      alert(errorMsg);
-                        window.location.href = "/user/dashboard";
-                  }
-                });
+                openDataAnakModal(files[0]);  // Buka modal data anak dengan file yang diunggah
+                
             });
+// Handle data anak selection
+$('#dataAnakTable').on('click', '.pilih-anak', function () {
+        var idAnak = $(this).data('id');
 
+        if (selectedImageBlob) {
+            var formData = new FormData();
+            formData.append('gambar', selectedImageBlob, 'photo.png');
+            formData.append('id_anak', idAnak);
+
+            $.ajax({
+                type: 'POST',
+                url: '/proses_diagnosa',  // Ganti dengan URL untuk proses diagnosa
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.msg === "SUKSES") {
+                        alert("Status : Sukses ");
+                        var id_hasil = data.id_hasil;
+                        window.location.href = "/user/hasil_diagnosa/" + id_hasil;
+                    } else {
+                        alert("Status: " + data.msg);
+                        window.location.href = "/user/dashboard";
+                    }
+                },
+                error: function(xhr) {
+                    var errorMsg = "Terjadi kesalahan pada Server";
+                    if (xhr.responseJSON && xhr.responseJSON.msg) {
+                        errorMsg = xhr.responseJSON.msg;
+                        window.location.href = "/user/dashboard";
+                    }
+                    alert(errorMsg);
+                    window.location.href = "/user/dashboard";
+                }
+            });
+        } else {
+            alert('No image selected.');
+        }
+    });
             // Hide the flash message after 1 second
             setTimeout(function () {
                 $('#flashMessage').fadeOut('fast');

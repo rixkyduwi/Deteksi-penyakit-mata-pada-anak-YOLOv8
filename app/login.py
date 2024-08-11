@@ -28,8 +28,9 @@ def login():
             return jsonify({"msg": "anda belum memverifikasi email"}), 401
         user_roles = [role.name for role in user.roles]
         access_token = create_access_token(identity=username)
+        session["username"] = username
         session['jwt_token'] = access_token
-        session['full_name'] = username
+        session['full_name'] = user.full_name
         session['id'] = user.id
         
         # Redirect berdasarkan peran user
@@ -39,7 +40,6 @@ def login():
             return jsonify(access_token=access_token, redirect_url=url_for('dashboardadmin'))
         elif 'user' in user_roles:
             session['role'] = 'user'
-            session['full_name'] = user.full_name
             session['address'] = user.address
             session['email'] = user.email
             session['phone_number'] = user.phone_number

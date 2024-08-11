@@ -52,34 +52,43 @@ def dashboarduser():
     if not all([session.get('username'),session.get('full_name'),session.get('email')]):
         return redirect(url_for("profile"))
     else:
-        return render_template('user/dashboard.html')
+        return render_template('user/dashboard.html',r)
 #halaman crud data anak
 @app.route('/user/data_anak', methods=['POST'])
 @login_role_required('user')
 def create_data_anak():
     data = request.get_json()
+    
+    # Debugging purpose
     print(data)
-    nama_anak = data['nama_anak']
-    usia_anak = data['usia_anak']
+    
+    nama_anak = data.get('nama_anak')
+    usia_anak = data.get('usia_anak')
     jenis_kelamin = data.get('jenis_kelamin')
 
     try:
+        # Validasi input
         if not nama_anak or not usia_anak or jenis_kelamin not in ['L', 'P']:
             return jsonify({"msg": "Invalid data"}), 400
+        
+        # Membuat instance DataAnak
         data_anak = DataAnak(
             user_id=session['id'],
             nama_anak=nama_anak,
-            usia_anak=int(usia_anak),
+            usia_anak=usia_anak,
             jenis_kelamin=jenis_kelamin
         )
         db.session.add(data_anak)
         db.session.commit()
 
-        return jsonify({"msg": "Data anak berhasil ditambahkan"}), 200
+        return jsonify({"msg": "Data anak berhasil ditambahkan"}), 201
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"msg": f"Error: {str(e)}"}), 400
+        # Log the actual error message somewhere secure
+        print(f"Error: {str(e)}")
+        return jsonify({"msg": "Something went wrong, please try again later."}), 500
+
 @app.route('/user/data_anak/<int:id>', methods=['PUT'])
 @login_role_required('user')
 def update_data_anak(id):
@@ -94,7 +103,7 @@ def update_data_anak(id):
         jenis_kelamin = data.get('jenis_kelamin')
 
         data_anak.nama_anak = nama_anak
-        data_anak.usia_anak = int(usia_anak)
+        data_anak.usia_anak = usia_anak
         data_anak.jenis_kelamin = jenis_kelamin
 
         db.session.commit()
@@ -129,8 +138,6 @@ def profile():
     anak_anak = DataAnak.query.filter_by(user_id=session['id']).all()
     data = [{"id": anak.id, "nama_anak": anak.nama_anak, "usia_anak": anak.usia_anak, "jenis_kelamin": anak.jenis_kelamin} for anak in anak_anak]
     return render_template('user/profile.html',data=data)
-
-from sqlalchemy.exc import IntegrityError
 
 @app.route('/user/update_profile', methods=['POST'])
 @login_role_required('user')
