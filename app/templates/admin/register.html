@@ -82,7 +82,7 @@
             <form class="form text-center" id="form-now">
                 <input class="btn bg-white mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="text" name="username" id="username"><br>
                 <input class="btn bg-white mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="password" name="password"><br>
-                <button onclick="" class="col-md-6 mt-3 mb-3 btn btn-custom custom-bg-warning text-white">
+                <button id="submit" class="col-md-6 mt-3 mb-3 btn btn-custom custom-bg-warning text-white">
                 <h4 class="font-semibold" style="margin-bottom: 0px;">Register</h4>
                 </button>
             </form>
@@ -95,10 +95,44 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
+    document.querySelectorAll('input').forEach(function(input) {
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+        }
+    });
+});
+
     // Hide the flash message after 1 second
     setTimeout(function() {
       $('#flashMessage').fadeOut('fast');
     }, 1000); // Adjust the timeout value as needed
+    function kirim(){
+        $.ajax({
+            url: '/bikin_akun_admin',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                username:document.getElementById("username").value,
+                password:document.getElementById("password").value
+            }),
+            success: function(response) {
+                // Proses respons dari server
+                console.log(response);
+                alert(response.msg)
+                window.location.href = '/admin/dashboard'
+            },
+            error: function(xhr) {
+                // Tangani dan tampilkan pesan error dari server
+                var errorMsg = "Terjadi kesalahan pada Server";
+                if (xhr.responseJSON && xhr.responseJSON.msg) {
+                    errorMsg = xhr.responseJSON.msg;
+                }
+                alert(errorMsg);
+            }
+        });
+    }
+    document.getElementById("submit").addEventListener("click", kirim);
   </script>
 </body>
 </html>

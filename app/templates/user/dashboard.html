@@ -118,6 +118,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
+            document.querySelectorAll('input').forEach(function(input) {
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+        }
+    });
+});
+
             function adjustContentStyle() {
                 const content = $('.content');
                 const sidebar = document.querySelector('.sidebar');
@@ -182,10 +190,16 @@
                             window.location.href = "/user/dashboard";
                         }
                     },
-                    error: function (error) {
-                        alert("Error: " + error);
+                     error: function(xhr) {
+                      // Tangani dan tampilkan pesan error dari server
+                      var errorMsg = "Terjadi kesalahan pada Server";
+                      if (xhr.responseJSON && xhr.responseJSON.msg) {
+                          errorMsg = xhr.responseJSON.msg;
                         window.location.href = "/user/dashboard";
-                    }
+                      }
+                      alert(errorMsg);
+                        window.location.href = "/user/dashboard";
+                  }
                     });
                 }, 'image/png');
             });
@@ -229,10 +243,16 @@
                             window.location.href = "/user/dashboard";
                         }
                     },
-                    error: function (error) {
-                        alert("Error: " + error);
+                     error: function(xhr) {
+                      // Tangani dan tampilkan pesan error dari server
+                      var errorMsg = "Terjadi kesalahan pada Server";
+                      if (xhr.responseJSON && xhr.responseJSON.msg) {
+                          errorMsg = xhr.responseJSON.msg;
                         window.location.href = "/user/dashboard";
-                    }
+                      }
+                      alert(errorMsg);
+                        window.location.href = "/user/dashboard";
+                  }
                 });
             });
 

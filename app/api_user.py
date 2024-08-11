@@ -205,7 +205,7 @@ def ganti_password_post():
             # Mengganti password lama dengan password baru
             user.password = bcrypt.generate_password_hash(password_baru).decode('utf-8')
             db.session.commit()
-            return jsonify({"msg": "SUKSES"})
+            return jsonify({"msg": "Berhasil Update Password"})
         else:
             return jsonify({"msg": "Password lama salah"})
     else:

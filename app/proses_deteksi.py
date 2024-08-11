@@ -213,5 +213,5 @@ def predict_mtcnn():
         new_history_id = history.id
         print("None of the names were found in the output.")
         return jsonify({"msg": "SUKSES", "id_hasil": new_history_id})
-        return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
+    return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
     

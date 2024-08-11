@@ -138,10 +138,12 @@ def register_user():
 
     if password != re_password:
         return jsonify({"msg": "Passwords do not match"}), 400
-    user = User.query.filter_by(username=username).first()
-    if user:
+    cek_username = User.query.filter_by(username=username).first()
+    if cek_username:
         return jsonify({"msg": "Username already exists"}), 400
-
+    cek_email = User.query.filter_by(email=email).first()
+    if cek_email:
+        return jsonify({"msg": "Username already exists"}), 400
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     # Create a new user
     new_user = User(username=username, password=hashed_password, verify_email=False, full_name='', address='', email=email, phone_number='')
@@ -175,7 +177,7 @@ def register_user():
         
         Salam Hangat,
         
-        Pejuang D4
+        Admin
     ''', username=username,  conf_email_url=conf_email_url)
 
     msg = Message('Confirmasi Email Anda',
@@ -186,15 +188,15 @@ def register_user():
 
     flash(" Register berhasil silahkan cek email anda.")
 
-    return redirect(url_for('login', msg='Register Berhasil silahkan cek email anda '))
+    return jsonify({"msg":'Register Berhasil silahkan cek email anda '})
 @app.route('/confirm_email/<token>', methods=['GET'])
 def confirm_email(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
     except SignatureExpired:
-        return jsonify({"message": "Token telah kedaluwarsa"}), 400
+        return jsonify({"msg": "Token telah kedaluwarsa"}), 400
     except BadSignature:
-        return jsonify({"message": "Token tidak valid"}), 400
+        return jsonify({"msg": "Token tidak valid"}), 400
     
     user = User.query.filter_by(email=email).first()
     if not user:
@@ -215,7 +217,58 @@ def confirm_email(token):
       </body>
     </html>
     '''.format(token)
+@app.route("/verif_email",methods=["GET","POST"])
+def verif_email():
+    if request.method == 'POST':
+        data = request.get_json()
+        email = data.get("email")
 
+        if not email:
+            return jsonify({"msg": "Email harus diisi"})
+            
+        user = User.query.filter_by(email=email).first()
+        print(user)
+        if not user:
+            return jsonify({"msg": "Email tidak ditemukan"})
+
+        verified_user = User.query.filter_by(email=email,verify_email=True).first()
+        print(verified_user)
+        if verified_user:
+            return jsonify({"msg": "user sudah terverifikasi"})
+
+        token = s.dumps(email, salt='email-confirm')
+
+        conf_email_url = url_for('confirm_email', token=token, _external=True)
+        email_body = render_template_string('''
+            Hello {{ username }},
+            
+            Anda menerima email ini, karena kami memerlukan verifikasi email untuk akun Anda agar aktif dan dapat digunakan.
+            
+            Silakan klik tautan di bawah ini untuk verifikasi email Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
+            
+            confirm youe email: {{ conf_email_url }}
+            
+            hubungi dukungan jika Anda memiliki pertanyaan.
+            
+            Untuk bantuan lebih lanjut, silakan hubungi tim dukungan kami di developer zulfanisa0103@gmail.com .
+            
+            Salam Hangat,
+            
+            Pejuang D4
+        ''', username=user.username,  conf_email_url=conf_email_url)
+
+        msg = Message('Confirmasi Email Anda',
+                    sender='zulfanisa0103@gmail.com', recipients=[email])
+
+        msg.body = email_body
+        mail.send(msg)
+
+        flash(" Register berhasil silahkan cek email anda.")
+
+        return redirect(url_for('login', msg='Register Berhasil silahkan cek email anda '))
+    else:
+        return render_template("verif_email.html")
+    
 @app.route("/forgotpassword",methods=["GET","POST"])
 def forgot_password():
     if request.method == 'POST':
@@ -223,12 +276,12 @@ def forgot_password():
         email = data.get("email")
 
         if not email:
-            return jsonify({"message": "Email harus diisi"}), 400
+            return jsonify({"msg": "Email harus diisi"})
             
         user = User.query.filter_by(email=email).first()
 
         if not user:
-            return jsonify({"message": "Email tidak ditemukan"}), 404
+            return jsonify({"msg": "Email tidak ditemukan"})
 
         token = s.dumps(email, salt='reset-password')
 
@@ -258,7 +311,7 @@ def forgot_password():
         mail.send(msg)
 
 
-        return jsonify({"message": "Email untuk mereset kata sandi telah dikirim."}), 200
+        return jsonify({"msg": "Email untuk mereset kata sandi telah dikirim."})
     else:
         return render_template("forgot_password.html")
 
@@ -268,9 +321,9 @@ def reset_password(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
     except SignatureExpired:
-        return jsonify({"message": "Token telah kedaluwarsa"}), 400
+        return jsonify({"msg": "Token telah kedaluwarsa"}), 400
     except BadSignature:
-        return jsonify({"message": "Token tidak valid"}), 400
+        return jsonify({"msg": "Token tidak valid"}), 400
     
     user = User.query.filter_by(email=email).first()
     
@@ -278,13 +331,6 @@ def reset_password(token):
         return jsonify({"msg": "User not found"}), 404
     if request.method == 'POST':
         password = request.form.get('password')
-        re_password = request.form.get('re_password')
-
-        if not password or not re_password:
-            return jsonify({"msg": "All fields are required"}), 400
-
-        if password != re_password:
-            return jsonify({"msg": "Passwords do not match"}), 400
 
         # Hash the new password and update it in the database
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -292,5 +338,5 @@ def reset_password(token):
         db.session.commit()
 
         flash('Password berhasil direset. Silakan login dengan password baru Anda.')
-        return redirect(url_for('login'))
+        return jsonify({"msg": "Sukses"})
     return render_template("reset_password.html").format(token)

@@ -61,9 +61,10 @@
   <section class="container my-5" >
     <div class="card border-medium" style="border-radius: 20px;">
         <div class="card-body text-center ">
-            <h1 class="font-semibold custom-text-warning">Ganti Password</h1>
+            <h1 class="font-semibold custom-text-warning">Verifikasi Email</h1>
+            <span>Isi Form ini apabila anda tidak menerima Email Konfirmasi di kotak masuk email anda. Apabila tetap tidak ada maka cek folder spam. Apabila Email belum terdaftar maka silahkan <a href="/login">Register</a></a></span>
             <form class="form text-center" id="form-now">
-                <input class="btn bg-white mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="email" id="email" name="email" placeholder="email yang sudah di daftarkan"><br>
+                <input class="form-control-center mt-3 mb-3 text-center col-md-6 font-semibold font-regular" type="email" id="email" name="email" placeholder="email yang sudah di daftarkan"><br>
                 <button id="submit" type="button" class="col-md-6 mt-3 mb-3 btn btn-custom custom-bg-warning text-white">
                 <h4 class="font-semibold" style="margin-bottom: 0px;">Submit</h4>
                 </button>
@@ -76,26 +77,47 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-     function kirim(){
+document.querySelectorAll('input').forEach(function(input) {
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+        }
+    });
+});
+
+document.getElementById("email").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Mencegah enter dari memicu tindakan default
+        }
+    });
+     function kirim(){  
+      var emailInput = document.getElementById("email");
+      if (!emailInput.checkValidity()) {
+        alert("Masukkan alamat email yang valid.");
+        return;
+    }
+
         $.ajax({
-            url: '/',
+            url: '/verif_email',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
-                password_lama:document.getElementById("password_lama").value,
-                password_baru:document.getElementById("password_baru").value
+                email:document.getElementById("email").value
             }),
             success: function(response) {
                 // Proses respons dari server
                 console.log(response);
-                if (response.msg="SUKSES"){
-                    alert("Sukses Silahkan Cek Email Anda")
-                }
-                else{
                   alert(response.msg)
-                }
                 
-            }
+            },
+            error: function(xhr) {
+                      // Tangani dan tampilkan pesan error dari server
+                      var errorMsg = "Terjadi kesalahan pada Server";
+                      if (xhr.responseJSON && xhr.responseJSON.msg) {
+                          errorMsg = xhr.responseJSON.msg;
+                      }
+                      alert(errorMsg);
+                  }
         });
     }
     document.getElementById("submit").addEventListener("click", kirim);</script>

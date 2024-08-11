@@ -290,6 +290,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+  document.querySelectorAll('input').forEach(function(input) {
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+        }
+    });
+});
+
   document.getElementById("msg-login").style.display = "none";
   document.getElementById("msg-register").style.display = "none";
   function saveTokenToLocalStorage(token) {
@@ -311,7 +319,7 @@
               password:document.getElementById("pswd-login").value
           });
           var next_url = "/user/dashboard";  
-          var msg= "login berhasil"
+          var pesan= "login berhasil"
         }
       }
       else{
@@ -331,7 +339,7 @@
               password:document.getElementById("pswd-daftar").value,
               re_password:document.getElementById("re-pswd-daftar").value
           });
-          var login = "Register berhasil silahkan cek email anda"
+          var pesan = "Register berhasil silahkan cek email anda"
           var next_url = "/login";
         }
       }
@@ -354,9 +362,12 @@
               }
           },
           error: function(xhr) {
-          // Menangani kesalahan
-              var errorMessage = JSON.parse(xhr.responseText);
-              console.log(errorMessage);
+            // Tangani dan tampilkan pesan error dari server
+            var errorMsg = "Terjadi kesalahan pada Server";
+            if (xhr.responseJSON && xhr.responseJSON.msg) {
+                errorMsg = xhr.responseJSON.msg;
+            }
+            alert(errorMsg);
               document.getElementById(msg).innerText = errorMessage.msg;
               document.getElementById(msg).style.display = "block";
         }

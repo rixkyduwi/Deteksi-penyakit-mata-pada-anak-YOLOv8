@@ -60,7 +60,7 @@ if __name__ == '__main__':
             regular_user.roles.append(user_role)
             db.session.add(regular_user)
             db.session.commit()
-
+ 
         # Membuat rekomendasi mata sehat
         rekomendasi_data = [
             {
