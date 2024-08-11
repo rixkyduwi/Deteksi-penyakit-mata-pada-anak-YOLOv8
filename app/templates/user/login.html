@@ -327,6 +327,11 @@
     const emailDaftar = document.getElementById('email-daftar').value;
     const pswdDaftar = document.getElementById('pswd-daftar').value;
     const repswd = document.getElementById("re-pswd-daftar").value
+    
+      if (!emailDaftar.checkValidity()) {
+        alert("Masukkan alamat email yang valid.");
+        return;
+    }
     if (!usernameDaftar || !emailDaftar || !pswdDaftar || !repswd) {
       alert("Mohon lengkapi semua field.");
     } else {
@@ -352,14 +357,8 @@
           success: function(response) {
               // Proses respons dari server
               console.log(response);
-              if(response=="Username and password are required" || response=="Username already exists"){
-                  document.getElementById(msg).innerText = response;
-                  document.getElementById(msg).style.display = "block";
-              } else {
-                  saveTokenToLocalStorage(response);
-                  alert(msg)
-                  window.location.href = next_url;
-              }
+              alert("login berhasil");
+              window.location.href = response.redirected_url;
           },
           error: function(xhr) {
             // Tangani dan tampilkan pesan error dari server

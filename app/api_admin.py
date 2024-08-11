@@ -83,7 +83,7 @@ def fetch_data_and_format(query):
 #halaman admin
 @app.route('/admin/dashboard')
 @login_role_required('admin')
-def dashboard():
+def dashboardadmin():
     return render_template('admin/dashboard.html')
 #halaman history konsultasi
 @app.route('/admin/history_konsultasi')

@@ -64,7 +64,7 @@ class DataAnak(db.Model):  # Penamaan class
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     nama_anak = db.Column(db.String(255), nullable=False)
-    usia_anak = db.Column(db.Integer, nullable=False)
+    usia_anak = db.Column(db.String(100), nullable=False)
     jenis_kelamin = db.Column(db.String(1), nullable=False)
 
 class History(db.Model):

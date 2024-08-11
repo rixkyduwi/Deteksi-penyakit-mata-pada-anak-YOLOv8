@@ -36,7 +36,7 @@ def login():
         if 'admin' in user_roles:
             session['role'] = 'admin'
             print(session)
-            return redirect(url_for('dashboard_admin'))
+            return jsonify(access_token=access_token, redirect_url=url_for('dashboardadmin'))
         elif 'user' in user_roles:
             session['role'] = 'user'
             session['full_name'] = user.full_name
@@ -47,7 +47,7 @@ def login():
             if user.full_name == "" or user.email == "" or user.phone_number == "":
                 return jsonify(access_token=access_token, redirect_url=url_for('profile'))
             else:
-                return redirect(url_for('dashboard_user'))
+                return jsonify(access_token=access_token, redirect_url=url_for('dashboarduser'))
 
     return render_template('user/login.html')
 # Endpoint yang memerlukan autentikasi
@@ -263,9 +263,9 @@ def verif_email():
         msg.body = email_body
         mail.send(msg)
 
-        flash(" Register berhasil silahkan cek email anda.")
+        flash("Silahkan cek email anda.")
 
-        return redirect(url_for('login', msg='Register Berhasil silahkan cek email anda '))
+        return jsonify({"msg":"Silahkan cek email anda."})
     else:
         return render_template("verif_email.html")
     
@@ -319,7 +319,7 @@ def forgot_password():
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
-        email = s.loads(token, salt='email-confirm', max_age=3600)
+        email = s.loads(token, salt='reset-password', max_age=3600)
     except SignatureExpired:
         return jsonify({"msg": "Token telah kedaluwarsa"}), 400
     except BadSignature:
@@ -330,7 +330,8 @@ def reset_password(token):
     if not user:
         return jsonify({"msg": "User not found"}), 404
     if request.method == 'POST':
-        password = request.form.get('password')
+        data = request.get_json()
+        password = data.get('password')
 
         # Hash the new password and update it in the database
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -339,4 +340,4 @@ def reset_password(token):
 
         flash('Password berhasil direset. Silakan login dengan password baru Anda.')
         return jsonify({"msg": "Sukses"})
-    return render_template("reset_password.html").format(token)
+    return render_template("reset_password.html",token=token)
