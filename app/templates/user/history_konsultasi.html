@@ -1,0 +1,54 @@
+{% extends 'user/layout_user.html' %}
+{% block content %}
+<!-- Content -->
+  <div class="content" id="mainContent">
+    <!-- Hero Section -->
+    <section class="container my-5" id="home">
+      <div class="row">
+        <div class="col-md-12 mb-3 text-center align-center">
+          <div class="text-center d-flex baseline">
+            <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi</h1>
+            <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Nama Anak</th>
+                  <th>Usia Anak</th>
+                  <th>Tanggal Konsultasi</th>
+                  <th>Hasil Diagnosa</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in histori_records %}
+                <tr>
+                  <td>{{ i.nama_user }}</td>
+                  <td>{{ i.nama_anak }}</td>
+                  <td>{{ i.usia_anak }}</td>
+                  <td>{{ i.tanggal_konsultasi  }}</td>
+                  <td>{{ i.hasil_diagnosa }}</td>
+                  <td>
+                    <button class="btn btn-info btn-sm" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  {% endblock %}
+  {% block js %}
+    <!-- Inisialisasi DataTables -->
+    <script>
+      $(document).ready(function() {
+        $('#data-table').DataTable();
+      });
+    </script>
+  {% endblock %}

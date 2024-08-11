@@ -8,6 +8,8 @@
   <!-- Link to Google Fonts Raleway -->
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Link to DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <style>
     body {
       min-height: 100vh;
@@ -119,8 +121,8 @@
       text-align: center;
     }
   </style>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Topbar -->
@@ -134,8 +136,6 @@
         <button id="sidebarToggle" class="btn btn-secondary">☰</button>
       </div>
     </div>
-    <div></div>
-    <div></div>
   </nav>
   <!-- Sidebar -->
   <nav class="sidebar bg-light p-2">
@@ -149,7 +149,7 @@
         <a class="nav-link" href="/admin/dashboard"><img src="../static/icon/jadwal.svg" height="25" width="25" alt="icon_dashboard"> Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin/history_konsultasi"><img src="../static/icon/history_konsultasi.svg" height="25" width="25" alt="icon_username"> History Konsultasi</a>
+        <a class="nav-link" href="/admin/history_konsultasi"><img src="../static/icon/history_konsultasi.svg" height="25" width="25" alt="icon_history_konsultasi"> History Konsultasi</a>
       </li>
     </ul>
     <div>
@@ -157,7 +157,7 @@
     </div>
     <ul class="nav flex-column text-start pl-3">
       <li class="nav-item">
-        <a class="nav-link" href="/admin/penyakit_terbanyak"><img src="../static/icon/icon_bar_chart.svg" height="25" width="25" alt="icon_ganti_password"> Penyakit Terbanyak</a>
+        <a class="nav-link" href="/admin/penyakit_terbanyak"><img src="../static/icon/icon_bar_chart.svg" height="25" width="25" alt="icon_bar_chart"> Penyakit Terbanyak</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/keluar"><img src="../static/icon/logout.svg" height="25" width="25" alt="icon_keluar"> Keluar</a>
@@ -167,9 +167,9 @@
       <hr class="custom-bg-info custom-border-size btn-custom">
     </div>
     <div class="text-center social-icons">
-      <a href="" class="mr-3"><img src="../static/icon/twitter.svg" height="25" width="25" alt=""></a> 
-      <a href="" class="mr-3"><img src="../static/icon/instagram.svg" height="25" width="25" alt=""></a>
-      <a href=""><img src="../static/icon/whatsapp.svg" height="25" width="25" alt=""></a>
+      <a href="" class="mr-3"><img src="../static/icon/twitter.svg" height="25" width="25" alt="twitter"></a> 
+      <a href="" class="mr-3"><img src="../static/icon/instagram.svg" height="25" width="25" alt="instagram"></a>
+      <a href=""><img src="../static/icon/whatsapp.svg" height="25" width="25" alt="whatsapp"></a>
     </div>
   </nav>
   <!-- Content -->
@@ -205,9 +205,8 @@
                   <td>
                     <button class="btn btn-info btn-sm" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
                   </td>
-                  {% endfor %}
                 </tr>
-                <!-- Tambahkan baris data lain di sini -->
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -215,40 +214,20 @@
       </div>
     </section>
   </div>
+  <!-- Load jQuery, Bootstrap, and DataTables JavaScript -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Inisialisasi DataTables -->
   <script>
-    $(document).ready(function () {
-      document.querySelectorAll('input').forEach(function(input) {
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); 
-        }
-    });
-});
-
+    $(document).ready(function() {
       $('#data-table').DataTable();
-      function adjustContentStyle() {
-        const content = $('.content');
-        const sidebarWidth = 250; // Width of the sidebar in pixels
-        if ($(window).width() >= 500) {
-          // Desktop view
-          content.addClass('width-desktop').removeClass('width-mobile');
-        } else {
-          // Mobile view
-          content.addClass('width-mobile').removeClass('width-desktop');
-        }
-      }
-      // Adjust styles on page load
-      adjustContentStyle();
-      // Adjust styles on window resize
-      window.addEventListener('resize', adjustContentStyle);
-      $('#sidebarToggle').on('click', function () {
-        $('.sidebar').toggleClass('collapsed');
-        $('#mainContent').toggleClass('collapsed');
-        adjustContentStyle();
-      });
+    });
+
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('collapsed');
+      document.getElementById('mainContent').classList.toggle('collapsed');
     });
   </script>
 </body>

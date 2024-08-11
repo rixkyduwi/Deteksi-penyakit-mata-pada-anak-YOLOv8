@@ -41,7 +41,7 @@
   <div class="mt-3">
     <h1 class="text-center font-semibold">Data Anak</h1>
     <button class="btn btn-custom-warning mb-2 custom-bg-info text-white" onclick="showModal('add')">Tambah Data</button>
-    <table id="bookingsTable" class="table table-bordered">
+    <table id="dataAnakTable" class="table table-bordered">
       <thead>
         <tr>
           <th>No</th>
@@ -59,16 +59,9 @@
           <td>{{ anak.usia_anak }}</td>
           <td>{{ anak.jenis_kelamin }}</td>
           <td>
-            <button class="btn btn-custom-warning mb-2 custom-bg-warning text-white" 
-            onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')">
-        Edit Data
-    </button>
-    <button class="btn btn-custom-danger mb-2 custom-bg-danger text-white" 
-            onclick="showModal('delete', '{{ anak.id }}')">
-        Hapus Data
-    </button>
-    
-     </td>
+            <button class="btn btn-custom-warning mb-2 custom-bg-warning text-white" onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')"> Edit Data </button>
+            <button class="btn btn-custom-danger mb-2 custom-bg-danger text-white" onclick="showModal('delete', '{{ anak.id }}')"> Hapus Data </button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -119,10 +112,8 @@
       </div>
   </div>
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+{% block js %}  
 <script>
   document.querySelectorAll('input').forEach(function(input) {
     input.addEventListener('keydown', function(e) {
@@ -133,7 +124,7 @@
 });
 
   $(document).ready(function () {
-    $('#bookingsTable').DataTable();
+    $('#dataAnakTable').DataTable();
     function adjustContentStyle() {
       const content = $('.content');
       const sidebarWidth = 250; // Width of the sidebar in pixels
@@ -164,9 +155,7 @@
 
     // Ambil nilai dari form
     var full_name = $('#full_name').val();
-    var email = $('#email')[0]; // Ambil elemen input sebagai objek HTMLInputElement
-    var nm_anak = $('#nm_anak').val();
-    var usia_anak = $('#usia_anak').val();
+    var email = $('#email')[0];
 
     // Periksa validitas email
     if (!email.checkValidity()) {
@@ -181,8 +170,6 @@
         data: {
             full_name: full_name,
             email: $('#email').val(),
-            nama_anak: nm_anak,
-            usia_anak: usia_anak,
         },
         success: function(response) {
             // Tampilkan pesan sukses atau lakukan tindakan lain setelah sukses
@@ -268,7 +255,7 @@ function updateData() {
     const jenis_kelamin = $('input[name="jenis_kelamin"]:checked').val();
 
     $.ajax({
-        type: 'POST',
+        type: 'PUT',
         url: '/user/data_anak/'+id,  // Ganti dengan URL endpoint Anda
         data: {
             id: id,

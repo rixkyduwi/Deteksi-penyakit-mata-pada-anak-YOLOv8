@@ -57,11 +57,15 @@ def dashboarduser():
 @app.route('/user/data_anak', methods=['POST'])
 @login_role_required('user')
 def create_data_anak():
-    nama_anak = request.form.get('nama_anak')
-    usia_anak = request.form.get('usia_anak')
-    jenis_kelamin = request.form.get('jenis_kelamin')
+    data = request.get_json()
+    print(data)
+    nama_anak = data['nama_anak']
+    usia_anak = data['usia_anak']
+    jenis_kelamin = data.get('jenis_kelamin')
 
     try:
+        if not nama_anak or not usia_anak or jenis_kelamin not in ['L', 'P']:
+            return jsonify({"msg": "Invalid data"}), 400
         data_anak = DataAnak(
             user_id=session['id'],
             nama_anak=nama_anak,
@@ -76,18 +80,18 @@ def create_data_anak():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": f"Error: {str(e)}"}), 400
-@app.route('/user/data_anak/<int:id>', methods=['POST'])
+@app.route('/user/data_anak/<int:id>', methods=['PUT'])
 @login_role_required('user')
 def update_data_anak(id):
     try:
         data_anak = DataAnak.query.filter_by(id=id, user_id=session['id']).first()
-
+        data = request.get_json()
         if not data_anak:
             return jsonify({"msg": "Data anak tidak ditemukan"}), 404
 
-        nama_anak = request.form.get('nama_anak')
-        usia_anak = request.form.get('usia_anak')
-        jenis_kelamin = request.form.get('jenis_kelamin')
+        nama_anak = data['nama_anak']
+        usia_anak = data['usia_anak']
+        jenis_kelamin = data.get('jenis_kelamin')
 
         data_anak.nama_anak = nama_anak
         data_anak.usia_anak = int(usia_anak)
@@ -105,7 +109,7 @@ def update_data_anak(id):
 def delete_data_anak(id):
     try:
         data_anak = DataAnak.query.filter_by(id=id, user_id=session['id']).first()
-
+        
         if not data_anak:
             return jsonify({"msg": "Data anak tidak ditemukan"}), 404
 
@@ -132,11 +136,11 @@ from sqlalchemy.exc import IntegrityError
 @login_role_required('user')
 def update_profile():
     user = User.query.filter_by(id=session['id']).first()
-
-    new_full_name = request.form.get('full_name')
-    new_address = request.form.get('address')
-    new_email = request.form.get('email')
-    new_phone_number = request.form.get('phone_number')
+    data = request.get_json()
+    new_full_name = data.get('full_name')
+    new_address = data.get('address')
+    new_email = data.get('email')
+    new_phone_number = data.get('phone_number')
 
     try:
         # Update user fields only if they are provided and different from current values
@@ -197,8 +201,8 @@ def ganti_password_post():
         password_baru = data.get('password_baru')
     else:
         # Jika tidak ada data JSON, ambil dari form
-        password_lama = request.form.get('password_lama')
-        password_baru = request.form.get('password_baru')
+        password_lama = data.get('password_lama')
+        password_baru = data.get('password_baru')
     user = User.query.filter_by(username=session['full_name']).first()
     if user:
         if bcrypt.check_password_hash(user.password, password_lama):

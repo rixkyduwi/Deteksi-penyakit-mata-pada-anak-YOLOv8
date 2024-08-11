@@ -5,124 +5,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EyeKids</title>
-  <!-- Link to Google Fonts Raleway -->
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-          <script
-              src="/static/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
-              <style>
-                body {
-                  min-height: 100vh;
-                  font-family: 'Raleway', sans-serif;
-                  font-weight: 600;
-                }
-                .navbar{
-                  height: 10vh;
-                  position: fixed;
-                  top: 0;
-                  z-index: 2;
-                  left: 0;
-                  width: 250px;
-                  background-color: #f8f9fa00;
-                }
-                .sidebar {
-                  height: 100vh;
-                  position: fixed;
-                  top: 65px;
-                  left: 0;
-                  width: 250px;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: space-between;
-                  background-color: #f8f9fa;
-                  border-right: 2px solid #ddd;
-                  transition: transform 0.3s ease;
-                  padding: 20px;
-                }
-                .sidebar .content {
-                  flex-grow: 1;
-                }
-                .sidebar.collapsed {
-                  transform: translateX(-100%);
-                }
-                .sidebar .nav-link {
-                  color: #000;
-                }
-                .sidebar .nav-link:hover {
-                  background-color: #e9ecef;
-                }
-                .sidebar .social-icons {
-                  height: 100px;
-                  margin-top: auto;
-                  text-align: center;
-                }
-                .content {
-                  margin-left: 250px;
-                  padding: 20px;
-                  transition: margin-left 0.3s ease;
-                }
-                .width-mobile {
-                  width: 100%;
-                }
-                .width-desktop {
-                  width: calc(100% - 250px);
-                }
-                .content.collapsed {
-                  margin-left: 0;
-                  width: 100%;
-                }
-                .btn-custom {
-                  border-radius: 60px;
-                }
-                .custom-bg-info {
-                  background-color: #1F4590;
-                }
-                .custom-text-info {
-                  color: #1F4590;
-                }
-                .custom-bg-warning {
-                  background-color: #FFA451;
-                }
-                .custom-text-warning {
-                  color: #FFA451;
-                }
-                .font-bold {
-                  font-weight: 700;
-                }
-                .font-semibold {
-                  font-weight: 600;
-                }
-                .font-regular {
-                  font-weight: 400;
-                }
-                .toggle-btn {
-                  cursor: pointer;
-                }
-                .baseline {
-                  align-items: baseline;
-                }
-                .custom-border-size {
-                  height: 4px;
-                  border: none;
-                  background-color: #1F4590;
-                }
-                .nav-link {
-                  color: #ffa451 !important;
-                }
-                .border-medium {
-                  border-radius: 10px;
-                }
-                .custom-border-info {
-                  border-color: #1F4590;
-                }
-                .text-white{
-                  color: #fff;
-                }
-              </style>            
-      
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+      <style>
+        body { min-height: 100vh; font-family: 'Raleway', sans-serif; font-weight: 600; }
+        .navbar{ height: 10vh; position: fixed; top: 0; z-index: 2; left: 0; width: 250px; background-color: #f8f9fa00; }
+        .sidebar { height: 100vh; position: fixed; top: 65px; left: 0; width: 250px; display: flex; flex-direction: column; justify-content: space-between; background-color: #f8f9fa; border-right: 2px solid #ddd; transition: transform 0.3s ease; padding: 20px; }
+        .sidebar .content { flex-grow: 1; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar .nav-link { color: #000; }
+        .sidebar .nav-link:hover { background-color: #e9ecef; }
+        .sidebar .social-icons { height: 100px; margin-top: auto; text-align: center; }
+        .content { margin-left: 250px; padding: 20px; transition: margin-left 0.3s ease; }
+        .width-mobile { width: 100%; }
+        .width-desktop { width: calc(100% - 250px); }
+        .content.collapsed { margin-left: 0; width: 100%; }
+        .btn-custom { border-radius: 60px; } 
+        .custom-bg-info { background-color: #1F4590; }
+        .custom-text-info { color: #1F4590; }
+        .custom-bg-warning { background-color: #FFA451; }
+        .custom-text-warning { color: #FFA451; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .font-regular { font-weight: 400; }
+        .toggle-btn { cursor: pointer; }
+        .baseline { align-items: baseline; }
+        .custom-border-size { height: 4px; border: none; background-color: #1F4590; }
+        .nav-link { color: #ffa451 !important; }
+        .border-medium { border-radius: 10px; }
+        .custom-border-info { border-color: #1F4590; }
+        .text-white{ color: #fff; }
+      </style>            
 </head>
 <body>
   <!-- Topbar -->
@@ -134,7 +51,7 @@
       </a>
     </div>
     <!-- Toggle Button -->
-    <div class="toggle-btn">
+    <div class="toggle-btn text-end">
       <button id="sidebarToggle" class="btn btn-secondary" aria-expanded="false" aria-controls="sidebar">☰</button>
     </div>
   </nav>
@@ -185,7 +102,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        {% block js %}{% endblock js %}     
 </body>
 </html>
 {% elif  session['role']=='admin' %}
