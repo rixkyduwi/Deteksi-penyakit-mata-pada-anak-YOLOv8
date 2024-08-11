@@ -45,6 +45,7 @@ def detail_tips(link):
 @login_role_required('user')
 def dashboarduser():
     data_anak = DataAnak.query.filter_by(user_id=session['id']).all()
+    print(data_anak)
     # Cek jika data anak kosong
     if not data_anak:
         return redirect(url_for("profile"))
@@ -52,7 +53,7 @@ def dashboarduser():
     if not all([session.get('username'),session.get('full_name'),session.get('email')]):
         return redirect(url_for("profile"))
     else:
-        return render_template('user/dashboard.html',r)
+        return render_template('user/dashboard.html',data = data_anak)
 #halaman crud data anak
 @app.route('/user/data_anak', methods=['POST'])
 @login_role_required('user')
@@ -258,10 +259,12 @@ def user_hasil_diagnosa(id):
                 link_rekomendasi = link_rekomendasi.split(",")
                 rekomendasi_diagnosa[penyakit]['link_rekomendasi'] = link_rekomendasi
     print(rekomendasi_diagnosa)
+    # Query semua rekomendasi
+    data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
     diagnosa = {
         'nama_user': history_record.nama_user,
-        'nama_anak': history_record.nama_anak,
-        'usia_anak': history_record.usia_anak,
+        'nama_anak': data_anak.nama_anak,
+        'usia_anak': data_anak.usia_anak,
         'tanggal_konsultasi': history_record.tanggal_konsultasi,
         'file_deteksi': history_record.file_deteksi,
         'hasil_diagnosa': hasil_diagnosa,

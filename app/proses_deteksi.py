@@ -81,9 +81,8 @@ def predict():
             print("Found names and their counts in output:")
             print(found_names)
             history = History(
-                nama_user=session['full_name'],
-                nama_anak=session['nama_anak'],
-                usia_anak=session['usia_anak'],
+                user_id = session['id'],
+                dataanak_id = request.form["id_anak"],
                 tanggal_konsultasi=current_time,
                 file_deteksi=detected_file_path,
                 hasil_diagnosa=found_names
@@ -95,9 +94,8 @@ def predict():
             return jsonify({"msg": "SUKSES", "id_hasil": new_history_id})
         else:
             history = History(
-                nama_user=session['full_name'],
-                nama_anak=session['nama_anak'],
-                usia_anak=session['usia_anak'],
+                user_id = session['id'],
+                dataanak_id = request.form["id_anak"],
                 tanggal_konsultasi=current_time,
                 file_deteksi=detected_file_path,
                 hasil_diagnosa="sehat"
@@ -183,9 +181,8 @@ def predict_mtcnn():
                 return jsonify({"msg": "SUKSES", "id_hasil": new_history_id})
             else:
                 history = History(
-                    nama_user=session['full_name'],
-                    nama_anak=session['nama_anak'],
-                    usia_anak=session['usia_anak'],
+                    user_id = session['id'],
+                    dataanak_id = request.form["id_anak"],
                     tanggal_konsultasi=current_time,
                     file_deteksi=detected_file_path,
                     hasil_diagnosa="sehat"
@@ -200,9 +197,8 @@ def predict_mtcnn():
             return jsonify({'msg': e.stderr}), 500
     else:
         history = History(
-            nama_user=session['full_name'],
-            nama_anak=session['nama_anak'],
-            usia_anak=session['usia_anak'],
+            user_id = session['id'],
+            dataanak_id = request.form["id_anak"],
             tanggal_konsultasi=current_time,
             file_deteksi=detected_file_path,
             hasil_diagnosa="sehat"

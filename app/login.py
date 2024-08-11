@@ -62,9 +62,6 @@ def unset_session():
     session.pop('address', None)
     session.pop('email', None)
     session.pop('phone_number', None)
-    session.pop('bio', None)
-    session.pop('nama_anak', None)
-    session.pop('usia_anak', None)
 @app.route('/keluar')
 def keluar():
     # Hapus token dari cookie (anda bisa menghapus token dari header juga jika tidak menggunakan cookie)

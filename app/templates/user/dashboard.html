@@ -52,7 +52,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dataAnakModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="dataAnakModalLabel">Pilih Daata Anak</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -76,9 +76,8 @@
                         <td>{{ anak.usia_anak }}</td>
                         <td>{{ anak.jenis_kelamin }}</td>
                         <td>
-                          <button class="btn btn-custom-warning mb-2 bg-warning text-white" onclick="showModal('edit', '{{ anak.id }}', '{{ anak.nama_anak }}', '{{ anak.usia_anak }}', '{{ anak.jenis_kelamin }}')"> Edit Data </button>
-                          <button class="btn btn-custom-danger mb-2 bg-danger text-white" onclick="showModal('delete', '{{ anak.id }}')"> Hapus Data </button>
-                        </td>
+                          <button class="btn btn-success pilih-anak" data-id="{{ anak.id }}" data-dismiss="modal">Pilih</button>
+                          </td>
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -191,7 +190,7 @@ $('#dataAnakTable').on('click', '.pilih-anak', function () {
 
             $.ajax({
                 type: 'POST',
-                url: '/proses_diagnosa',  // Ganti dengan URL untuk proses diagnosa
+                url: '/predict_mtcnn',  // Ganti dengan URL untuk proses diagnosa
                 data: formData,
                 processData: false,
                 contentType: false,
