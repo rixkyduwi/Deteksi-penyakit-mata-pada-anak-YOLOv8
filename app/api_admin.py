@@ -1,4 +1,4 @@
-from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required,DataAnak
+from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required,DataAnak,User
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import os,textwrap, locale, json, uuid, time,re
 import pandas as pd
@@ -89,21 +89,31 @@ def dashboardadmin():
 @app.route('/admin/history_konsultasi')
 @login_role_required('admin')
 def history_konsultasi():
+    # Mengambil semua histori tanpa memfilter berdasarkan user_id
     histori_data = History.query.all()
     histori_records = []
 
     for history_record in histori_data:
+        # Mengambil data anak berdasarkan dataanak_id
         data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
+        
+        # Mengambil data pengguna dari tabel User (atau tabel terkait)
+        user = User.query.filter_by(id=history_record.user_id).first()
+        
         diagnosa = {
             'id': history_record.id,
-            'nama_user': session["full_name"],
+            'nama_user': user.full_name if user else "Nama User Tidak Ditemukan",  # Nama user dari database
             'nama_anak': data_anak.nama_anak if data_anak else "Data Anak Tidak Ditemukan",
             'usia_anak': data_anak.usia_anak if data_anak else "N/A",
             'tanggal_konsultasi': history_record.tanggal_konsultasi,
             'hasil_diagnosa': history_record.hasil_diagnosa,  # asumsikan 'hasil_diagnosa' ada di model History
         }
         histori_records.append(diagnosa)
-    return render_template('admin/history_konsultasi.html',histori_records= histori_records)
+    
+    return render_template('admin/history_konsultasi.html', histori_records=histori_records)
+
+
+
 #halaman penyakit terbanyak
 @app.route('/admin/penyakit_terbanyak')
 @login_role_required('admin')
@@ -132,27 +142,28 @@ def penyakit_terbanyak():
 @app.route('/admin/history_konsultasi/<id>')
 @login_role_required('admin')
 def admin_hasil_diagnosa(id):
-    if 'full_name' not in session:
-        abort(403)  # Forbidden, user tidak terautentikasi
-
-    # Query data history berdasarkan id dan username dari session
+    # Query data history berdasarkan id
     history_record = History.query.filter_by(id=id).first()
     if not history_record:
         abort(404)  # Not found, data history tidak ditemukan
     
-    # Pastikan hasil_diagnosa adalah dictionary
-    hasil_diagnosa_str = history_record.hasil_diagnosa
+    # Query user terkait
+    user_record = User.query.filter_by(id=history_record.user_id).first()
+    if not user_record:
+        abort(404)  # Not found, data user tidak ditemukan
 
-    hasil_diagnosa = hasil_diagnosa_str.split(",")
+    # Query data anak terkait
+    data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
+    if not data_anak:
+        abort(404)  # Not found, data anak tidak ditemukan
+    
+    # Pastikan hasil_diagnosa adalah string dan ubah menjadi list
+    hasil_diagnosa_str = history_record.hasil_diagnosa or ""
+    hasil_diagnosa = [diagnosis.strip() for diagnosis in hasil_diagnosa_str.split(",") if diagnosis.strip()]
 
-    if hasil_diagnosa[-1] == '':
-        hasil_diagnosa.pop()
-    print(hasil_diagnosa)
     # Query semua rekomendasi
     rekomendasi_records = Rekomendasi.query.all()
-    print(rekomendasi_records)
     rekomendasi_list = [record.serialize() for record in rekomendasi_records]
-    print(rekomendasi_list)
 
     # Gabungkan rekomendasi yang relevan dengan hasil diagnosa
     rekomendasi_diagnosa = {}
@@ -160,16 +171,18 @@ def admin_hasil_diagnosa(id):
         for rekomendasi in rekomendasi_list:
             if rekomendasi['nama'] == penyakit:
                 rekomendasi_diagnosa[penyakit] = rekomendasi
-    print(rekomendasi_diagnosa)
+    
+    # Membuat dictionary diagnosa untuk dikirim ke template
     diagnosa = {
-        'nama_user': history_record.nama_user,
-        'nama_anak': history_record.nama_anak,
-        'usia_anak': history_record.usia_anak,
+        'nama_user': user_record.full_name,
+        'nama_anak': data_anak.nama_anak,
+        'usia_anak': data_anak.usia_anak,
         'tanggal_konsultasi': history_record.tanggal_konsultasi,
         'file_deteksi': history_record.file_deteksi,
         'hasil_diagnosa': hasil_diagnosa,
         'rekomendasi_diagnosa': rekomendasi_diagnosa,
     }
-    print(diagnosa)
 
+    # Kirim data ke template untuk ditampilkan
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
+

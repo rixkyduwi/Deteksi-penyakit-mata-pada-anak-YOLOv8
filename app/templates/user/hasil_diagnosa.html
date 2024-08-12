@@ -76,26 +76,29 @@
             </h4>
         </div>
         <div class="col-md-8">
-            {% for penyakit in diagnosa.hasil_diagnosa %}
-            {% if penyakit == "sehat"%}
-            {% else %}
-            <h5 class="font-semibold">{{ penyakit }}</h5>
+          {% set tips_shown = False %}
+          {% for penyakit in diagnosa.hasil_diagnosa %}
+            {% if penyakit != "sehat" %}
+              <h5 class="font-semibold">{{ penyakit }}</h5>
+              {% if penyakit in diagnosa.rekomendasi_diagnosa %}
+                  <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
+                  {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}
+                  {% if link == "klinik" %}
+                  <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik+mata+terdekat/">Rekomendasi Klinik</a>
+                  {% elif link == "apotek" %}
+                  <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/apotek+terdekat/">Rekomendasi Apotek</a>
+                  {% elif link == "rumah sakit"%}
+                  <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/rumah+sakit/">Rekomendasi Rumah Sakit</a>
+                  {% endif %}
+                  {% endfor %}
+              {% endif %}
+            {% elif penyakit == "sehat" and not tips_shown %}
+            <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
+              <a class="btn btn-custom custom-bg-warning font-semibold" href="/tips">Tips Menjaga Kesehatan Mata</a>
+              {% set tips_shown = True %}
             {% endif %}
-            {% if penyakit in diagnosa.rekomendasi_diagnosa %}
-                <p class="font-semibold">{{ diagnosa.rekomendasi_diagnosa[penyakit].pengobatan|safe }}</p>
-                {% for link in diagnosa.rekomendasi_diagnosa[penyakit]['link_rekomendasi'] %}
-                {% if link == "klinik" %}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/klinik+mata+terdekat/">Rekomendasi Klinik</a>
-                {% elif link == "apotek" %}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/apotek+terdekat/">Rekomendasi Apotek</a>
-                {% elif link == "rumah sakit"%}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="https://www.google.com/maps/search/rumah+sakit/">Rekomendasi Rumah Sakit</a>
-                {% elif penyakit == "sehat"%}
-                <a class="btn btn-custom custom-bg-warning font-semibold" href="/tips">Tips Menjaga Kesehatan Mata</a>
-                {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+          {% endfor %}
+         
         <br>
         </div>
     </div>
@@ -103,8 +106,13 @@
   </section>
   <section class="container my-5">
   <div class="row">
-    <div class="btn-custom custom-bg-warning font-semibold col-md-12 text-end">
-      <p><a href="/user/dashboard">back</a></p>
+    <div class="btn-custom custom-bg-warning font-semibold col-md-12 text-center pt-2 pb-2">
+      {% if session["role"]== "user" %}
+      <a href="/user/dashboard" style="color:#fff; margin-top: 100px;margin-bottom: 100px;">Back</a>
+      {% else %}
+      <a href="/admin/dashboard" style="color: #fff; margin-top: 100px;margin-bottom: 100px;">Back</a>
+      {% endif %}
+    </div>
     </div>
   </div>
   </section>
