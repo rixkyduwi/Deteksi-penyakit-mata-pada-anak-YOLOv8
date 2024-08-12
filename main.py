@@ -89,7 +89,7 @@ Untuk ptosis sendiri memang tindakanya hanya oprasi saja,karena ditujukan untuk 
                 "link_gmaps": "klinik"
             },
             {
-                "nama_penyakit":' mata merah',
+                "nama_penyakit":'mata merah',
                 "pengobatan": """Mata merah biasanya terjadi karena infeks iatau alergi Paparan asap, debu, angin, atau bahan kimia yang dapat menyebabkan mata merah<br>
 Cara mengatasinya<br>
 1.	Pastikan apakah mata yang terkena kemerahan hanya satu atau keduanya, karena jika hanya satu mata, kemungkinan besar terjadi infeksi.<br>
