@@ -89,7 +89,7 @@ def dashboardadmin():
 @app.route('/admin/history_konsultasi')
 @login_role_required('admin')
 def history_konsultasi():
-    histori_data = History.query.filter_by(user_id=session["id"]).all()
+    histori_data = History.query.all()
     histori_records = []
 
     for history_record in histori_data:
