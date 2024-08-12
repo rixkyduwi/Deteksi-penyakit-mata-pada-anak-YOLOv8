@@ -1,4 +1,4 @@
-from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required
+from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required,DataAnak
 from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
 import os,textwrap, locale, json, uuid, time,re
 import pandas as pd
@@ -89,8 +89,20 @@ def dashboardadmin():
 @app.route('/admin/history_konsultasi')
 @login_role_required('admin')
 def history_konsultasi():
-    histori_records = History.query.all()
-    print(histori_records)
+    histori_data = History.query.filter_by(user_id=session["id"]).all()
+    histori_records = []
+
+    for history_record in histori_data:
+        data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
+        diagnosa = {
+            'id': history_record.id,
+            'nama_user': session["full_name"],
+            'nama_anak': data_anak.nama_anak if data_anak else "Data Anak Tidak Ditemukan",
+            'usia_anak': data_anak.usia_anak if data_anak else "N/A",
+            'tanggal_konsultasi': history_record.tanggal_konsultasi,
+            'hasil_diagnosa': history_record.hasil_diagnosa,  # asumsikan 'hasil_diagnosa' ada di model History
+        }
+        histori_records.append(diagnosa)
     return render_template('admin/history_konsultasi.html',histori_records= histori_records)
 #halaman penyakit terbanyak
 @app.route('/admin/penyakit_terbanyak')
