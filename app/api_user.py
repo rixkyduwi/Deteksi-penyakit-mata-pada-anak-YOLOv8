@@ -260,9 +260,10 @@ def user_hasil_diagnosa(id):
                 rekomendasi_diagnosa[penyakit]['link_rekomendasi'] = link_rekomendasi
     print(rekomendasi_diagnosa)
     # Query semua rekomendasi
+    user = User.query.filter_by(id=history_record.user_id).first()
     data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
     diagnosa = {
-        'nama_user': history_record.nama_user,
+        'nama_user': user.full_name,
         'nama_anak': data_anak.nama_anak,
         'usia_anak': data_anak.usia_anak,
         'tanggal_konsultasi': history_record.tanggal_konsultasi,
