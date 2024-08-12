@@ -14,7 +14,7 @@
             <table class="table table-bordered" id="data-table">
               <thead>
                 <tr>
-                  <th>Nama</th>
+                  <th>Nama ortu</th>
                   <th>Nama Anak</th>
                   <th>Usia Anak</th>
                   <th>Tanggal Konsultasi</th>
@@ -25,13 +25,13 @@
               <tbody>
                 {% for i in histori_records %}
                 <tr>
-                  <td>{{ i.nama_user }}</td>
+                  <td>{{ session["full_name"] }}</td>
                   <td>{{ i.nama_anak }}</td>
                   <td>{{ i.usia_anak }}</td>
                   <td>{{ i.tanggal_konsultasi  }}</td>
                   <td>{{ i.hasil_diagnosa }}</td>
                   <td>
-                    <button class="btn btn-info btn-sm" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
+                    <button class="btn btn-info btn-sm" onclick="window.open('/user/hasil_diagnosa/{{ i.id }}', '_blank');">Detail</button>
                   </td>
                 </tr>
                 {% endfor %}

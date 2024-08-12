@@ -274,3 +274,22 @@ def user_hasil_diagnosa(id):
     print(diagnosa)
 
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
+@app.route('/user/history_konsultasi')
+@login_role_required('user')
+def user_history_konsultasi():
+    histori_records = History.query.filter_by(user_id=session["id"]).all()
+    diagnosa_records = []
+
+    for history_record in histori_records:
+        data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
+        diagnosa = {
+            'id': history_record.id,
+            'nama_user': session["full_name"],
+            'nama_anak': data_anak.nama_anak if data_anak else "Data Anak Tidak Ditemukan",
+            'usia_anak': data_anak.usia_anak if data_anak else "N/A",
+            'tanggal_konsultasi': history_record.tanggal_konsultasi,
+            'hasil_diagnosa': history_record.hasil_diagnosa,  # asumsikan 'hasil_diagnosa' ada di model History
+        }
+        diagnosa_records.append(diagnosa)
+    
+    return render_template('user/history_konsultasi.html', histori_records=diagnosa_records)

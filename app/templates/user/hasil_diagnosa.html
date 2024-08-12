@@ -65,7 +65,7 @@
         <div class="col-md-4">
             <h2 class="font-semibold">Nama: {{ diagnosa.nama_anak }}</h2>
             <p>Usia : {{ diagnosa.usia_anak }} Tahun</p>
-            <img src="/static/detect/{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
+            <img src="{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
             <h4 class="font-semibold  mt-2" id="hasil_predict">
               {% for penyakit in diagnosa.hasil_diagnosa %}
               {% if penyakit == "sehat"%}

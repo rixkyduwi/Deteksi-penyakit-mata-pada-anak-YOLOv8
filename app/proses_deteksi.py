@@ -73,7 +73,7 @@ def predict():
         # Cari folder predict terbaru di dalam save_path
         subfolders = [f.path for f in os.scandir(save_path) if f.is_dir()]
         latest_folder = max(subfolders, key=os.path.getmtime)  # Folder terbaru berdasarkan waktu modifikasi
-        latest_folder = latest_folder.replace("./app/static/detect\\", "")
+        latest_folder = latest_folder.replace(project_directory, "")
         detected_file_path = latest_folder+"/"+random_name
         print(detected_file_path)
         # Menampilkan hasil
@@ -160,7 +160,7 @@ def predict_mtcnn():
             # Cari folder predict terbaru di dalam save_path
             subfolders = [f.path for f in os.scandir(save_path) if f.is_dir()]
             latest_folder = max(subfolders, key=os.path.getmtime)  # Folder terbaru berdasarkan waktu modifikasi
-            latest_folder = latest_folder.replace("./app/static/detect\\", "")
+            latest_folder = latest_folder.replace(project_directory, "")
             detected_file_path = latest_folder+"/"+random_name
             print(detected_file_path)
             # Menampilkan hasil
