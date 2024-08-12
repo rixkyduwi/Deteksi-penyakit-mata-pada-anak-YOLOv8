@@ -185,14 +185,15 @@
     const pswdDaftar = document.getElementById('pswd-daftar').value;
     const repswd = document.getElementById("re-pswd-daftar").value
     
-      if (!emailDaftar.checkValidity()) {
-        alert("Masukkan alamat email yang valid.");
-        return;
-    }
+     
     if (!usernameDaftar || !emailDaftar || !pswdDaftar || !repswd) {
       alert("Mohon lengkapi semua field.");
     } else {
-    
+    const emailcek = document.getElementById('email-daftar');
+    if (!emailcek.checkValidity()) {
+        alert("Masukkan alamat email yang valid.");
+        return;
+    }
           var uri = "/bikin_akun_user";
           var msg = "msg-register";
           var data_kirim = JSON.stringify({

@@ -68,7 +68,10 @@
             <img src="/static/detect/{{ diagnosa.file_deteksi }}" class="w-100" alt="hasil konsultasi">
             <h4 class="font-semibold  mt-2" id="hasil_predict">
               {% for penyakit in diagnosa.hasil_diagnosa %}
-              <li>{{ penyakit }}</li>
+              {% if penyakit == "sehat"%}
+              {%  else %}
+              {{ penyakit }}
+              {% endif %}
           {% endfor %}
             </h4>
         </div>

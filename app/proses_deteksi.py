@@ -196,17 +196,5 @@ def predict_mtcnn():
         except subprocess.CalledProcessError as e:
             return jsonify({'msg': e.stderr}), 500
     else:
-        history = History(
-            user_id = session['id'],
-            dataanak_id = request.form["id_anak"],
-            tanggal_konsultasi=current_time,
-            file_deteksi=detected_file_path,
-            hasil_diagnosa="sehat"
-        )
-        db.session.add(history)
-        db.session.commit()
-        new_history_id = history.id
-        print("None of the names were found in the output.")
-        return jsonify({"msg": "SUKSES", "id_hasil": new_history_id})
-    return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
+        return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
     
