@@ -1,11 +1,13 @@
 from . import app,mysql,db,allowed_file, History,Rekomendasi,login_role_required,DataAnak,User
-from flask import render_template, request, jsonify, redirect, url_for,session,g,abort
+from flask import render_template, request, jsonify, redirect, url_for,session,g,abort,flash
 import os,textwrap, locale, json, uuid, time,re
 import pandas as pd
 from PIL import Image
 from io import BytesIO
 from datetime import datetime
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy import func
+from sqlalchemy import extract
 
 @app.before_request
 def before_request():
@@ -89,30 +91,63 @@ def dashboardadmin():
 @app.route('/admin/history_konsultasi')
 @login_role_required('admin')
 def history_konsultasi():
-    # Mengambil semua histori tanpa memfilter berdasarkan user_id
-    histori_data = History.query.all()
-    histori_records = []
+    filter_date = request.args.get('filterDate')
+    filter_month = request.args.get('filterMonth')
+    filter_year = request.args.get('filterYear')
+    filter_complete_date = request.args.get('filterCompleteDate')
 
-    for history_record in histori_data:
-        # Mengambil data anak berdasarkan dataanak_id
+    query = History.query
+
+    if filter_complete_date:
+        query = query.filter(func.date(History.tanggal_konsultasi) == filter_complete_date)
+    else:
+        if filter_date:
+            query = query.filter(extract('day', History.tanggal_konsultasi) == filter_date)
+        if filter_month:
+            query = query.filter(extract('month', History.tanggal_konsultasi) == filter_month)
+        if filter_year:
+            query = query.filter(extract('year', History.tanggal_konsultasi) == filter_year)
+    
+    histori_records = query.all()
+    diagnosa_records = []
+
+    for history_record in histori_records:
         data_anak = DataAnak.query.filter_by(id=history_record.dataanak_id).first()
-        
-        # Mengambil data pengguna dari tabel User (atau tabel terkait)
-        user = User.query.filter_by(id=history_record.user_id).first()
-        
+        user = User.query.filter_by(id = history_record.user_id).first()
         diagnosa = {
             'id': history_record.id,
-            'nama_user': user.full_name if user else "Nama User Tidak Ditemukan",  # Nama user dari database
+            'nama_user': user.full_name,
             'nama_anak': data_anak.nama_anak if data_anak else "Data Anak Tidak Ditemukan",
             'usia_anak': data_anak.usia_anak if data_anak else "N/A",
-            'tanggal_konsultasi': history_record.tanggal_konsultasi,
-            'hasil_diagnosa': history_record.hasil_diagnosa,  # asumsikan 'hasil_diagnosa' ada di model History
+            'tanggal_konsultasi': history_record.tanggal_konsultasi.strftime('%Y-%m-%d'),
+            'hasil_diagnosa': history_record.hasil_diagnosa,
         }
-        histori_records.append(diagnosa)
+        diagnosa_records.append(diagnosa)
     
-    return render_template('admin/history_konsultasi.html', histori_records=histori_records)
+    return render_template('admin/history_konsultasi.html', histori_records=diagnosa_records)
 
+@app.route('/admin/history_konsultasi/<int:id>', methods=['PUT'])
+@login_role_required('admin')
+def detail_history_konsultasi(id):
+    history_record = History.query.get_or_404(id)
+    data = request.get_json()
 
+    # Update fields with data from JSON request
+    history_record.tanggal_konsultasi = data.get('tanggal_konsultasi')
+    history_record.hasil_diagnosa = data.get('hasil_diagnosa')
+
+    db.session.commit()
+
+    # Return JSON response
+    return jsonify({'msg': 'History updated successfully!'})
+
+@app.route('/admin/history_konsultasi/<int:id>/delete', methods=['DELETE'])
+@login_role_required('admin')
+def delete_history_konsultasi(id):
+    history_record = History.query.get_or_404(id)
+    db.session.delete(history_record)
+    db.session.commit()
+    return jsonify({'msg': 'History deleted successfully!'})
 
 #halaman penyakit terbanyak
 @app.route('/admin/penyakit_terbanyak')

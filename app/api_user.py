@@ -7,6 +7,7 @@ import os,textwrap, locale, json, uuid, time,re
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
+from sqlalchemy import extract
 
 @app.before_request
 def before_request():
@@ -281,7 +282,7 @@ def user_hasil_diagnosa(id):
     print(diagnosa)
 
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
-from sqlalchemy import extract
+
 
 @app.route('/user/history_konsultasi', methods=['GET'])
 @login_role_required('user')

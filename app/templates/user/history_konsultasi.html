@@ -15,10 +15,6 @@
                 <div class="mb-4">
                   <form id="filterForm" method="GET">
                     <div class="form-row">
-                      <div class="form-group col-md-12">
-                        <label for="filterCompleteDate">Tanggal Lengkap</label>
-                        <input type="date" class="form-control" id="filterCompleteDate" name="filterCompleteDate" value="{{ request.args.get('filterCompleteDate') }}">
-                      </div>
                       <div class="form-group col-md-4">
                         <label for="filterDate">Tanggal</label>
                         <input type="number" class="form-control" id="filterDate" name="filterDate" min="1" max="31" placeholder="Tanggal (1-31)" value="{{ request.args.get('filterDate') }}">

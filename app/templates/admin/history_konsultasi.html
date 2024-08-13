@@ -174,13 +174,36 @@
   </nav>
   <!-- Content -->
   <div class="content" id="mainContent">
+      <!-- Filter Section -->
+      
+
     <!-- Hero Section -->
-    <section class="container my-5" id="home">
+    <section class="container my-5 mt-1" id="home">
       <div class="row">
         <div class="col-md-12 mb-3 text-center align-center">
           <div class="text-center d-flex baseline">
             <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi</h1>
             <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
+          </div>
+          <div class="mt-2 mb-4">
+            <form id="filterForm" method="GET">
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="filterDate">Tanggal</label>
+                  <input type="number" class="form-control" id="filterDate" name="filterDate" min="1" max="31" placeholder="Tanggal (1-31)" value="{{ request.args.get('filterDate') }}">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="filterMonth">Bulan</label>
+                  <input type="number" class="form-control" id="filterMonth" name="filterMonth" min="1" max="12" placeholder="Bulan (1-12)" value="{{ request.args.get('filterMonth') }}">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="filterYear">Tahun</label>
+                  <input type="number" class="form-control" id="filterYear" name="filterYear" min="2000" placeholder="Tahun" value="{{ request.args.get('filterYear') }}">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Filter</button>
+              <a href="{{ url_for('history_konsultasi') }}" class="btn btn-secondary">Reset</a>
+            </form>
           </div>
           <div class="table-responsive">
             <table class="table table-bordered" id="data-table">
@@ -203,7 +226,9 @@
                   <td>{{ i.tanggal_konsultasi  }}</td>
                   <td>{{ i.hasil_diagnosa }}</td>
                   <td>
-                    <button class="btn btn-info btn-sm" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
+                    <button class="btn btn-custom-info mb-2 bg-info text-white" onclick="window.open('/admin/history_konsultasi/{{ i.id }}', '_blank');">Detail</button>
+                    <button class="btn btn-custom-warning mb-2 bg-warning text-white" onclick="showModal('edit', '{{ i.id }}','{{ i.nama_user }}', '{{ i.nama_anak }}', '{{ i.usia_anak }}', '{{ i.tanggal_konsultasi }}', '{{ i.hasil_diagnosa }}')"> Edit Data </button>
+                    <button class="btn btn-custom-danger mb-2 bg-danger text-white" onclick="showModal('delete', '{{ i.id }}')"> Hapus Data </button>
                   </td>
                 </tr>
                 {% endfor %}
@@ -214,6 +239,51 @@
       </div>
     </section>
   </div>
+  <!-- Modal -->
+<div class="modal fade" id="dataHistoryModal" tabindex="-1" role="dialog" aria-labelledby="dataHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="dataHistoryModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form id="dataHistoryForm">
+                  <input type="hidden" id="data_id">
+                  <div class="form-group">
+                    <label for="data_nama_anak">Nama Ortu</label>
+                    <input type="text" class="form-control" id="data_nama_ortu">
+                </div>
+                  <div class="form-group">
+                      <label for="data_nama_anak">Nama Anak</label>
+                      <input type="text" class="form-control" id="data_nama_anak">
+                  </div>
+                  <div class="form-group">
+                      <label for="data_usia_anak">Usia Anak</label>
+                      <input type="text" class="form-control" id="data_usia_anak">
+                  </div>
+                  <div class="form-group">
+                    <label for="tanggal_konsultasi">Tanggal Konsultasi</label>
+                    <input type="date" class="form-control" id="tanggal_konsultasi">
+                </div>
+                <div class="form-group">
+                  <label for="hasil_diagnosa">Hasil Diagnosa</label>
+                  <input type="text" class="form-control" id="hasil_diagnosa">
+              </div>
+              </form>
+              <div id="deleteConfirmation" style="display: none;">
+                <p>Anda yakin ingin menghapus data ini?</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" id="modalActionButton" class="btn btn-primary">Action</button>
+          </div>
+      </div>
+  </div>
+</div>
   <!-- Load jQuery, Bootstrap, and DataTables JavaScript -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -221,14 +291,108 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Inisialisasi DataTables -->
   <script>
-    $(document).ready(function() {
-      $('#data-table').DataTable();
-    });
+  $(document).ready(function() {
+    $('#data-table').DataTable();
+    
+    var thisYear = new Date().getFullYear();
+    $("#filterYear").attr('max', thisYear);
+    var placeholder = "Tahun (2000 - " + thisYear + ")";
+    $("#filterYear").attr('placeholder', placeholder);
+  });
 
     document.getElementById('sidebarToggle').addEventListener('click', function() {
       document.querySelector('.sidebar').classList.toggle('collapsed');
       document.getElementById('mainContent').classList.toggle('collapsed');
     });
+    
+function showModal(action, id, nama_ortu, nama_anak, usia_anak, tanggal_konsultasi,hasil_diagnosa) {
+    const modalTitle = $('#dataHistoryModalLabel');
+    const modalActionButton = $('#modalActionButton');
+    const deleteConfirmation = $('#deleteConfirmation');
+
+    // Reset form
+    $('#dataHistoryForm')[0].reset();
+    $('#data_id').val('');
+    deleteConfirmation.hide();
+
+     if (action === 'edit') {
+        $("#dataHistoryForm").show();
+        modalTitle.text('Edit Data Anak');
+        modalActionButton.text('Simpan');
+        $('#data_id').val(id);
+        $('#data_nama_ortu').val(nama_ortu || '');
+        $('#data_nama_anak').val(nama_anak || '');
+        $('#data_usia_anak').val(usia_anak || '');
+        $('#tanggal_konsultasi').val(tanggal_konsultasi || '');
+        $('#hasil_diagnosa').val(hasil_diagnosa || '');
+        
+        modalActionButton.off('click').on('click', updateData);
+    } else if (action === 'delete') {
+        modalTitle.text('Hapus Data Anak');
+        modalActionButton.text('Hapus');
+        $('#data_id').val(id);
+        deleteConfirmation.show();
+        $("#dataHistoryForm").hide();
+        modalActionButton.off('click').on('click', deleteData);
+    }
+
+    $('#dataHistoryModal').modal('show');
+}
+
+// Function to handle updating data
+function updateData() {
+    const id = $('#data_id').val();
+    const nama_ortu = $('#data_nama_ortu').val();
+    const nama_anak = $('#data_nama_anak').val();
+    const usia_anak = $('#data_usia_anak').val();
+    const tanggal_konsultasi = $('#tanggal_konsultasi').val();
+    const hasil_diagnosa = $('#hasil_diagnosa').val();
+    console.log(hasil_diagnosa)
+    $.ajax({
+        type: 'PUT',
+        url: '/admin/history_konsultasi/'+id,  // Ganti dengan URL endpoint Anda
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({ 
+            id: id,
+            nama_ortu:nama_ortu,
+            nama_anak: nama_anak,
+            usia_anak: usia_anak,
+            tanggal_konsultasi: tanggal_konsultasi,
+            hasil_diagnosa:hasil_diagnosa
+        }),
+        success: function(response) {
+            alert(response.msg);
+            $('#dataHistoryModal').modal('hide');
+            // Refresh table or take other actions
+            location.reload()
+        },
+        error: function(xhr) {
+            alert("Terjadi kesalahan: " + (xhr.responseJSON ? xhr.responseJSON.msg : "Kesalahan tidak diketahui"));
+        }
+    });
+}
+
+// Function to handle deleting data
+function deleteData() {
+    const id = $('#data_id').val();
+
+    $.ajax({
+        type: 'DELETE',
+        url: '/admin/history_konsultasi/'+id+"/delete",  // Ganti dengan URL endpoint Anda
+        contentType: 'application/json',  // Set header Content-Type
+        data: JSON.stringify({  id: id }),
+        success: function(response) {
+            alert(response.msg);
+            $('#dataHistoryModal').modal('hide');
+            // Refresh table or take other actions
+            location.reload()
+        },
+        error: function(xhr) {
+            alert("Terjadi kesalahan: " + (xhr.responseJSON ? xhr.responseJSON.msg : "Kesalahan tidak diketahui"));
+        }
+    });
+}
+    
   </script>
 </body>
 </html>
