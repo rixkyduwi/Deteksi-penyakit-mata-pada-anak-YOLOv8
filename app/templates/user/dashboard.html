@@ -52,7 +52,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dataAnakModalLabel">Pilih Daata Anak</h5>
+                    <h5 class="modal-title" id="dataAnakModalLabel">Pilih Data Anak</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -76,7 +76,7 @@
                         <td>{{ anak.usia_anak }}</td>
                         <td>{{ anak.jenis_kelamin }}</td>
      a                   <td>
-                          <button class="btn btn-success pilih-anak" data-id="{{ anak.id }}" data-dismiss="modal">Pilih</button>
+                          <button class="btn btn-success pilih-anak" data-id="{{ anak.id }}">Pilih</button>
                           </td>
                       </tr>
                       {% endfor %}
@@ -182,7 +182,8 @@ function openDataAnakModal(imageBlob) {
 // Handle data anak selection
 $('#dataAnakTable').on('click', '.pilih-anak', function () {
         var idAnak = $(this).data('id');
-
+        $(this).text('Loading..');
+        $(this).attr("disabled","disabled");
         if (selectedImageBlob) {
             var formData = new FormData();
             formData.append('gambar', selectedImageBlob, 'photo.png');
