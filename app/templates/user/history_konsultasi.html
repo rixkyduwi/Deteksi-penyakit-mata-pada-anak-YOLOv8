@@ -1,54 +1,87 @@
 {% extends 'user/layout_user.html' %}
 {% block content %}
 <!-- Content -->
-  <div class="content" id="mainContent">
+<div class="content" id="mainContent">
     <!-- Hero Section -->
     <section class="container my-5" id="home">
-      <div class="row">
-        <div class="col-md-12 mb-3 text-center align-center">
-          <div class="text-center d-flex baseline">
-            <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi</h1>
-            <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
-          </div>
-          <div class="table-responsive">
-            <table class="table table-bordered" id="data-table">
-              <thead>
-                <tr>
-                  <th>Nama ortu</th>
-                  <th>Nama Anak</th>
-                  <th>Usia Anak</th>
-                  <th>Tanggal Konsultasi</th>
-                  <th>Hasil Diagnosa</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for i in histori_records %}
-                <tr>
-                  <td>{{ session["full_name"] }}</td>
-                  <td>{{ i.nama_anak }}</td>
-                  <td>{{ i.usia_anak }}</td>
-                  <td>{{ i.tanggal_konsultasi  }}</td>
-                  <td>{{ i.hasil_diagnosa }}</td>
-                  <td>
-                    <button class="btn btn-info btn-sm" onclick="window.open('/user/hasil_diagnosa/{{ i.id }}', '_blank');">Detail</button>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        <div class="row">
+            <div class="col-md-12 mb-3 text-center align-center">
+                <div class="text-center d-flex baseline">
+                    <h1 class="font-bold custom-text-info mr-3">List Table History Konsultasi</h1>
+                    <img src="../static/icon/table.svg" height="25" width="25" alt="icon_table">
+                </div>
 
-  {% endblock %}
-  {% block js %}
-    <!-- Inisialisasi DataTables -->
-    <script>
-      $(document).ready(function() {
-        $('#data-table').DataTable();
-      });
-    </script>
-  {% endblock %}
+                <!-- Filter Section -->
+                <div class="mb-4">
+                  <form id="filterForm" method="GET">
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="filterCompleteDate">Tanggal Lengkap</label>
+                        <input type="date" class="form-control" id="filterCompleteDate" name="filterCompleteDate" value="{{ request.args.get('filterCompleteDate') }}">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="filterDate">Tanggal</label>
+                        <input type="number" class="form-control" id="filterDate" name="filterDate" min="1" max="31" placeholder="Tanggal (1-31)" value="{{ request.args.get('filterDate') }}">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="filterMonth">Bulan</label>
+                        <input type="number" class="form-control" id="filterMonth" name="filterMonth" min="1" max="12" placeholder="Bulan (1-12)" value="{{ request.args.get('filterMonth') }}">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="filterYear">Tahun</label>
+                        <input type="number" class="form-control" id="filterYear" name="filterYear" min="2000" placeholder="Tahun" value="{{ request.args.get('filterYear') }}">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="{{ url_for('user_history_konsultasi') }}" class="btn btn-secondary">Reset</a>
+                  </form>
+                </div>
+
+                <!-- Table Section -->
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nama ortu</th>
+                                <th>Nama Anak</th>
+                                <th>Usia Anak</th>
+                                <th>Tanggal Konsultasi</th>
+                                <th>Hasil Diagnosa</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in histori_records %}
+                            <tr>
+                                <td>{{ session["full_name"] }}</td>
+                                <td>{{ i.nama_anak }}</td>
+                                <td>{{ i.usia_anak }}</td>
+                                <td>{{ i.tanggal_konsultasi }}</td>
+                                <td>{{ i.hasil_diagnosa }}</td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" onclick="window.open('/user/hasil_diagnosa/{{ i.id }}', '_blank');">Detail</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+{% block js %}
+<!-- Inisialisasi DataTables -->
+
+<script>
+  $(document).ready(function() {
+    $('#data-table').DataTable();
+    
+    var thisYear = new Date().getFullYear();
+    $("#filterYear").attr('max', thisYear);
+    var placeholder = "Tahun (2000 - " + thisYear + ")";
+    $("#filterYear").attr('placeholder', placeholder);
+  });
+</script>
+{% endblock %}

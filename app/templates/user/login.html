@@ -160,73 +160,80 @@
   function saveTokenToLocalStorage(token) {
       localStorage.setItem('jwt_token', token);
   }
-  function kirim(pilihan){
-      if (pilihan==="login"){
+  function kirim(pilihan) {
+      if (pilihan === "login") {
         const usernameLogin = document.getElementById('username-login').value;
-    const pswdLogin = document.getElementById('pswd-login').value;
-    if (!usernameLogin || !pswdLogin) {
-      alert("Mohon lengkapi semua field.");
-    } else {
-    
+        const pswdLogin = document.getElementById('pswd-login').value;
+        if (!usernameLogin || !pswdLogin) {
+          alert("Mohon lengkapi semua field.");
+          window.location.href = "/login";
+        } else {
+
           var uri = "/login";
-          var msg= "msg-login";
+          var msg = "msg-login";
 
           var data_kirim = JSON.stringify({
-              username:document.getElementById("username-login").value,
-              password:document.getElementById("pswd-login").value
+            username: document.getElementById("username-login").value,
+            password: document.getElementById("pswd-login").value
           });
-          var next_url = "/user/dashboard";  
-          var pesan= "login berhasil"
+          var next_url = "/user/dashboard";
+          var pesan = "login berhasil"
+          $('#login-button').text("Loading...")
+          $('#login-button').attr("disabled","disabled")
         }
       }
-      else{
+      else {
         const usernameDaftar = document.getElementById('username-daftar').value;
-    const emailDaftar = document.getElementById('email-daftar').value;
-    const pswdDaftar = document.getElementById('pswd-daftar').value;
-    const repswd = document.getElementById("re-pswd-daftar").value
-    
-     
-    if (!usernameDaftar || !emailDaftar || !pswdDaftar || !repswd) {
-      alert("Mohon lengkapi semua field.");
-    } else {
-    const emailcek = document.getElementById('email-daftar');
-    if (!emailcek.checkValidity()) {
-        alert("Masukkan alamat email yang valid.");
-        return;
-    }
+        const emailDaftar = document.getElementById('email-daftar').value;
+        const pswdDaftar = document.getElementById('pswd-daftar').value;
+        const repswd = document.getElementById("re-pswd-daftar").value
+
+
+        if (!usernameDaftar || !emailDaftar || !pswdDaftar || !repswd) {
+          alert("Mohon lengkapi semua field.");
+          window.location.href = "/login";
+        } else {
+          const emailcek = document.getElementById('email-daftar');
+          if (!emailcek.checkValidity()) {
+            alert("Masukkan alamat email yang valid.");
+          window.location.href = "/login";
+            return;
+          }
           var uri = "/bikin_akun_user";
           var msg = "msg-register";
           var data_kirim = JSON.stringify({
-              username:document.getElementById("username-daftar").value,
-              email:document.getElementById("email-daftar").value,
-              password:document.getElementById("pswd-daftar").value,
-              re_password:document.getElementById("re-pswd-daftar").value
+            username: document.getElementById("username-daftar").value,
+            email: document.getElementById("email-daftar").value,
+            password: document.getElementById("pswd-daftar").value,
+            re_password: document.getElementById("re-pswd-daftar").value
           });
           var pesan = "Register berhasil silahkan cek email anda"
           var next_url = "/login";
+          $('#daftar-button').text("Loading...")
+          $('#daftar-button').attr("disabled", "disabled")
         }
       }
       console.log(data_kirim)
       $.ajax({
-          url: uri,
-          method: 'POST',
-          contentType: 'application/json',
-          data: data_kirim ,
-          success: function(response) {
-              // Proses respons dari server
-              console.log(response);
-              alert(pesan);
-              window.location.href = "/login";
-          },
-          error: function(xhr) {
-            // Tangani dan tampilkan pesan error dari server
-            var errorMsg = "Terjadi kesalahan pada Server";
-            if (xhr.responseJSON && xhr.responseJSON.msg) {
-                errorMsg = xhr.responseJSON.msg;
-            }
-            alert(errorMsg);
-              document.getElementById(msg).innerText = errorMessage.msg;
-              document.getElementById(msg).style.display = "block";
+        url: uri,
+        method: 'POST',
+        contentType: 'application/json',
+        data: data_kirim,
+        success: function (response) {
+          // Proses respons dari server
+          console.log(response);
+          alert(pesan);
+          window.location.href = "/login";
+        },
+        error: function (xhr) {
+          // Tangani dan tampilkan pesan error dari server
+          var errorMsg = "Terjadi kesalahan pada Server";
+          if (xhr.responseJSON && xhr.responseJSON.msg) {
+            errorMsg = xhr.responseJSON.msg;
+          }
+          alert(errorMsg);
+          window.location.href = "/login";
+
         }
       })
     }

@@ -218,6 +218,10 @@ $('#dataAnakTable').on('click', '.pilih-anak', function () {
             alert('No image selected.');
         }
     });
+    $('#dataAnakModal').on('hidden.bs.modal', function () {
+    location.reload();  // Ini akan merefresh browser ketika modal ditutup
+});
+
             // Hide the flash message after 1 second
             setTimeout(function () {
                 $('#flashMessage').fadeOut('fast');

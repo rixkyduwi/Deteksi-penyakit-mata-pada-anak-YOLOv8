@@ -6,6 +6,7 @@ from io import BytesIO
 import os,textwrap, locale, json, uuid, time,re
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 
 @app.before_request
 def before_request():
@@ -280,10 +281,29 @@ def user_hasil_diagnosa(id):
     print(diagnosa)
 
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
-@app.route('/user/history_konsultasi')
+from sqlalchemy import extract
+
+@app.route('/user/history_konsultasi', methods=['GET'])
 @login_role_required('user')
 def user_history_konsultasi():
-    histori_records = History.query.filter_by(user_id=session["id"]).all()
+    filter_date = request.args.get('filterDate')
+    filter_month = request.args.get('filterMonth')
+    filter_year = request.args.get('filterYear')
+    filter_complete_date = request.args.get('filterCompleteDate')
+
+    query = History.query.filter_by(user_id=session["id"])
+
+    if filter_complete_date:
+        query = query.filter(func.date(History.tanggal_konsultasi) == filter_complete_date)
+    else:
+        if filter_date:
+            query = query.filter(extract('day', History.tanggal_konsultasi) == filter_date)
+        if filter_month:
+            query = query.filter(extract('month', History.tanggal_konsultasi) == filter_month)
+        if filter_year:
+            query = query.filter(extract('year', History.tanggal_konsultasi) == filter_year)
+    
+    histori_records = query.all()
     diagnosa_records = []
 
     for history_record in histori_records:
@@ -293,9 +313,10 @@ def user_history_konsultasi():
             'nama_user': session["full_name"],
             'nama_anak': data_anak.nama_anak if data_anak else "Data Anak Tidak Ditemukan",
             'usia_anak': data_anak.usia_anak if data_anak else "N/A",
-            'tanggal_konsultasi': history_record.tanggal_konsultasi,
-            'hasil_diagnosa': history_record.hasil_diagnosa,  # asumsikan 'hasil_diagnosa' ada di model History
+            'tanggal_konsultasi': history_record.tanggal_konsultasi.strftime('%Y-%m-%d'),
+            'hasil_diagnosa': history_record.hasil_diagnosa,
         }
         diagnosa_records.append(diagnosa)
     
     return render_template('user/history_konsultasi.html', histori_records=diagnosa_records)
+
