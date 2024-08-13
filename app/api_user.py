@@ -71,7 +71,13 @@ def create_data_anak():
         # Validasi input
         if not nama_anak or not usia_anak or jenis_kelamin not in ['L', 'P']:
             return jsonify({"msg": "Invalid data"}), 400
-        
+        cek_nama_anak = DataAnak.query.filter_by(user_id=session["id"]).all()
+        print(cek_nama_anak)
+        for anak in cek_nama_anak :
+            print(anak.nama_anak)
+            print(nama_anak)
+            if anak.nama_anak == nama_anak:
+                return jsonify({"msg":"maaf nama anak tidak boleh sama "})
         # Membuat instance DataAnak
         data_anak = DataAnak(
             user_id=session['id'],

@@ -215,8 +215,8 @@
           success: function(response) {
               // Proses respons dari server
               console.log(response);
-              alert("login berhasil");
-              window.location.href = response.redirect_url;
+              alert(pesan);
+              window.location.href = "/login";
           },
           error: function(xhr) {
             // Tangani dan tampilkan pesan error dari server
