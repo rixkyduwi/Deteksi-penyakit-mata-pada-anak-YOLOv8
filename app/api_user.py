@@ -217,9 +217,9 @@ def ganti_password_post():
         password_baru = data.get('password_baru')
     else:
         # Jika tidak ada data JSON, ambil dari form
-        password_lama = data.get('password_lama')
-        password_baru = data.get('password_baru')
-    user = User.query.filter_by(username=session['full_name']).first()
+        password_lama = request.form('password_lama')
+        password_baru = request.form('password_baru')
+    user = User.query.filter_by(username=session['username']).first()
     if user:
         if bcrypt.check_password_hash(user.password, password_lama):
             # Mengganti password lama dengan password baru

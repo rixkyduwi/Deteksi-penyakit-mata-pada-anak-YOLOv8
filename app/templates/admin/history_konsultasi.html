@@ -188,17 +188,9 @@
           <div class="mt-2 mb-4">
             <form id="filterForm" method="GET">
               <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="filterDate">Tanggal</label>
-                  <input type="number" class="form-control" id="filterDate" name="filterDate" min="1" max="31" placeholder="Tanggal (1-31)" value="{{ request.args.get('filterDate') }}">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="filterMonth">Bulan</label>
-                  <input type="number" class="form-control" id="filterMonth" name="filterMonth" min="1" max="12" placeholder="Bulan (1-12)" value="{{ request.args.get('filterMonth') }}">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="filterYear">Tahun</label>
-                  <input type="number" class="form-control" id="filterYear" name="filterYear" min="2000" placeholder="Tahun" value="{{ request.args.get('filterYear') }}">
+                <div class="form-group col-md-12">
+                  <label for="filterCompleteDate">Tanggal</label>
+                  <input type="date" class="form-control" id="filterCompleteDate" name="filterCompleteDate" value="{{ request.args.get('filterCompleteDate') }}">
                 </div>
               </div>
               <button type="submit" class="btn btn-primary">Filter</button>
