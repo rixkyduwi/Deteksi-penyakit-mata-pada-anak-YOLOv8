@@ -8,6 +8,7 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 from sqlalchemy import extract
+from datetime import datetime
 
 @app.before_request
 def before_request():
@@ -283,7 +284,6 @@ def user_hasil_diagnosa(id):
 
     return render_template('user/hasil_diagnosa.html', diagnosa=diagnosa)
 
-
 @app.route('/user/history_konsultasi', methods=['GET'])
 @login_role_required('user')
 def user_history_konsultasi():
@@ -291,6 +291,27 @@ def user_history_konsultasi():
     filter_month = request.args.get('filterMonth')
     filter_year = request.args.get('filterYear')
     filter_complete_date = request.args.get('filterCompleteDate')
+    filter_anything = request.args.get('filteranything')  # Filter baru untuk "apapun"
+
+    # Generate list of years from 2000 to current year
+    current_year = datetime.now().year
+    years = list(range(2000, current_year + 1))
+
+    # List of months with values 1-12 in Indonesian
+    months = [
+        {"name": "Januari", "value": 1},
+        {"name": "Februari", "value": 2},
+        {"name": "Maret", "value": 3},
+        {"name": "April", "value": 4},
+        {"name": "Mei", "value": 5},
+        {"name": "Juni", "value": 6},
+        {"name": "Juli", "value": 7},
+        {"name": "Agustus", "value": 8},
+        {"name": "September", "value": 9},
+        {"name": "Oktober", "value": 10},
+        {"name": "November", "value": 11},
+        {"name": "Desember", "value": 12},
+    ]
 
     query = History.query.filter_by(user_id=session["id"])
 
@@ -303,6 +324,15 @@ def user_history_konsultasi():
             query = query.filter(extract('month', History.tanggal_konsultasi) == filter_month)
         if filter_year:
             query = query.filter(extract('year', History.tanggal_konsultasi) == filter_year)
+    
+    # Filter baru untuk mencari di hasil diagnosa dan nama anak
+    if filter_anything:
+        query = query.join(DataAnak, History.dataanak_id == DataAnak.id).filter(
+            db.or_(
+                DataAnak.nama_anak.ilike(f'%{filter_anything}%'),
+                History.hasil_diagnosa.ilike(f'%{filter_anything}%')
+            )
+        )
     
     histori_records = query.all()
     diagnosa_records = []
@@ -319,5 +349,7 @@ def user_history_konsultasi():
         }
         diagnosa_records.append(diagnosa)
     
-    return render_template('user/history_konsultasi.html', histori_records=diagnosa_records)
-
+    return render_template('user/history_konsultasi.html', 
+                           histori_records=diagnosa_records, 
+                           years=years, 
+                           months=months)
