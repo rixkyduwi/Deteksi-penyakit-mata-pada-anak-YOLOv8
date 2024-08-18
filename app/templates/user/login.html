@@ -56,7 +56,11 @@
     .font-regular { font-weight: 400; }
     .navbar-brand { align-items: baseline; position: absolute; top: 20px; left: 20px; }
     .border-medium { border-radius: 10px; }
+    .field { position: relative; }
+    .field-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; }
   </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
 </head>
 <body >
 
@@ -95,7 +99,9 @@
         </div>
         <div class="field">
           <input type="password" id="pswd-login" placeholder="Masukan Password" required>
+          <span toggle="#pswd-login" class="fa fa-fw fa-eye field-icon toggle-password"></span>
         </div>
+        
         <div class="pass-link">
           <a href="/forgotpassword">Lupa password?</a>
           <a href="/verif_email">Verifikasi Email</a>
@@ -115,9 +121,11 @@
         </div>
         <div class="field">
           <input type="password" id="pswd-daftar" placeholder="Masukan Password" required>
+          <span toggle="#pswd-daftar" class="fa fa-fw fa-eye field-icon toggle-password"></span>
         </div>                        
         <div class="field">
           <input type="password" id="re-pswd-daftar" placeholder="Konfirmasi Ulang Password" required>
+          <span toggle="#re-pswd-daftar" class="fa fa-fw fa-eye field-icon toggle-password"></span>
         </div>
         <p class="text-danger" id="msg-register"></p>
           <button class="btn btn-custom custom-bg-warning mt-2 w-100" type="button" id="daftar-button">Submit</button>
@@ -153,6 +161,15 @@
             e.preventDefault(); 
         }
     });
+});
+$(document).on('click', '.toggle-password', function() {
+  $(this).toggleClass('fa-eye fa-eye-slash');
+  var input = $($(this).attr('toggle'));
+  if (input.attr('type') === 'password') {
+    input.attr('type', 'text');
+  } else {
+    input.attr('type', 'password');
+  }
 });
 
   document.getElementById("msg-login").style.display = "none";
