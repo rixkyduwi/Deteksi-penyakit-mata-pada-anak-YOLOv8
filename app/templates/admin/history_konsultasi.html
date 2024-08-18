@@ -192,7 +192,7 @@
                               <a href="{{ url_for('user_history_konsultasi') }}" class="btn w-100 btn-secondary">Reset</a>
                           </div>
                           <div class="col-lg-2">
-                              <input type="text" class="w-100 form-control" id="filteranything" name="filteranything" placeholder="Cari apapun" value="{% if request.args.get('filteranything') %}{{ request.args.get('filteranything') }}{% endif %}">
+                              <input type="text" class="w-100 form-control" id="filteranything" name="filteranything" placeholder="Search" value="{% if request.args.get('filteranything') %}{{ request.args.get('filteranything') }}{% endif %}">
                           </div>
                           <div class="col-lg-1">
                               <button type="submit" class="btn w-100 btn-primary">Cari</button>
@@ -316,7 +316,7 @@
   <!-- Inisialisasi DataTables -->
   <script>
   $(document).ready(function() {
-    $('#data-table').DataTable();
+    $('#data-table').DataTable({ searching: false });
     
     var thisYear = new Date().getFullYear();
     $("#filterYear").attr('max', thisYear);
