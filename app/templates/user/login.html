@@ -19,7 +19,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    html, body { display: grid; height: 100%; width: 100%; place-items: center; background-color: #fff; }
+    html, body { }
     ::selection { background: #1a75ff; color: #fff; }
     .wrapper { overflow: hidden; max-width: 390px; background: #1F4590; padding: 30px; border-radius: 15px; box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px; }
     .wrapper .title-text { display: flex; width: 200%; color: #FFA451; }
@@ -69,7 +69,6 @@
 .bg-image img {
   width: 100%;
   height: 100vh;
-  object-fit: cover;
 }
 .wrappe{
   display: grid; height: 100%; width: 100%; place-items: center; 
@@ -88,18 +87,27 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
 </head>
-<body >
+<body>
+  <a class="navbar-brand d-flex" href="/">
+    <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids <img src="/static/icon/eye.svg" style="margin-left: 5px; margin-bottom: 10px;" width="30px" height="30px" alt="logooo"/></p>
+  </a>
   <div class="container-fluid">
+    <a class="navbar-brand d-flex" href="/">
+      <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids <img src="/static/icon/eye.svg" style="margin-left: 5px; margin-bottom: 10px;" width="30px" height="30px" alt="logooo"/></p>
+    </a>
     <div class="row no-gutters">
-      <div class="col-lg-6 bg-image d-none center d-lg-block flex-start">
+      <a class="navbar-brand d-flex" href="/">
+        <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids <img src="/static/icon/eye.svg" style="margin-left: 5px; margin-bottom: 10px;" width="30px" height="30px" alt="logooo"/></p>
+      </a>
+      <div class="col-lg-8 bg-image d-none center d-lg-block flex-start">
         <!-- <img src="/static/image/eye_2.jpg" class="img-fluid" style="width: 80%;" alt="omaga"> -->
         <!-- <img src="/static/image/eye_2.jpg" class="img-fluid" style="width: 80%;" alt="omaga"> -->
         <!-- <img src="/static/image/eye_3.webp" class="w-100 img-fluid" alt="omaga"> -->
         <!-- <img src="/static/image/bg_tips.svg" class="w-100 img-fluid" alt="omaga"> -->
         <img src="/static/image/eye_4.png" class="w-100 img-fluid" alt="omaga">
       </div>
-      <div class="col-lg-6">
-        <div class="wrappe" >
+      <div class="col-lg-4 w-100">
+        <div class="wrappe w-100 " style="background-color: #fff;" >
           <!-- Isi form login dan registrasi tetap sama seperti sebelumnya -->
     <div class=""></div>
 <div class="wrapper">
@@ -112,11 +120,7 @@
       {{ messages[0] }}
     </div>
   {% endif %}
-  {% endwith %}
-
-  <a class="navbar-brand d-flex" href="/">
-    <h3 class="custom-text-info font-semibold">Eye</h3><p class="custom-text-warning font-semibold">kids <img src="/static/icon/eye.svg" style="margin-left: 5px; margin-bottom: 10px;" width="30px" height="30px" alt="logooo"/></p>
-  </a>
+  {%   endwith %}
 
   <div class="title-text">
     <div class="title login">Login <img src="/static/icon/eye.svg" width="30px" height="30px" alt="logooo"></div>

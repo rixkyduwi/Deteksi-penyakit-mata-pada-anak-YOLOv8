@@ -9,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 from sqlalchemy import extract
 from datetime import datetime
+from sqlalchemy.orm import aliased
 
 @app.before_request
 def before_request():
@@ -325,12 +326,20 @@ def user_history_konsultasi():
         if filter_year:
             query = query.filter(extract('year', History.tanggal_konsultasi) == filter_year)
     
-    # Filter baru untuk mencari di hasil diagnosa dan nama anak
+    # Aliased untuk tabel-tabel yang ingin di-join
+    data_anak_alias = aliased(DataAnak)
+    user_alias = aliased(User)
+
     if filter_anything:
-        query = query.join(DataAnak, History.dataanak_id == DataAnak.id).filter(
+        query = query.join(data_anak_alias, History.dataanak_id == data_anak_alias.id)\
+                    .join(user_alias, History.user_id == user_alias.id)\
+                    .filter(
             db.or_(
-                DataAnak.nama_anak.ilike(f'%{filter_anything}%'),
-                History.hasil_diagnosa.ilike(f'%{filter_anything}%')
+                data_anak_alias.nama_anak.ilike(f'%{filter_anything}%'),
+                data_anak_alias.usia_anak.ilike(f'%{filter_anything}%'),
+                History.tanggal_konsultasi.ilike(f'%{filter_anything}%'),
+                History.hasil_diagnosa.ilike(f'%{filter_anything}%'),
+                user_alias.full_name.ilike(f'%{filter_anything}%')
             )
         )
     
