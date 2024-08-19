@@ -97,7 +97,15 @@
 
 <script>
 $(document).ready(function() {
-    $('#data-table').DataTable({searching: false});
+    $('#data-table').DataTable(
+        {
+            searching: false,
+            layout: {
+        topStart: {
+            buttons: ['csv', 'excel', 'pdf', 'print']
+        }
+    } 
+});
 })
 </script>
 {% endblock %}

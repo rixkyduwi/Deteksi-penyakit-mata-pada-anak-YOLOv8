@@ -10,6 +10,8 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Link to DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.1/css/buttons.dataTables.css">
   <style>
     body {
       min-height: 100vh;
@@ -316,7 +318,13 @@
   <!-- Inisialisasi DataTables -->
   <script>
   $(document).ready(function() {
-    $('#data-table').DataTable({ searching: false });
+    $('#data-table').DataTable({ searching: false,
+      layout: {
+        topStart: {
+            buttons: ['csv', 'excel', 'pdf', 'print']
+        }
+    } 
+  });
     
     var thisYear = new Date().getFullYear();
     $("#filterYear").attr('max', thisYear);
