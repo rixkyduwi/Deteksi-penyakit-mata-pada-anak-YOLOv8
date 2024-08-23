@@ -132,11 +132,38 @@ $(document).ready(function() {
     $('#data-table').DataTable(
         {
             searching: false,
-            layout: {
-        topStart: {
-            buttons: ['csv', 'excel', 'pdf', 'print']
-        }
-    } 
+            dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                text: 'Export CSV',
+                exportOptions: {
+                    columns: ':not(:last-child)' // Mengekspor semua kolom kecuali kolom terakhir
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: 'Export Excel',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'Export PDF',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'print',
+                text: 'Print',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            }
+        ]
+    
 });
 })
 </script>
