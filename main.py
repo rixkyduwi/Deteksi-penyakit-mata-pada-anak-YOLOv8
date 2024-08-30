@@ -2,7 +2,8 @@ from app import app, db, bcrypt,Rekomendasi,User,Role
 import flask_bcrypt
 import os
 from dotenv import load_dotenv
-
+# Menjalankan Flask dengan SSL adhoc
+#app.run(ssl_context='adhoc')
 # Load environment variables from .env file
 load_dotenv()
 
